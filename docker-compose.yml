@@ -1,0 +1,47 @@
+# Production-like stack: TimescaleDB + Rust prober + worker + web.
+#   cp apps/worker/.env.example .env   # set STEAM_API_KEY
+#   docker compose up -d --build
+services:
+  db:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      POSTGRES_USER: wiperadar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: wiperadar
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wiperadar"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  prober:
+    build: { context: ., dockerfile: Dockerfile.prober }
+    environment:
+      PROBER_CONCURRENCY: 512
+      PROBER_PER_HOST: 3
+    restart: unless-stopped
+
+  worker:
+    build: { context: ., dockerfile: Dockerfile.worker }
+    environment:
+      PROBER_URL: http://prober:4100
+      DATABASE_URL: postgres://wiperadar:${POSTGRES_PASSWORD:-change-me}@db:5432/wiperadar
+      STEAM_API_KEY: ${STEAM_API_KEY:-}
+      GEOIP_DB: ${GEOIP_DB:-}
+      PORT: 4000
+    depends_on:
+      db: { condition: service_healthy }
+      prober: { condition: service_started }
+    restart: unless-stopped
+
+  web:
+    build: { context: ., dockerfile: Dockerfile.web, args: { API_URL: http://worker:4000 } }
+    environment:
+      API_URL: http://worker:4000
+    ports: ["3000:3000"]
+    depends_on: [worker]
+    restart: unless-stopped
+
+volumes:
+  pgdata:

@@ -1,0 +1,14 @@
+FROM node:22-alpine
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/a2s/package.json packages/a2s/
+COPY apps/worker/package.json apps/worker/
+COPY apps/web/package.json apps/web/
+RUN npm ci --workspace @wiperadar/worker --include-workspace-root
+COPY packages packages
+COPY apps/worker apps/worker
+ENV NODE_ENV=production
+EXPOSE 4000
+# A2S RULES is UDP egress only; no inbound UDP needed
+CMD ["npm", "start", "-w", "@wiperadar/worker"]

@@ -1,0 +1,23 @@
+{
+  "name": "wiperadar",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "test": "npm test -w @wiperadar/shared -w @wiperadar/a2s -w @wiperadar/worker",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck -w @wiperadar/web",
+    "prober": "cargo run --release --manifest-path services/prober/Cargo.toml",
+    "prober:test": "cargo test --manifest-path services/prober/Cargo.toml",
+    "format": "prettier --write \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

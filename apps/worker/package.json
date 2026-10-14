@@ -1,0 +1,25 @@
+{
+  "name": "@wiperadar/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "start": "tsx src/index.ts",
+    "test": "tsx --test src/*.test.ts",
+    "tags:survey": "tsx src/tools/tags-survey.ts"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.3.0",
+    "@fastify/cors": "^11.0.0",
+    "@wiperadar/a2s": "*",
+    "@wiperadar/shared": "*",
+    "fastify": "^5.2.0",
+    "maxmind": "^4.3.0",
+    "pg": "^8.13.0",
+    "undici": "^8.11.2"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.0"
+  }
+}

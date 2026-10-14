@@ -1,0 +1,5 @@
+# normalize line endings so Windows/Linux (and the cloud sessions) produce identical diffs
+* text=auto eol=lf
+*.png binary
+*.ttf binary
+*.mmdb binary

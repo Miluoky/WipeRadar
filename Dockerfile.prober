@@ -1,0 +1,11 @@
+FROM rust:1-slim AS build
+WORKDIR /src
+COPY services/prober/Cargo.toml services/prober/Cargo.lock* ./
+COPY services/prober/src src
+RUN cargo build --release
+
+FROM debian:bookworm-slim
+COPY --from=build /src/target/release/wiperadar-prober /usr/local/bin/wiperadar-prober
+ENV PROBER_ADDR=0.0.0.0:4100
+EXPOSE 4100
+CMD ["wiperadar-prober"]

@@ -1,0 +1,327 @@
+import { joinDescription } from "@wiperadar/a2s";
+import { predictNextWipe, stripRichText, type Cadence } from "@wiperadar/shared";
+import { config } from "./config";
+import type { Db } from "./db";
+import { publish } from "./events";
+import { deriveRow, detectWipe, wipeKind, type DerivedRow } from "./ingest";
+import { mapLimited } from "./limiter";
+import { getServerSummary, getStats } from "./repo";
+import type { ServerSource } from "./sources/types";
+
+interface Known {
+  id: number;
+  bornAt: Date | null;
+}
+
+const CHUNK = 2000;
+
+/** Only absolute http(s) URLs from server RULES reach the page; anything else is dropped. */
+function httpsUrl(v: string | undefined): string | null {
+  if (!v) return null;
+  try {
+    const u = new URL(v.trim());
+    return u.protocol === "https:" || u.protocol === "http:" ? u.toString().slice(0, 500) : null;
+  } catch {
+    return null;
+  }
+}
+
+export class Poller {
+  private known = new Map<string, Known>();
+  private lastFullPredict = 0;
+  private running = false;
+
+  constructor(
+    private db: Db,
+    private source: ServerSource,
+  ) {}
+
+  get idByAddr() {
+    return new Map([...this.known].map(([k, v]) => [k, v.id]));
+  }
+
+  async init() {
+    const { rows } = await this.db.query<{ id: number; ip: string; query_port: number; born_at: Date | null }>(
+      `SELECT id, ip, query_port, born_at FROM servers`,
+    );
+    for (const r of rows) this.known.set(`${r.ip}:${r.query_port}`, { id: r.id, bornAt: r.born_at && new Date(r.born_at) });
+  }
+
+  /** One discovery cycle: snapshot → upsert → wipes → metrics → offline → rules → predictions. */
+  async cycle() {
+    if (this.running) return;
+    this.running = true;
+    const t0 = performance.now();
+    try {
+      const now = new Date();
+      const list = await this.source.fetchList();
+      const rows = list.map((e) => deriveRow(e, now));
+
+      const ids = await this.upsert(rows, now);
+      const wiped = await this.recordWipes(rows, ids, now);
+      await this.recordMetrics(rows, ids, now);
+      await this.markMissing(new Set(ids));
+      await this.refreshRules();
+      await this.refreshPredictions(wiped);
+
+      for (const id of wiped.fresh) {
+        const server = await getServerSummary(this.db, id);
+        if (server) publish({ type: "wipe", server });
+      }
+      publish({ type: "tick", stats: await getStats(this.db, config.demo) });
+      console.log(
+        `[poll] ${this.source.name}: ${rows.length} servers, ${wiped.all.length} wipes (${wiped.fresh.length} live) in ${Math.round(performance.now() - t0)}ms`,
+      );
+    } catch (e) {
+      console.error("[poll] cycle failed:", e);
+    } finally {
+      this.running = false;
+    }
+  }
+
+  private async upsert(rows: DerivedRow[], now: Date): Promise<number[]> {
+    const ids: number[] = [];
+    for (let i = 0; i < rows.length; i += CHUNK) {
+      const c = rows.slice(i, i + CHUNK);
+      const col = <K extends keyof DerivedRow>(k: K) => c.map((r) => r[k]);
+      const { rows: out } = await this.db.query<{ id: number; ip: string; query_port: number }>(
+        `INSERT INTO servers (ip, query_port, game_port, name, map, players, max_players, queue, region, country,
+                              rate, group_limit, type, cadence, tags, build, born_at, hostname_wipe_date, suspicious,
+                              search_key, peak_players, online, misses, last_seen_at)
+         SELECT u.ip, u.qp, u.gp, u.name, u.map, u.pl, u.mx, u.qu, u.region, u.country, u.rate, u.grp, u.type, u.cadence,
+                string_to_array(u.tags, ','), u.build, u.born, u.hdate, u.sus, u.skey, u.pl, true, 0, $20
+         FROM unnest($1::text[], $2::int[], $3::int[], $4::text[], $5::text[], $6::int[], $7::int[], $8::int[],
+                     $9::text[], $10::text[], $11::text[], $12::text[], $13::text[], $14::text[], $15::text[],
+                     $16::text[], $17::timestamptz[], $18::date[], $19::bool[], $21::text[])
+              AS u(ip, qp, gp, name, map, pl, mx, qu, region, country, rate, grp, type, cadence, tags, build, born, hdate, sus, skey)
+         ON CONFLICT (ip, query_port) DO UPDATE SET
+           game_port = EXCLUDED.game_port, name = EXCLUDED.name, map = EXCLUDED.map,
+           players = EXCLUDED.players, max_players = EXCLUDED.max_players, queue = EXCLUDED.queue,
+           region = COALESCE(EXCLUDED.region, servers.region), country = COALESCE(EXCLUDED.country, servers.country),
+           rate = EXCLUDED.rate, group_limit = EXCLUDED.group_limit, type = EXCLUDED.type,
+           cadence = COALESCE(EXCLUDED.cadence, servers.cadence), tags = EXCLUDED.tags, build = EXCLUDED.build,
+           born_at = COALESCE(EXCLUDED.born_at, servers.born_at), hostname_wipe_date = EXCLUDED.hostname_wipe_date,
+           suspicious = EXCLUDED.suspicious, search_key = EXCLUDED.search_key,
+           peak_players = GREATEST(servers.peak_players, EXCLUDED.players), online = true, misses = 0, last_seen_at = EXCLUDED.last_seen_at
+         RETURNING id, ip, query_port`,
+        [
+          col("ip"),
+          col("queryPort"),
+          col("gamePort"),
+          col("name"),
+          col("map"),
+          col("players"),
+          col("maxPlayers"),
+          col("queue"),
+          col("region"),
+          col("country"),
+          col("rate"),
+          col("groupLimit"),
+          col("type"),
+          col("cadence"),
+          c.map((r) => r.tags.join(",")),
+          col("build"),
+          c.map((r) => r.bornAt?.toISOString() ?? null),
+          col("hostnameWipeDate"),
+          col("suspicious"),
+          now.toISOString(),
+          col("searchKey"),
+        ],
+      );
+      const byAddr = new Map(out.map((o) => [`${o.ip}:${o.query_port}`, o.id]));
+      for (const r of c) ids.push(byAddr.get(`${r.ip}:${r.queryPort}`)!);
+    }
+    return ids;
+  }
+
+  private async recordWipes(rows: DerivedRow[], ids: number[], now: Date) {
+    const all: number[] = [];
+    const fresh: number[] = [];
+    const sid: number[] = [];
+    const at: string[] = [];
+    const kind: string[] = [];
+    const by: string[] = [];
+    rows.forEach((r, i) => {
+      const addr = `${r.ip}:${r.queryPort}`;
+      const prev = this.known.get(addr);
+      const verdict = detectWipe(prev?.bornAt ?? null, r.bornAt);
+      this.known.set(addr, { id: ids[i], bornAt: verdict ? r.bornAt : (prev?.bornAt ?? r.bornAt) });
+      if (!verdict || !r.bornAt) return;
+      all.push(ids[i]);
+      sid.push(ids[i]);
+      at.push(r.bornAt.toISOString());
+      kind.push(wipeKind(r.bornAt));
+      by.push(verdict === "initial" ? "born-initial" : "born");
+      // only real transitions within the last 2h go to the live feed
+      if (verdict === "wipe" && now.getTime() - r.bornAt.getTime() < 2 * 3_600_000) fresh.push(ids[i]);
+    });
+    if (sid.length) {
+      await this.db.query(
+        `INSERT INTO wipes (server_id, wiped_at, kind, map, detected_by)
+         SELECT u.sid, u.at, u.kind, s.map, u.by
+         FROM unnest($1::int[], $2::timestamptz[], $3::text[], $4::text[]) AS u(sid, at, kind, by)
+         JOIN servers s ON s.id = u.sid
+         ON CONFLICT DO NOTHING`,
+        [sid, at, kind, by],
+      );
+      // new map → seed/size must be re-read
+      await this.db.query(
+        `UPDATE servers s SET last_wipe_at = u.at, rules_checked_at = NULL, next_wipe_at = NULL, peak_players = s.players
+         FROM unnest($1::int[], $2::timestamptz[]) AS u(sid, at) WHERE s.id = u.sid`,
+        [sid, at],
+      );
+    }
+    return { all, fresh };
+  }
+
+  private async recordMetrics(rows: DerivedRow[], ids: number[], now: Date) {
+    // 5-minute buckets: repeated polls inside a bucket overwrite (keeps the table small)
+    const bucket = new Date(Math.floor(now.getTime() / 300_000) * 300_000).toISOString();
+    for (let i = 0; i < rows.length; i += CHUNK) {
+      const c = rows.slice(i, i + CHUNK);
+      await this.db.query(
+        `INSERT INTO metrics (server_id, ts, players, queue)
+         SELECT u.sid, $4::timestamptz, LEAST(u.pl, 32767), LEAST(u.qu, 32767)
+         FROM unnest($1::int[], $2::int[], $3::int[]) AS u(sid, pl, qu)
+         -- ~75% of Rust servers sit empty: store only non-zero samples, charts fill gaps with 0
+         WHERE u.pl > 0 OR u.qu > 0
+         ON CONFLICT (server_id, ts) DO UPDATE SET players = EXCLUDED.players, queue = EXCLUDED.queue`,
+        [ids.slice(i, i + CHUNK), c.map((r) => r.players), c.map((r) => r.queue), bucket],
+      );
+    }
+  }
+
+  private async markMissing(seen: Set<number>) {
+    const missing = [...this.known.values()].map((k) => k.id).filter((id) => !seen.has(id));
+    if (!missing.length) return;
+    await this.db.query(
+      `UPDATE servers SET misses = misses + 1, online = (misses + 1) < $2, players = 0, queue = 0
+       WHERE id = ANY($1::int[])`,
+      [missing, config.offlineAfterMisses],
+    );
+  }
+
+  /** A2S_RULES for new / just-wiped / stale servers: seed, size, description, url. */
+  private async refreshRules() {
+    const { rows } = await this.db.query<{ id: number; ip: string; query_port: number; last_wipe_at: Date | null }>(
+      `SELECT id, ip, query_port, last_wipe_at FROM servers
+       WHERE online AND (rules_checked_at IS NULL OR rules_checked_at < now() - make_interval(hours => $1))
+       ORDER BY rules_checked_at NULLS FIRST, players DESC LIMIT 3000`,
+      [config.rulesTtlHours],
+    );
+    if (!rows.length) return;
+    let results: PromiseSettledResult<Record<string, string>>[] | null = null;
+    if (this.source.fetchRulesBatch) {
+      try {
+        results = (await this.source.fetchRulesBatch(rows.map((r) => ({ ip: r.ip, queryPort: r.query_port })))).map((v) =>
+          v instanceof Error ? { status: "rejected", reason: v } : { status: "fulfilled", value: v },
+        );
+      } catch (e) {
+        // prober down or not started — degrade to the in-process client instead of losing the cycle
+        console.warn(`[rules] prober unavailable (${(e as Error).message}), using Node A2S`);
+      }
+    }
+    results ??= await mapLimited(
+      rows,
+      { concurrency: config.rulesConcurrency, perKey: config.perHostConcurrency, key: (r) => r.ip },
+      (r) => this.source.fetchRules(r.ip, r.query_port),
+    );
+    let ok = 0;
+    for (let i = 0; i < rows.length; i++) {
+      const r = rows[i];
+      const res = results[i];
+      if (res.status === "rejected") {
+        // don't hammer servers that block RULES — retry after TTL
+        await this.db.query(`UPDATE servers SET rules_checked_at = now() WHERE id = $1`, [r.id]);
+        continue;
+      }
+      ok++;
+      const rules = res.value;
+      const num = (k: string) => (rules[k] && Number.isFinite(Number(rules[k])) ? Math.round(Number(rules[k])) : null);
+      const seed = num("world.seed");
+      const size = num("world.size");
+      await this.db.query(
+        `UPDATE servers SET seed = $2, world_size = $3, description = $4, url = $5, header_image = $6,
+                fps = $7, entities = $8, logo_image = $9, map_image = $10, rules_checked_at = now()
+         WHERE id = $1`,
+        [
+          r.id,
+          seed,
+          size,
+          (() => {
+            const desc = joinDescription(rules);
+            return desc ? stripRichText(desc).trim().slice(0, 4000) || null : null;
+          })(),
+          httpsUrl(rules.url),
+          httpsUrl(rules.headerimage),
+          num("fps_avg"),
+          num("ent_cnt"),
+          httpsUrl(rules.logoimage),
+          httpsUrl(rules.map_image_url),
+        ],
+      );
+      if (r.last_wipe_at) {
+        await this.db.query(
+          `UPDATE wipes SET seed = COALESCE(seed, $3), world_size = COALESCE(world_size, $4)
+           WHERE server_id = $1 AND wiped_at = $2`,
+          [r.id, r.last_wipe_at, seed, size],
+        );
+      }
+    }
+    console.log(`[rules] ${ok}/${rows.length} ok`);
+  }
+
+  /** Next-wipe predictions: all servers every 10 min, plus wiped/unknown ones every cycle. */
+  private async refreshPredictions(wiped: { all: number[] }) {
+    const full = Date.now() - this.lastFullPredict > 10 * 60_000;
+    if (full) this.lastFullPredict = Date.now();
+    const { rows } = await this.db.query<{
+      id: number;
+      cadence: Cadence | null;
+      last_wipe_at: Date | null;
+      hostname_wipe_date: string | Date | null;
+      owner_next: Date | null;
+      history: (string | Date)[] | null;
+    }>(
+      `SELECT s.id, s.cadence, s.last_wipe_at, s.hostname_wipe_date, ws.next_at AS owner_next,
+              (SELECT array_agg(w.wiped_at ORDER BY w.wiped_at) FROM wipes w
+                WHERE w.server_id = s.id AND w.wiped_at > now() - interval '120 days') AS history
+       FROM servers s LEFT JOIN wipe_schedules ws ON ws.server_id = s.id
+       WHERE s.online AND ($1 OR s.next_wipe_at IS NULL OR s.next_wipe_at < now() OR s.id = ANY($2::int[]))`,
+      [full, wiped.all],
+    );
+    if (!rows.length) return;
+    const now = new Date();
+    const ids: number[] = [];
+    const at: string[] = [];
+    const src: string[] = [];
+    for (const r of rows) {
+      const p = predictNextWipe({
+        now,
+        lastWipe: r.last_wipe_at && new Date(r.last_wipe_at),
+        cadence: r.cadence,
+        history: (r.history ?? []).map((d) => new Date(d)),
+        hostnameDate: r.hostname_wipe_date ? new Date(r.hostname_wipe_date) : null,
+        ownerNext: r.owner_next && new Date(r.owner_next),
+      });
+      ids.push(r.id);
+      at.push(p.at.toISOString());
+      src.push(p.source);
+    }
+    await this.db.query(
+      `UPDATE servers s SET next_wipe_at = u.at, next_wipe_source = u.src
+       FROM unnest($1::int[], $2::timestamptz[], $3::text[]) AS u(id, at, src) WHERE s.id = u.id`,
+      [ids, at, src],
+    );
+  }
+
+  /** Recompute every prediction on the next cycle (e.g. after a history backfill). */
+  forceFullPredict() {
+    this.lastFullPredict = 0;
+  }
+
+  async pruneMetrics() {
+    if (this.db.kind === "postgres") return; // timescale retention policy (or cron) handles it
+    await this.db.query(`DELETE FROM metrics WHERE ts < now() - make_interval(days => $1)`, [config.metricsRetentionDays]);
+  }
+}
