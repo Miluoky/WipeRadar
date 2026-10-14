@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const API_URL = process.env.API_URL ?? "http://localhost:4000";
 
-// baseline hardening; no CSP yet — the 3D hero, inline JSON-LD and next/font would each need nonces/hashes
+// baseline hardening; the per-request CSP (nonce) is set in src/proxy.ts
 const SECURITY_HEADERS = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
