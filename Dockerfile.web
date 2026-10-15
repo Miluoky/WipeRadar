@@ -8,8 +8,10 @@ COPY apps/web/package.json apps/web/
 RUN npm ci --workspace @wiperadar/web --include-workspace-root
 COPY packages packages
 COPY apps/web apps/web
+# rewrites (and robots/sitemap) are baked at build time; Railway passes service variables as build args
 ARG API_URL=http://worker:4000
-ENV API_URL=$API_URL NEXT_TELEMETRY_DISABLED=1
+ARG SITE_URL=http://localhost:3000
+ENV API_URL=$API_URL SITE_URL=$SITE_URL NEXT_TELEMETRY_DISABLED=1
 RUN npm run build -w @wiperadar/web
 
 FROM node:22-alpine
