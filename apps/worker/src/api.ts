@@ -1,5 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import rateLimit from "@fastify/rate-limit";
+import type { FastifyRequest } from "fastify";
 import { CADENCES, GROUP_LIMITS, RATES, REGIONS, SERVER_TYPES, type MetricRange } from "@wiperadar/shared";
 import { config } from "./config";
 import type { Db } from "./db";
@@ -19,10 +21,34 @@ export const STALE_AFTER_MS = 10 * 60_000;
 
 const num = (v: unknown) => (v !== undefined && v !== "" && Number.isFinite(Number(v)) ? Number(v) : undefined);
 
+/** Page size caps: the site's own server-side calls (calendar) need more than the public API gets. */
+const PUBLIC_LIMIT = 200;
+const INTERNAL_LIMIT = 1000;
+
+/**
+ * The worker is private: browsers reach it only through the site's /api rewrite, which forwards
+ * the visitor's address (X-Real-IP from Railway's edge, X-Forwarded-For from the Next proxy).
+ * No forwarded address → the site's own server-side render, which is trusted.
+ */
+export function clientIp(req: FastifyRequest): string | null {
+  const real = req.headers["x-real-ip"];
+  if (typeof real === "string" && real.trim()) return real.trim();
+  const fwd = req.headers["x-forwarded-for"];
+  const first = (Array.isArray(fwd) ? fwd[0] : fwd)?.split(",")[0]?.trim();
+  return first || null;
+}
+
 export async function buildApi(db: Db, status?: PollStatus) {
   const app = Fastify({ logger: { level: "warn" } });
-  await app.register(cors, { origin: true });
+  await app.register(cors, { origin: config.siteUrl ? new URL(config.siteUrl).origin : false });
+  await app.register(rateLimit, {
+    max: config.rateLimitPerMin,
+    timeWindow: 60_000,
+    keyGenerator: (req) => clientIp(req) ?? "internal",
+    allowList: (req) => clientIp(req) === null,
+  });
   const cache = new TtlCache();
+  const sse = { total: 0, perIp: new Map<string, number>() };
 
   // browsers/CDNs may reuse a response briefly; the SSE feed pushes anything urgent
   const SHORT = "public, max-age=5, stale-while-revalidate=25";
@@ -64,7 +90,7 @@ export async function buildApi(db: Db, status?: PollStatus) {
       cadence: list(q.cadence, CADENCES),
       minPlayers: num(q.minPlayers),
       sort: sort && ["players", "wiped", "next", "name", "hot"].includes(sort) ? sort : undefined,
-      limit: num(q.limit),
+      limit: Math.min(num(q.limit) ?? 50, clientIp(req) ? PUBLIC_LIMIT : INTERNAL_LIMIT),
       offset: num(q.offset),
       wipedWithinHours: num(q.wipedWithinHours),
       nextWithinHours: num(q.nextWithinHours),
@@ -101,12 +127,19 @@ export async function buildApi(db: Db, status?: PollStatus) {
   });
 
   /** Server-Sent Events: live wipes + stats ticks. */
-  app.get("/api/live", (req, reply) => {
+  app.get("/api/live", { config: { rateLimit: false } }, (req, reply) => {
+    const ip = clientIp(req) ?? "internal";
+    const mine = sse.perIp.get(ip) ?? 0;
+    if (sse.total >= config.sseMaxTotal || (ip !== "internal" && mine >= config.sseMaxPerIp)) {
+      return reply.code(429).send({ error: "too many live connections" });
+    }
+    sse.total++;
+    sse.perIp.set(ip, mine + 1);
+    reply.hijack(); // the raw stream is ours; fastify must not send its own response
     reply.raw.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache, no-transform",
       Connection: "keep-alive",
-      "Access-Control-Allow-Origin": "*",
       "X-Accel-Buffering": "no",
     });
     reply.raw.write(": connected\n\n");
@@ -115,6 +148,10 @@ export async function buildApi(db: Db, status?: PollStatus) {
     req.raw.on("close", () => {
       off();
       clearInterval(ping);
+      sse.total--;
+      const n = (sse.perIp.get(ip) ?? 1) - 1;
+      if (n > 0) sse.perIp.set(ip, n);
+      else sse.perIp.delete(ip);
     });
   });
 
