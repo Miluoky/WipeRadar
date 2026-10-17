@@ -37,7 +37,10 @@ if (demo) {
 // demo ticks faster so the live feed moves while you watch
 const interval = (config.demo ? 20 : config.listIntervalSec) * 1000;
 setInterval(() => void poller.cycle(), interval);
-setInterval(() => void poller.pruneMetrics(), 3_600_000);
+// on plain Postgres / PGlite this DELETE is the only retention (TimescaleDB has its own policy)
+const prune = () => poller.pruneMetrics().catch((e) => console.error("[prune] failed:", e));
+void prune();
+setInterval(() => void prune(), 3_600_000);
 
 const shutdown = async () => {
   await app.close();
