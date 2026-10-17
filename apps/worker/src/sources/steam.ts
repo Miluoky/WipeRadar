@@ -1,5 +1,6 @@
 import { queryRules } from "@wiperadar/a2s";
 import { ShrinkGuard } from "../guard";
+import { log } from "../log";
 import { probeRules } from "./prober";
 
 /** Steam's edge occasionally drops connects; retry with backoff before failing the cycle. 4xx is final. */
@@ -15,7 +16,7 @@ async function fetchWithRetry(url: URL, attempts = 4): Promise<{ response?: { se
     } catch (e) {
       if ((e as { final?: boolean }).final || i >= attempts) throw e;
       const wait = 2000 * 2 ** (i - 1);
-      console.warn(`[steam] attempt ${i} failed (${(e as Error).message}), retrying in ${wait / 1000}s`);
+      log.warn(`[steam] attempt ${i} failed (${(e as Error).message}), retrying in ${wait / 1000}s`);
       await new Promise((r) => setTimeout(r, wait));
     }
   }
@@ -67,12 +68,12 @@ export class SteamSource implements ServerSource {
       const json = await fetchWithRetry(url);
       const servers = json.response?.servers ?? [];
       if (servers.length >= Math.min(this.limit, 10_000)) {
-        console.warn(`[steam] shard "${filter}" hit limit ${this.limit} — split it via LIST_SHARDS`);
+        log.warn(`[steam] shard "${filter}" hit limit ${this.limit} — split it via LIST_SHARDS`);
       }
       let guard = this.shardGuards.get(filter);
       if (!guard) this.shardGuards.set(filter, (guard = new ShrinkGuard()));
       if (!guard.accept(servers.length)) {
-        console.warn(`[steam] shard "${filter}" returned only ${servers.length} servers`);
+        log.warn(`[steam] shard "${filter}" returned only ${servers.length} servers`);
         partial = true;
       }
       for (const s of servers) {
