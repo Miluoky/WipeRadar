@@ -12,6 +12,7 @@ import {
 } from "@wiperadar/shared";
 import type { Db } from "./db";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- untyped SQL rows, mapped field by field below
 type Row = Record<string, any>;
 
 const iso = (d: unknown) => (d ? new Date(d as string).toISOString() : null);

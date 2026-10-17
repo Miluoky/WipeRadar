@@ -24,7 +24,7 @@ export function WipeTicker({ items, d, locale }: { items: ServerSummary[]; d: Di
             {s.lastWipeAt && <Since iso={s.lastWipeAt} units={d.units} suffix={d.card.ago} />}
           </span>
           <span className="text-seam" aria-hidden>
-            ///
+            {"///"}
           </span>
         </li>
       ))}

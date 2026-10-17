@@ -12,13 +12,17 @@
     "prober": "cargo run --release --manifest-path services/prober/Cargo.toml",
     "prober:test": "cargo test --manifest-path services/prober/Cargo.toml",
     "format": "prettier --write \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts",
-    "format:check": "prettier --check \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts"
+    "format:check": "prettier --check \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.0",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tsx": "^4.19.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.71.2"
   }
 }
