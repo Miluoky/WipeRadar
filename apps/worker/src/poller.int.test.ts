@@ -1,45 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { subscribe } from "./events";
 import { Poller } from "./poller";
-import type { ListEntry, ServerSource } from "./sources/types";
-import { memoryDb } from "./test-db";
-
-const HOUR = 3_600_000;
-
-async function waitFor(check: () => Promise<boolean>, ms = 5000) {
-  for (const end = Date.now() + ms; Date.now() < end; await new Promise((r) => setTimeout(r, 20))) {
-    if (await check()) return;
-  }
-  throw new Error("timed out");
-}
-
-function entry(n: number, bornAt: Date, players = 10): ListEntry {
-  return {
-    ip: `10.0.0.${n}`,
-    queryPort: 28017,
-    gamePort: 28015,
-    name: `Test server ${n}`,
-    map: "Procedural Map",
-    players,
-    maxPlayers: 100,
-    keywords: `mp100,cp${players},born${Math.floor(bornAt.getTime() / 1000)},weekly`,
-  };
-}
-
-/** Scripted source: the test swaps `list` and `rules` between cycles. */
-class FakeSource implements ServerSource {
-  readonly name = "fake";
-  list: ListEntry[] = [];
-  rules = new Map<string, Record<string, string> | Error>();
-  async fetchList() {
-    return this.list;
-  }
-  async fetchRules(ip: string) {
-    const r = this.rules.get(ip);
-    if (!r || r instanceof Error) throw r ?? new Error("timeout");
-    return r;
-  }
-}
+import { entry, FakeSource, HOUR, memoryDb } from "./testing";
 
 test("RULES results are written in batches: ok rows, failures and the wipe's seed", async () => {
   const db = await memoryDb();
@@ -58,8 +21,7 @@ test("RULES results are written in batches: ok rows, failures and the wipe's see
   const poller = new Poller(db, src);
   await poller.init();
   await poller.cycle();
-  await poller.rulesCycle(); // no-op if the pass the cycle started is still running…
-  await waitFor(async () => (await db.query(`SELECT 1 FROM servers WHERE rules_checked_at IS NULL`)).rows.length === 0);
+  await poller.rulesCycle(); // the pass the cycle started
 
   const { rows } = await db.query(
     `SELECT ip, seed, world_size, description, header_image, logo_image, url, fps, rules_checked_at FROM servers ORDER BY ip`,
@@ -79,5 +41,83 @@ test("RULES results are written in batches: ok rows, failures and the wipe's see
     wipes.map((w) => w.seed),
     [123456, null],
   );
+  await poller.rulesCycle();
+  await db.close();
+});
+
+test("a born change is recorded as a wipe and pushed to the live feed", async () => {
+  const db = await memoryDb();
+  const src = new FakeSource();
+  const old = new Date(Date.now() - 7 * 24 * HOUR);
+  src.list = [entry(1, old)];
+  const poller = new Poller(db, src);
+  await poller.init();
+  await poller.cycle();
+
+  const live: number[] = [];
+  const off = subscribe((e) => e.type === "wipe" && live.push(e.server.id));
+  const fresh = new Date(Date.now() - 10 * 60_000);
+  src.list = [entry(1, fresh)];
+  await poller.cycle();
+  off();
+
+  const { rows } = await db.query(`SELECT detected_by, wiped_at FROM wipes ORDER BY wiped_at`);
+  assert.deepEqual(
+    rows.map((r) => r.detected_by),
+    ["born-initial", "born"],
+  );
+  assert.equal(new Date(rows[1].wiped_at).getTime(), Math.floor(fresh.getTime() / 1000) * 1000);
+  assert.equal(live.length, 1);
+  await poller.rulesCycle();
+  await db.close();
+});
+
+test("a born that goes back in time (restored backup) is not a wipe", async () => {
+  const db = await memoryDb();
+  const src = new FakeSource();
+  const poller = new Poller(db, src);
+  await poller.init();
+  src.list = [entry(1, new Date(Date.now() - HOUR))];
+  await poller.cycle();
+  src.list = [entry(1, new Date(Date.now() - 5 * 24 * HOUR))];
+  await poller.cycle();
+  const { rows } = await db.query(`SELECT count(*)::int AS n FROM wipes`);
+  assert.equal(rows[0].n, 1);
+  await poller.rulesCycle();
+  await db.close();
+});
+
+test("a server missing from three snapshots goes offline", async () => {
+  const db = await memoryDb();
+  const src = new FakeSource();
+  const born = new Date(Date.now() - HOUR);
+  const poller = new Poller(db, src);
+  await poller.init();
+  src.list = [entry(1, born), entry(2, born), entry(3, born)];
+  await poller.cycle();
+  src.list = [entry(1, born), entry(2, born)];
+  const online = async () => (await db.query(`SELECT ip FROM servers WHERE online ORDER BY ip`)).rows.map((r) => r.ip as string);
+  await poller.cycle();
+  await poller.cycle();
+  assert.deepEqual(await online(), ["10.0.0.1", "10.0.0.2", "10.0.0.3"]);
+  await poller.cycle();
+  assert.deepEqual(await online(), ["10.0.0.1", "10.0.0.2"]);
+  await poller.rulesCycle();
+  await db.close();
+});
+
+test("an empty answer from Steam does not take servers offline", async () => {
+  const db = await memoryDb();
+  const src = new FakeSource();
+  const born = new Date(Date.now() - HOUR);
+  const poller = new Poller(db, src);
+  await poller.init();
+  src.list = [entry(1, born), entry(2, born)];
+  await poller.cycle();
+  src.list = [];
+  for (let i = 0; i < 4; i++) await poller.cycle();
+  const { rows } = await db.query(`SELECT count(*)::int AS n FROM servers WHERE online`);
+  assert.equal(rows[0].n, 2);
+  await poller.rulesCycle();
   await db.close();
 });

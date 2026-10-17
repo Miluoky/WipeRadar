@@ -47,7 +47,7 @@ export class Poller {
   private lastFullPredict = 0;
   private running = false;
   private listGuard = new ShrinkGuard();
-  private rulesRunning = false;
+  private rulesPass: Promise<void> | null = null;
 
   constructor(
     private db: Db,
@@ -109,17 +109,12 @@ export class Poller {
     }
   }
 
-  /** One RULES pass; skipped while the previous one is still running. */
-  async rulesCycle() {
-    if (this.rulesRunning) return;
-    this.rulesRunning = true;
-    try {
-      await this.refreshRules();
-    } catch (e) {
-      console.error("[rules] pass failed:", e);
-    } finally {
-      this.rulesRunning = false;
-    }
+  /** One RULES pass; while one is running, returns that pass instead of starting another. */
+  rulesCycle(): Promise<void> {
+    this.rulesPass ??= this.refreshRules()
+      .catch((e) => console.error("[rules] pass failed:", e))
+      .finally(() => (this.rulesPass = null));
+    return this.rulesPass;
   }
 
   private async upsert(rows: DerivedRow[], now: Date): Promise<number[]> {
