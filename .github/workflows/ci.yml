@@ -47,5 +47,19 @@ jobs:
           context: .
           file: Dockerfile.${{ matrix.image }}
           push: false
+          load: true
+          tags: wiperadar-${{ matrix.image }}:ci
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+      # boot the image and hit the same path the Railway healthcheck uses
+      - name: smoke test
+        if: matrix.image != 'prober'
+        run: |
+          if [ "${{ matrix.image }}" = worker ]; then port=4000; path=/api/health; else port=3000; path=/robots.txt; fi
+          docker run -d --name smoke -p $port:$port wiperadar-${{ matrix.image }}:ci
+          for i in $(seq 1 30); do
+            if curl -fsS "http://localhost:$port$path" >/dev/null; then echo "up after ${i}s"; docker rm -f smoke >/dev/null; exit 0; fi
+            sleep 1
+          done
+          docker logs smoke
+          exit 1
