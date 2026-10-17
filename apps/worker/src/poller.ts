@@ -16,12 +16,17 @@ interface Known {
 
 const CHUNK = 2000;
 
-/** Only absolute http(s) URLs from server RULES reach the page; anything else is dropped. */
-function httpsUrl(v: string | undefined): string | null {
+/**
+ * Only absolute URLs from server RULES reach the page; anything else is dropped.
+ * Images must be https: plain http would be mixed content on the https site (blocked or flagged).
+ * Plain links may stay http.
+ */
+export function ruleUrl(v: string | undefined, { image = false } = {}): string | null {
   if (!v) return null;
   try {
     const u = new URL(v.trim());
-    return u.protocol === "https:" || u.protocol === "http:" ? u.toString().slice(0, 500) : null;
+    const ok = u.protocol === "https:" || (!image && u.protocol === "http:");
+    return ok ? u.toString().slice(0, 500) : null;
   } catch {
     return null;
   }
@@ -276,12 +281,12 @@ export class Poller {
             const desc = joinDescription(rules);
             return desc ? stripRichText(desc).trim().slice(0, 4000) || null : null;
           })(),
-          httpsUrl(rules.url),
-          httpsUrl(rules.headerimage),
+          ruleUrl(rules.url),
+          ruleUrl(rules.headerimage, { image: true }),
           num("fps_avg"),
           num("ent_cnt"),
-          httpsUrl(rules.logoimage),
-          httpsUrl(rules.map_image_url),
+          ruleUrl(rules.logoimage, { image: true }),
+          ruleUrl(rules.map_image_url, { image: true }),
         ],
       );
       if (r.last_wipe_at) {
