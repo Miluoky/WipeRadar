@@ -1,3 +1,4 @@
+import { config } from "../config";
 import type { Db } from "./index";
 
 /** Append-only. Never edit a migration that has shipped. */
@@ -122,7 +123,6 @@ const TIMESCALE = /* sql */ `
   SELECT create_hypertable('metrics', 'ts', chunk_time_interval => INTERVAL '1 day', migrate_data => true, if_not_exists => true);
   ALTER TABLE metrics SET (timescaledb.compress, timescaledb.compress_segmentby = 'server_id');
   SELECT add_compression_policy('metrics', INTERVAL '2 days', if_not_exists => true);
-  SELECT add_retention_policy('metrics', INTERVAL '35 days', if_not_exists => true);
 `;
 
 export async function migrate(db: Db) {
@@ -142,6 +142,16 @@ export async function migrate(db: Db) {
       await db.exec(TIMESCALE);
       await db.query(`INSERT INTO schema_migrations (id) VALUES ('timescale')`);
       console.log("[db] timescaledb enabled for metrics");
+      done.add("timescale");
+    }
+  }
+  if (done.has("timescale")) {
+    // re-applied on every start so METRICS_RETENTION_DAYS changes take effect
+    try {
+      await db.query(`SELECT remove_retention_policy('metrics', if_exists => true)`);
+      await db.query(`SELECT add_retention_policy('metrics', make_interval(days => $1))`, [config.metricsRetentionDays]);
+    } catch (e) {
+      console.warn("[db] could not update metrics retention policy:", (e as Error).message);
     }
   }
 }
