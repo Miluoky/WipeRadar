@@ -1,6 +1,7 @@
-# Production-like stack: TimescaleDB + Rust prober + worker + web.
-#   cp apps/worker/.env.example .env   # set STEAM_API_KEY
+# Production-like stack: TimescaleDB + Rust prober + worker + web behind Caddy (HTTPS) + daily backups.
+#   cp apps/worker/.env.example .env   # set STEAM_API_KEY, POSTGRES_PASSWORD, SITE_DOMAIN
 #   docker compose up -d --build
+# SITE_DOMAIN must point at this host (ports 80/443 open) for Caddy to get a certificate.
 services:
   db:
     image: timescale/timescaledb:latest-pg17
@@ -13,6 +14,28 @@ services:
       test: ["CMD-SHELL", "pg_isready -U wiperadar"]
       interval: 5s
       retries: 20
+    restart: unless-stopped
+
+  # pg_dump once a day into ./backups, keeping the last 7 days
+  backup:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      PGHOST: db
+      PGUSER: wiperadar
+      PGPASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      PGDATABASE: wiperadar
+    volumes: ["./backups:/backups"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        while true; do
+          f=/backups/wiperadar-$$(date +%F).dump
+          pg_dump -Fc -f "$$f.tmp" && mv "$$f.tmp" "$$f" && echo "backup $$f"
+          find /backups -name 'wiperadar-*.dump' -mtime +7 -delete
+          sleep 86400
+        done
+    depends_on:
+      db: { condition: service_healthy }
     restart: unless-stopped
 
   prober:
@@ -29,6 +52,7 @@ services:
       DATABASE_URL: postgres://wiperadar:${POSTGRES_PASSWORD:-change-me}@db:5432/wiperadar
       STEAM_API_KEY: ${STEAM_API_KEY:-}
       GEOIP_DB: ${GEOIP_DB:-}
+      SITE_URL: https://${SITE_DOMAIN:-localhost}
       PORT: 4000
     depends_on:
       db: { condition: service_healthy }
@@ -36,12 +60,29 @@ services:
     restart: unless-stopped
 
   web:
-    build: { context: ., dockerfile: Dockerfile.web, args: { API_URL: http://worker:4000 } }
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+      args: { API_URL: "http://worker:4000", SITE_URL: "https://${SITE_DOMAIN:-localhost}" }
     environment:
       API_URL: http://worker:4000
-    ports: ["3000:3000"]
+      SITE_URL: https://${SITE_DOMAIN:-localhost}
     depends_on: [worker]
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [web, worker]
     restart: unless-stopped
 
 volumes:
   pgdata:
+  caddy_data:
+  caddy_config:

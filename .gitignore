@@ -5,3 +5,4 @@ data/
 *.log
 /services/prober/target
 .claude/
+backups/

@@ -1,0 +1,16 @@
+# Public entrypoint for docker compose: automatic HTTPS (Let's Encrypt) for SITE_DOMAIN.
+# Without SITE_DOMAIN it serves http://localhost with a local certificate authority.
+{$SITE_DOMAIN:localhost} {
+	encode zstd gzip
+
+	# SSE goes straight to the worker: Next's rewrite proxy may buffer or cut long-lived streams
+	handle /api/live {
+		reverse_proxy worker:4000 {
+			flush_interval -1
+		}
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+}
