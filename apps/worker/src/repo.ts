@@ -146,9 +146,12 @@ async function attachSparklines(db: Db, servers: ServerSummary[]) {
   for (const s of servers) s.spark = full.get(s.id)!.slice(SPARK_SLOTS - (slots.get(s.id) ?? SPARK_SLOTS));
 }
 
-export async function getServerSummary(db: Db, id: number): Promise<ServerSummary | null> {
-  const { rows } = await db.query(`SELECT ${SUMMARY_COLS} FROM servers WHERE id = $1`, [id]);
-  return rows[0] ? toSummary(rows[0]) : null;
+/** Summaries for many ids in one query (live-feed burst on global wipe day). Keeps `ids` order. */
+export async function getServerSummaries(db: Db, ids: number[]): Promise<ServerSummary[]> {
+  if (!ids.length) return [];
+  const { rows } = await db.query(`SELECT ${SUMMARY_COLS} FROM servers WHERE id = ANY($1::int[])`, [ids]);
+  const byId = new Map(rows.map((r) => [r.id as number, toSummary(r)]));
+  return ids.map((id) => byId.get(id)).filter((s): s is ServerSummary => !!s);
 }
 
 export async function getServer(db: Db, id: number): Promise<ServerDetail | null> {
