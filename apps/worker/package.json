@@ -12,6 +12,7 @@
   "dependencies": {
     "@electric-sql/pglite": "^0.3.0",
     "@fastify/cors": "^11.0.0",
+    "@fastify/rate-limit": "^10.3.0",
     "@wiperadar/a2s": "*",
     "@wiperadar/shared": "*",
     "fastify": "^5.2.0",

@@ -35,4 +35,10 @@ export const config = {
   rulesTtlHours: Number(env("RULES_TTL_HOURS") ?? 6),
   offlineAfterMisses: 3,
   metricsRetentionDays: Number(env("METRICS_RETENTION_DAYS") ?? 35),
+  /** Public site origin; the only origin CORS allows. Unset → no cross-origin access (the site proxies /api). */
+  siteUrl: env("SITE_URL"),
+  /** Requests per minute per client IP on proxied (public) traffic. */
+  rateLimitPerMin: Number(env("RATE_LIMIT_PER_MIN") ?? 300),
+  sseMaxPerIp: Number(env("SSE_MAX_PER_IP") ?? 5),
+  sseMaxTotal: Number(env("SSE_MAX_TOTAL") ?? 5000),
 };
