@@ -115,6 +115,15 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       UPDATE servers SET rules_checked_at = NULL;
     `,
   },
+  {
+    // images are https-only now (mixed content); drop the http ones already stored
+    id: "005_https_images",
+    sql: /* sql */ `
+      UPDATE servers SET header_image = NULL WHERE header_image LIKE 'http:%';
+      UPDATE servers SET logo_image = NULL WHERE logo_image LIKE 'http:%';
+      UPDATE servers SET map_image = NULL WHERE map_image LIKE 'http:%';
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */
