@@ -79,6 +79,8 @@ docker compose up -d --build
 
 Переменные в `.env` рядом с `docker-compose.yml`: `STEAM_API_KEY`, `POSTGRES_PASSWORD`, `SITE_DOMAIN`, `GEOIP_DB`. Остальные настройки воркера — в [apps/worker/.env.example](apps/worker/.env.example).
 
+Деплой на Railway описан в `railway/*.json`. `/api/health` воркера отвечает 503, если цикл опроса не завершался 10 минут: на него можно вешать алерт.
+
 ## Тесты
 
 ```bash
