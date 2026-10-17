@@ -11,5 +11,5 @@
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["packages/*/src", "apps/worker/src"]
+  "include": ["packages/*/src", "apps/worker/src", "e2e", "playwright.config.ts"]
 }
