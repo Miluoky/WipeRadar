@@ -252,49 +252,73 @@ export class Poller {
       { concurrency: config.rulesConcurrency, perKey: config.perHostConcurrency, key: (r) => r.ip },
       (r) => this.source.fetchRules(r.ip, r.query_port),
     );
-    let ok = 0;
+    // one batched UPDATE per table instead of a query per server (up to 3000 per cycle)
+    const failed: number[] = [];
+    const ok = {
+      id: [] as number[],
+      seed: [] as (number | null)[],
+      size: [] as (number | null)[],
+      desc: [] as (string | null)[],
+      url: [] as (string | null)[],
+      header: [] as (string | null)[],
+      fps: [] as (number | null)[],
+      ents: [] as (number | null)[],
+      logo: [] as (string | null)[],
+      mapImg: [] as (string | null)[],
+    };
+    const wipe = { id: [] as number[], at: [] as string[], seed: [] as (number | null)[], size: [] as (number | null)[] };
     for (let i = 0; i < rows.length; i++) {
       const r = rows[i];
       const res = results[i];
       if (res.status === "rejected") {
         // don't hammer servers that block RULES — retry after TTL
-        await this.db.query(`UPDATE servers SET rules_checked_at = now() WHERE id = $1`, [r.id]);
+        failed.push(r.id);
         continue;
       }
-      ok++;
       const rules = res.value;
       const num = (k: string) => (rules[k] && Number.isFinite(Number(rules[k])) ? Math.round(Number(rules[k])) : null);
       const seed = num("world.seed");
       const size = num("world.size");
-      await this.db.query(
-        `UPDATE servers SET seed = $2, world_size = $3, description = $4, url = $5, header_image = $6,
-                fps = $7, entities = $8, logo_image = $9, map_image = $10, rules_checked_at = now()
-         WHERE id = $1`,
-        [
-          r.id,
-          seed,
-          size,
-          (() => {
-            const desc = joinDescription(rules);
-            return desc ? stripRichText(desc).trim().slice(0, 4000) || null : null;
-          })(),
-          ruleUrl(rules.url),
-          ruleUrl(rules.headerimage, { image: true }),
-          num("fps_avg"),
-          num("ent_cnt"),
-          ruleUrl(rules.logoimage, { image: true }),
-          ruleUrl(rules.map_image_url, { image: true }),
-        ],
-      );
+      const desc = joinDescription(rules);
+      ok.id.push(r.id);
+      ok.seed.push(seed);
+      ok.size.push(size);
+      ok.desc.push(desc ? stripRichText(desc).trim().slice(0, 4000) || null : null);
+      ok.url.push(ruleUrl(rules.url));
+      ok.header.push(ruleUrl(rules.headerimage, { image: true }));
+      ok.fps.push(num("fps_avg"));
+      ok.ents.push(num("ent_cnt"));
+      ok.logo.push(ruleUrl(rules.logoimage, { image: true }));
+      ok.mapImg.push(ruleUrl(rules.map_image_url, { image: true }));
       if (r.last_wipe_at) {
-        await this.db.query(
-          `UPDATE wipes SET seed = COALESCE(seed, $3), world_size = COALESCE(world_size, $4)
-           WHERE server_id = $1 AND wiped_at = $2`,
-          [r.id, r.last_wipe_at, seed, size],
-        );
+        wipe.id.push(r.id);
+        wipe.at.push(new Date(r.last_wipe_at).toISOString());
+        wipe.seed.push(seed);
+        wipe.size.push(size);
       }
     }
-    console.log(`[rules] ${ok}/${rows.length} ok`);
+    if (failed.length) {
+      await this.db.query(`UPDATE servers SET rules_checked_at = now() WHERE id = ANY($1::int[])`, [failed]);
+    }
+    if (ok.id.length) {
+      await this.db.query(
+        `UPDATE servers s SET seed = u.seed, world_size = u.size, description = u.descr, url = u.url, header_image = u.header,
+                fps = u.fps, entities = u.ents, logo_image = u.logo, map_image = u.map_img, rules_checked_at = now()
+         FROM unnest($1::int[], $2::bigint[], $3::int[], $4::text[], $5::text[], $6::text[], $7::int[], $8::int[],
+                     $9::text[], $10::text[]) AS u(id, seed, size, descr, url, header, fps, ents, logo, map_img)
+         WHERE s.id = u.id`,
+        [ok.id, ok.seed, ok.size, ok.desc, ok.url, ok.header, ok.fps, ok.ents, ok.logo, ok.mapImg],
+      );
+    }
+    if (wipe.id.length) {
+      await this.db.query(
+        `UPDATE wipes w SET seed = COALESCE(w.seed, u.seed), world_size = COALESCE(w.world_size, u.size)
+         FROM unnest($1::int[], $2::timestamptz[], $3::bigint[], $4::int[]) AS u(id, at, seed, size)
+         WHERE w.server_id = u.id AND w.wiped_at = u.at`,
+        [wipe.id, wipe.at, wipe.seed, wipe.size],
+      );
+    }
+    console.log(`[rules] ${ok.id.length}/${rows.length} ok`);
   }
 
   /** Next-wipe predictions: all servers every 10 min, plus wiped/unknown ones every cycle. */
