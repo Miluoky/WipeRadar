@@ -6,6 +6,13 @@ import { memoryDb } from "./test-db";
 
 const HOUR = 3_600_000;
 
+async function waitFor(check: () => Promise<boolean>, ms = 5000) {
+  for (const end = Date.now() + ms; Date.now() < end; await new Promise((r) => setTimeout(r, 20))) {
+    if (await check()) return;
+  }
+  throw new Error("timed out");
+}
+
 function entry(n: number, bornAt: Date, players = 10): ListEntry {
   return {
     ip: `10.0.0.${n}`,
@@ -51,6 +58,8 @@ test("RULES results are written in batches: ok rows, failures and the wipe's see
   const poller = new Poller(db, src);
   await poller.init();
   await poller.cycle();
+  await poller.rulesCycle(); // no-op if the pass the cycle started is still running…
+  await waitFor(async () => (await db.query(`SELECT 1 FROM servers WHERE rules_checked_at IS NULL`)).rows.length === 0);
 
   const { rows } = await db.query(
     `SELECT ip, seed, world_size, description, header_image, logo_image, url, fps, rules_checked_at FROM servers ORDER BY ip`,
