@@ -47,6 +47,7 @@ export class Poller {
   private lastFullPredict = 0;
   private running = false;
   private listGuard = new ShrinkGuard();
+  private rulesRunning = false;
 
   constructor(
     private db: Db,
@@ -67,7 +68,10 @@ export class Poller {
     this.listGuard = new ShrinkGuard(online[0]?.n ?? 0);
   }
 
-  /** One discovery cycle: snapshot → upsert → wipes → metrics → offline → rules → predictions. */
+  /**
+   * One discovery cycle: snapshot → upsert → wipes → metrics → offline → predictions.
+   * RULES run afterwards in their own pass, so slow UDP queries never delay the next snapshot (wipe detection).
+   */
   async cycle() {
     if (this.running) return;
     this.running = true;
@@ -84,7 +88,6 @@ export class Poller {
       const trusted = this.listGuard.accept(rows.length) && !this.source.lastListPartial;
       if (trusted) await this.markMissing(new Set(ids));
       else console.warn(`[poll] list looks truncated (${rows.length} servers), not marking missing servers offline`);
-      await this.refreshRules();
       await this.refreshPredictions(wiped);
 
       for (const server of await getServerSummaries(this.db, wiped.fresh)) publish({ type: "wipe", server });
@@ -97,11 +100,25 @@ export class Poller {
       console.log(
         `[poll] ${this.source.name}: ${rows.length} servers, ${wiped.all.length} wipes (${wiped.fresh.length} live) in ${Math.round(performance.now() - t0)}ms`,
       );
+      void this.rulesCycle();
     } catch (e) {
       console.error("[poll] cycle failed:", e);
       this.status.lastError = { at: new Date(), message: (e as Error).message ?? String(e) };
     } finally {
       this.running = false;
+    }
+  }
+
+  /** One RULES pass; skipped while the previous one is still running. */
+  async rulesCycle() {
+    if (this.rulesRunning) return;
+    this.rulesRunning = true;
+    try {
+      await this.refreshRules();
+    } catch (e) {
+      console.error("[rules] pass failed:", e);
+    } finally {
+      this.rulesRunning = false;
     }
   }
 
