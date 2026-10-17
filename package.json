@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck -w @wiperadar/web",
     "prober": "cargo run --release --manifest-path services/prober/Cargo.toml",
     "prober:test": "cargo test --manifest-path services/prober/Cargo.toml",
-    "format": "prettier --write \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts"
+    "format": "prettier --write \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts",
+    "format:check": "prettier --check \"apps/*/src/**/*.{ts,tsx}\" \"packages/*/src/**/*.ts\" scripts"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

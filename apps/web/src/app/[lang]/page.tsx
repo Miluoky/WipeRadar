@@ -246,14 +246,14 @@ function Hero({ d, stats, locale }: { d: Dict; stats: Stats | null; locale: Loca
           />
         </svg>
         <p className="max-w-2xl text-sm text-ash sm:text-base">{d.hero.subtitle}</p>
-        <p className="font-hand -rotate-1 text-[21px] text-hazard">
+        <p className="-rotate-1 font-hand text-[21px] text-hazard">
           <span aria-hidden>✎ </span>
           {d.hero.note}
         </p>
         {stats && (
           <dl className="wobble grid grid-cols-2 gap-1.5 pt-1 sm:grid-cols-4">
             {cells.map(({ v, l, icon: Icon, tone }) => (
-              <div key={l} className="relative flex min-h-[86px] flex-col justify-between p-2.5 slot scratched">
+              <div key={l} className="scratched relative flex min-h-[86px] flex-col justify-between p-2.5 slot">
                 <Icon className={`size-5 opacity-80 ${tone}`} aria-hidden />
                 <dd className={`font-display text-[28px] leading-none tabular-nums ${tone}`}>{v}</dd>
                 <dt className="font-display text-[11px] font-normal tracking-wide text-ash">{l}</dt>
@@ -267,7 +267,7 @@ function Hero({ d, stats, locale }: { d: Dict; stats: Stats | null; locale: Loca
       <div className="relative">
         <Island3D label={d.hero.islandLabel} hint={d.hero.islandHint} />
         {stats && (
-          <div className="plate taped bolted stained -mt-6 ml-0 w-fit max-w-full -rotate-1 sm:absolute sm:bottom-1 sm:left-0 sm:mt-0">
+          <div className="stained taped bolted -mt-6 ml-0 w-fit max-w-full -rotate-1 plate sm:absolute sm:bottom-1 sm:left-0 sm:mt-0">
             <p className="px-3 py-2 panel-head text-[12px]">{d.hero.forceWipe}</p>
             <div className="p-3">
               <Countdown iso={stats.nextForceWipe} units={d.units} />

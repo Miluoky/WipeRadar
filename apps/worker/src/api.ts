@@ -24,7 +24,12 @@ export async function buildApi(db: Db) {
   const SHORT = "public, max-age=5, stale-while-revalidate=25";
   const LONG = "public, max-age=60, stale-while-revalidate=300";
 
-  app.get("/api/health", async () => ({ ok: true, demo: config.demo, db: db.kind, cache: { hits: cache.hits, misses: cache.misses } }));
+  app.get("/api/health", async () => ({
+    ok: true,
+    demo: config.demo,
+    db: db.kind,
+    cache: { hits: cache.hits, misses: cache.misses },
+  }));
 
   app.get("/api/stats", async (_req, reply) => {
     reply.header("Cache-Control", SHORT);

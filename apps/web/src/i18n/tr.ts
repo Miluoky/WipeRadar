@@ -107,8 +107,10 @@ export const tr: Dict = {
   seo: {
     wipedToday: "Bugün wipe",
     landingTitle: "Rust sunucuları: {label}",
-    landingDesc: "Rust sunucu listesi — {label}: çevrimiçi oyuncular, sıralar, wipe takvimi ve son wipe'tan beri geçen süre. Her dakika güncellenir.",
-    landingIntro: "\"{label}\" için tüm Rust sunucuları, anlık oyuncu sayısına göre sıralı. Wipe saatleri senin saat diliminde; liste kendini yeniler.",
+    landingDesc:
+      "Rust sunucu listesi — {label}: çevrimiçi oyuncular, sıralar, wipe takvimi ve son wipe'tan beri geçen süre. Her dakika güncellenir.",
+    landingIntro:
+      '"{label}" için tüm Rust sunucuları, anlık oyuncu sayısına göre sıralı. Wipe saatleri senin saat diliminde; liste kendini yeniler.',
     breadcrumbHome: "Sunucular",
     explore: "Diğer sunucu listeleri",
     popular: "Popüler listeler",
