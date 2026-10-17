@@ -134,7 +134,9 @@ function buildTerrain(geo: BufferGeometry, seed: number): { x: number; z: number
     } else if (z < -0.32 && h > 0.04) {
       c.copy(PALETTE.tundra).lerp(PALETTE.snow, smooth(-0.32, -0.62, z) * 0.9 + (h > 0.32 ? 0.2 : 0));
     } else if (z > 0.55 && h < 0.5) {
-      c.copy(PALETTE.desert).lerp(PALETTE.grass, smooth(0.55, 0.45, z) * 0.6).lerp(PALETTE.rock, smooth(0.3, 0.5, h) * 0.8);
+      c.copy(PALETTE.desert)
+        .lerp(PALETTE.grass, smooth(0.55, 0.45, z) * 0.6)
+        .lerp(PALETTE.rock, smooth(0.3, 0.5, h) * 0.8);
     } else {
       c.copy(PALETTE.grass).lerp(PALETTE.grassDark, smooth(0.1, 0.4, n));
       if (h > 0.5) c.lerp(PALETTE.rock, smooth(0.5, 0.7, h));
@@ -193,7 +195,10 @@ export function mountIsland(host: HTMLElement, opts: { seed: number; reduceMotio
   );
   water.position.y = -0.25;
   table.add(water);
-  const edges = new LineSegments(new EdgesGeometry(waterGeo), new LineBasicMaterial({ color: 0xe4dad1, transparent: true, opacity: 0.4 }));
+  const edges = new LineSegments(
+    new EdgesGeometry(waterGeo),
+    new LineBasicMaterial({ color: 0xe4dad1, transparent: true, opacity: 0.4 }),
+  );
   edges.position.y = -0.25;
   table.add(edges);
 
@@ -208,7 +213,13 @@ export function mountIsland(host: HTMLElement, opts: { seed: number; reduceMotio
   table.add(baseRim);
 
   // --- radar: range rings + sweep
-  const ringMat = new MeshBasicMaterial({ color: 0xe8a93a, transparent: true, opacity: 0.18, side: DoubleSide, depthWrite: false });
+  const ringMat = new MeshBasicMaterial({
+    color: 0xe8a93a,
+    transparent: true,
+    opacity: 0.18,
+    side: DoubleSide,
+    depthWrite: false,
+  });
   for (const r of [2.2, 3.9, 5.6]) {
     const ring = new Mesh(new RingGeometry(r, r + 0.025, 96), ringMat);
     ring.rotation.x = -Math.PI / 2;
@@ -226,7 +237,13 @@ export function mountIsland(host: HTMLElement, opts: { seed: number; reduceMotio
   sweepGeo.setAttribute("color", new Float32BufferAttribute(rgba, 4));
   const sweep = new Mesh(
     sweepGeo,
-    new MeshBasicMaterial({ vertexColors: true, transparent: true, blending: AdditiveBlending, depthWrite: false, side: DoubleSide }),
+    new MeshBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      blending: AdditiveBlending,
+      depthWrite: false,
+      side: DoubleSide,
+    }),
   );
   sweep.position.y = 0.03;
   table.add(sweep);
@@ -235,7 +252,13 @@ export function mountIsland(host: HTMLElement, opts: { seed: number; reduceMotio
   const blips: { mesh: Mesh; ring: Mesh; phase: number }[] = [];
   const towerGeo = new CylinderGeometry(0.05, 0.08, 0.34, 6);
   const blipMat = new MeshBasicMaterial({ color: 0xcd412b });
-  const pulseMat = new MeshBasicMaterial({ color: 0xcd412b, transparent: true, opacity: 0.6, depthWrite: false, side: DoubleSide });
+  const pulseMat = new MeshBasicMaterial({
+    color: 0xcd412b,
+    transparent: true,
+    opacity: 0.6,
+    depthWrite: false,
+    side: DoubleSide,
+  });
   const pulseGeo = new RingGeometry(0.1, 0.13, 24);
   const placeBlips = () => {
     const rnd = mulberry32(opts.seed * 7 + 1);
@@ -268,7 +291,10 @@ export function mountIsland(host: HTMLElement, opts: { seed: number; reduceMotio
   const ping = () => {
     if (!land.length) return;
     const p = land[Math.floor(Math.random() * land.length)];
-    const m = new Mesh(new RingGeometry(0.08, 0.14, 40), new MeshBasicMaterial({ color: 0xe8a93a, transparent: true, opacity: 0.9, depthWrite: false, side: DoubleSide }));
+    const m = new Mesh(
+      new RingGeometry(0.08, 0.14, 40),
+      new MeshBasicMaterial({ color: 0xe8a93a, transparent: true, opacity: 0.9, depthWrite: false, side: DoubleSide }),
+    );
     m.rotation.x = -Math.PI / 2;
     m.position.set(p.x, sampleHeight(p.x, p.z) + 0.06, p.z);
     table.add(m);

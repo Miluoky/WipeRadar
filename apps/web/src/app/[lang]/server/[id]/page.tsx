@@ -74,7 +74,11 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
             description: s.description?.slice(0, 300) || undefined,
             image: s.headerImage || s.logoImage || undefined,
             playersOnline: s.players,
-            serverStatus: !s.online ? "https://schema.org/OfflineTemporarily" : s.queue > 0 ? "https://schema.org/OnlineFull" : "https://schema.org/Online",
+            serverStatus: !s.online
+              ? "https://schema.org/OfflineTemporarily"
+              : s.queue > 0
+                ? "https://schema.org/OnlineFull"
+                : "https://schema.org/Online",
             game: { "@type": "VideoGame", name: "Rust", url: "https://store.steampowered.com/app/252490/Rust/" },
           },
           breadcrumbs([

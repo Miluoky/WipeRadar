@@ -125,8 +125,10 @@ export const de: Dict = {
   seo: {
     wipedToday: "Heute gewiped",
     landingTitle: "Rust-Server: {label}",
-    landingDesc: "Live-Liste der Rust-Server — {label}: Spielerzahl, Warteschlangen, Wipe-Plan und Zeit seit dem letzten Wipe. Minütlich aktualisiert.",
-    landingIntro: "Alle Rust-Server für „{label}“, sortiert nach aktueller Spielerzahl. Wipe-Zeiten in deiner Zeitzone; die Liste aktualisiert sich selbst.",
+    landingDesc:
+      "Live-Liste der Rust-Server — {label}: Spielerzahl, Warteschlangen, Wipe-Plan und Zeit seit dem letzten Wipe. Minütlich aktualisiert.",
+    landingIntro:
+      "Alle Rust-Server für „{label}“, sortiert nach aktueller Spielerzahl. Wipe-Zeiten in deiner Zeitzone; die Liste aktualisiert sich selbst.",
     breadcrumbHome: "Server",
     explore: "Weitere Serverlisten",
     popular: "Beliebte Listen",

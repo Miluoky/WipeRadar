@@ -53,7 +53,18 @@ export function landingFilter(slug: string): URLSearchParams | null {
     p.set("wipedWithinHours", "24");
     p.set("sort", "wiped");
   } else if (l.value) {
-    p.set(l.kind === "cadence" ? "cadence" : l.kind === "region" ? "region" : l.kind === "rate" ? "rate" : l.kind === "group" ? "group" : "type", l.value);
+    p.set(
+      l.kind === "cadence"
+        ? "cadence"
+        : l.kind === "region"
+          ? "region"
+          : l.kind === "rate"
+            ? "rate"
+            : l.kind === "group"
+              ? "group"
+              : "type",
+      l.value,
+    );
   }
   return p;
 }

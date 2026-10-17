@@ -55,7 +55,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]/rust/[s
         ]}
       />
 
-      <header className="plate stained bolted p-5 sm:p-7">
+      <header className="stained bolted p-5 plate sm:p-7">
         <nav aria-label="breadcrumb" className="mb-2 font-display text-[12px] text-smoke">
           <Link href={`/${lang}`} className="hover:text-bone">
             {d.seo.breadcrumbHome}
@@ -68,7 +68,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]/rust/[s
       </header>
 
       <section className="plate">
-        <h2 className="panel-head px-4 py-2.5 text-[15px] text-bone">
+        <h2 className="px-4 py-2.5 panel-head text-[15px] text-bone">
           {label} <span className="ml-2 font-mono text-xs text-smoke">{list?.total ?? 0}</span>
         </h2>
         <div className="space-y-1.5 p-2 sm:p-3">
@@ -80,14 +80,14 @@ export default async function LandingPage({ params }: PageProps<"/[lang]/rust/[s
         </div>
       </section>
 
-      <section aria-labelledby="more" className="plate p-4">
+      <section aria-labelledby="more" className="p-4 plate">
         <h2 id="more" className="mb-3 font-display text-[13px] text-ash">
           {d.seo.explore}
         </h2>
         <ul className="flex flex-wrap gap-1.5">
           {LANDING_SLUGS.filter((s) => s !== slug).map((s) => (
             <li key={s}>
-              <Link href={`/${lang}/rust/${s}`} className="btn-dim inline-block px-2.5 py-1 text-[13px]">
+              <Link href={`/${lang}/rust/${s}`} className="inline-block px-2.5 py-1 btn-dim text-[13px]">
                 {landingLabel(s, d)}
               </Link>
             </li>

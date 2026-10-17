@@ -75,7 +75,9 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
         <Suspense>
           <Header d={d} locale={lang} />
         </Suspense>
-        <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 pt-6">{children}</main>
+        <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 pt-6">
+          {children}
+        </main>
         <Footer d={d} locale={lang} demo={demo} />
       </body>
     </html>

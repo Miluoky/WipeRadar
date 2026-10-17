@@ -9,9 +9,7 @@ const MAX_SERVERS = 4_700;
 
 /** Every page × every language, with hreflang alternates so Google serves the right locale. */
 function entry(path: string, priority: number, changeFrequency: "hourly" | "daily"): MetadataRoute.Sitemap {
-  const languages: Record<string, string> = Object.fromEntries(
-    LOCALES.map((l) => [LOCALE_META[l].intl, `${SITE}/${l}${path}`]),
-  );
+  const languages: Record<string, string> = Object.fromEntries(LOCALES.map((l) => [LOCALE_META[l].intl, `${SITE}/${l}${path}`]));
   languages["x-default"] = `${SITE}/en${path}`;
   return LOCALES.map((l) => ({
     url: `${SITE}/${l}${path}`,

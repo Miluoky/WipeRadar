@@ -135,7 +135,7 @@ export function Countdown({ iso, units }: { iso: string; units: Dict["units"] })
   return (
     <div className="flex gap-1.5" aria-live="off">
       {parts.map(([v, u]) => (
-        <div key={u} className="slot min-w-14 px-2 py-2 text-center">
+        <div key={u} className="min-w-14 px-2 py-2 text-center slot">
           <div className="font-display text-[26px] leading-none text-bone tabular-nums">
             {t ? <Flip text={String(v).padStart(2, "0")} /> : "--"}
           </div>
