@@ -1,4 +1,5 @@
 import { queryRules } from "@wiperadar/a2s";
+import { ShrinkGuard } from "../guard";
 import { probeRules } from "./prober";
 
 /** Steam's edge occasionally drops connects; retry with backoff before failing the cycle. 4xx is final. */
@@ -42,6 +43,9 @@ interface SteamServer {
  */
 export class SteamSource implements ServerSource {
   readonly name = "steam";
+  lastListPartial = false;
+  /** per shard: losing the small "has players" shard alone barely dents the total but hides every live server */
+  private shardGuards = new Map<string, ShrinkGuard>();
 
   constructor(
     private key: string,
@@ -54,6 +58,7 @@ export class SteamSource implements ServerSource {
 
   async fetchList(): Promise<ListEntry[]> {
     const seen = new Map<string, ListEntry>();
+    let partial = false;
     for (const filter of this.shards) {
       const url = new URL("https://api.steampowered.com/IGameServersService/GetServerList/v1/");
       url.searchParams.set("key", this.key);
@@ -63,6 +68,12 @@ export class SteamSource implements ServerSource {
       const servers = json.response?.servers ?? [];
       if (servers.length >= Math.min(this.limit, 10_000)) {
         console.warn(`[steam] shard "${filter}" hit limit ${this.limit} — split it via LIST_SHARDS`);
+      }
+      let guard = this.shardGuards.get(filter);
+      if (!guard) this.shardGuards.set(filter, (guard = new ShrinkGuard()));
+      if (!guard.accept(servers.length)) {
+        console.warn(`[steam] shard "${filter}" returned only ${servers.length} servers`);
+        partial = true;
       }
       for (const s of servers) {
         const [ip, port] = s.addr.split(":");
@@ -80,6 +91,7 @@ export class SteamSource implements ServerSource {
         seen.set(`${ip}:${port}`, e);
       }
     }
+    this.lastListPartial = partial;
     return [...seen.values()];
   }
 

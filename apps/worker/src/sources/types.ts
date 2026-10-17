@@ -16,6 +16,8 @@ export interface ListEntry {
 export interface ServerSource {
   readonly name: string;
   fetchList(): Promise<ListEntry[]>;
+  /** Set by fetchList when one of several list requests came back suspiciously short. */
+  readonly lastListPartial?: boolean;
   fetchRules(ip: string, queryPort: number): Promise<Record<string, string>>;
   /** Optional bulk path (Rust prober). Result order matches `targets`; a failed target is an Error. */
   fetchRulesBatch?(targets: { ip: string; queryPort: number }[]): Promise<(Record<string, string> | Error)[]>;
