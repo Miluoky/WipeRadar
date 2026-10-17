@@ -6,7 +6,7 @@
     "watchPatterns": ["apps/web/**", "packages/shared/**", "package-lock.json", "Dockerfile.web", "railway/web.json"]
   },
   "deploy": {
-    "startCommand": "npm start -w @wiperadar/web",
+    "startCommand": "node apps/web/server.js",
     "healthcheckPath": "/robots.txt",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",

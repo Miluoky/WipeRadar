@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { join } from "node:path";
 
 const API_URL = process.env.API_URL ?? "http://localhost:4000";
 
@@ -14,6 +15,9 @@ const SECURITY_HEADERS = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // self-contained server (apps/web/server.js + traced node_modules) — the image ships without dev deps
+  output: "standalone",
+  outputFileTracingRoot: join(import.meta.dirname, "../.."),
   // pages show live data on every request; caching lives in the worker/Redis layer
   cacheComponents: false,
   transpilePackages: ["@wiperadar/shared"],

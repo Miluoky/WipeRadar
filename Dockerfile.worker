@@ -8,7 +8,13 @@ COPY apps/web/package.json apps/web/
 RUN npm ci --workspace @wiperadar/worker --include-workspace-root
 COPY packages packages
 COPY apps/worker apps/worker
-ENV NODE_ENV=production
+ENV NODE_ENV=production PORT=4000
+# PGlite fallback writes under ./data; everything else is read-only
+RUN mkdir -p apps/worker/data && chown node:node apps/worker/data
+USER node
 EXPOSE 4000
+# 503 once polling has stalled for 10 min (see /api/health)
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD wget -qO- "http://127.0.0.1:${PORT}/api/health" >/dev/null || exit 1
 # A2S RULES is UDP egress only; no inbound UDP needed
 CMD ["npm", "start", "-w", "@wiperadar/worker"]
