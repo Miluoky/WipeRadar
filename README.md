@@ -75,7 +75,9 @@ npm run tags:survey -w @wiperadar/worker
 docker compose up -d --build
 ```
 
-Поднимает TimescaleDB, Rust-пробер, worker и web на порту 3000. Переменные: `STEAM_API_KEY`, `POSTGRES_PASSWORD`, `GEOIP_DB`, `SITE_URL` (для sitemap и OG).
+Поднимает TimescaleDB, Rust-пробер, worker, web и Caddy на портах 80/443. Caddy сам получает HTTPS-сертификат для `SITE_DOMAIN` (домен должен указывать на сервер) и проксирует `/api/live` прямо в worker, минуя Next. Сервис `backup` раз в сутки делает `pg_dump` в `./backups` и хранит 7 дней.
+
+Переменные в `.env` рядом с `docker-compose.yml`: `STEAM_API_KEY`, `POSTGRES_PASSWORD`, `SITE_DOMAIN`, `GEOIP_DB`. Остальные настройки воркера — в [apps/worker/.env.example](apps/worker/.env.example).
 
 ## Тесты
 
