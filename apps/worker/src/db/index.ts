@@ -26,7 +26,8 @@ export async function openDb(): Promise<Db> {
     };
   } else {
     const { PGlite, types } = await import("@electric-sql/pglite");
-    mkdirSync(config.pgliteDir, { recursive: true });
+    // "memory://" = throwaway in-memory database (e2e tests)
+    if (!config.pgliteDir.startsWith("memory://")) mkdirSync(config.pgliteDir, { recursive: true });
     const lite = await PGlite.create(config.pgliteDir, {
       parsers: { [types.INT8]: (v: string) => Number(v) },
     });

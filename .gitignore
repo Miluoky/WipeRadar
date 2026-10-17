@@ -6,3 +6,5 @@ data/
 /services/prober/target
 .claude/
 backups/
+test-results/
+playwright-report/
