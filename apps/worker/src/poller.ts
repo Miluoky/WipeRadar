@@ -6,7 +6,7 @@ import { publish } from "./events";
 import { ShrinkGuard } from "./guard";
 import { deriveRow, detectWipe, wipeKind, type DerivedRow } from "./ingest";
 import { mapLimited } from "./limiter";
-import { getServerSummary, getStats } from "./repo";
+import { getServerSummaries, getStats } from "./repo";
 import type { ServerSource } from "./sources/types";
 
 interface Known {
@@ -87,10 +87,7 @@ export class Poller {
       await this.refreshRules();
       await this.refreshPredictions(wiped);
 
-      for (const id of wiped.fresh) {
-        const server = await getServerSummary(this.db, id);
-        if (server) publish({ type: "wipe", server });
-      }
+      for (const server of await getServerSummaries(this.db, wiped.fresh)) publish({ type: "wipe", server });
       publish({ type: "tick", stats: await getStats(this.db, config.demo) });
       Object.assign(this.status, {
         lastCycleAt: new Date(),
