@@ -134,6 +134,12 @@ const TIMESCALE = /* sql */ `
   SELECT add_compression_policy('metrics', INTERVAL '2 days', if_not_exists => true);
 `;
 
+/** Postgres only, when pg_trgm is available: lets `search_key LIKE '%…%'` use an index instead of a full scan. */
+const TRGM = /* sql */ `
+  CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  CREATE INDEX IF NOT EXISTS servers_search_trgm ON servers USING gin (search_key gin_trgm_ops);
+`;
+
 export async function migrate(db: Db) {
   await db.exec(
     `CREATE TABLE IF NOT EXISTS schema_migrations (id TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())`,
@@ -152,6 +158,19 @@ export async function migrate(db: Db) {
       await db.query(`INSERT INTO schema_migrations (id) VALUES ('timescale')`);
       console.log("[db] timescaledb enabled for metrics");
       done.add("timescale");
+    }
+  }
+  if (db.kind === "postgres" && !done.has("trgm")) {
+    try {
+      const { rows: ext } = await db.query(`SELECT 1 FROM pg_available_extensions WHERE name = 'pg_trgm'`);
+      if (ext.length) {
+        await db.exec(TRGM);
+        await db.query(`INSERT INTO schema_migrations (id) VALUES ('trgm')`);
+        console.log("[db] pg_trgm search index created");
+      }
+    } catch (e) {
+      // e.g. no privilege to create extensions — search still works, just unindexed
+      console.warn("[db] pg_trgm search index skipped:", (e as Error).message);
     }
   }
   if (done.has("timescale")) {
