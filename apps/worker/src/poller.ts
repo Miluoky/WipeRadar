@@ -320,8 +320,14 @@ export class Poller {
     this.lastFullPredict = 0;
   }
 
+  private timescale?: boolean;
+
   async pruneMetrics() {
-    if (this.db.kind === "postgres") return; // timescale retention policy (or cron) handles it
+    if (this.db.kind === "postgres") {
+      // timescale's retention policy handles it; plain Postgres (e.g. Railway) needs the DELETE
+      this.timescale ??= (await this.db.query(`SELECT 1 FROM schema_migrations WHERE id = 'timescale'`)).rows.length > 0;
+      if (this.timescale) return;
+    }
     await this.db.query(`DELETE FROM metrics WHERE ts < now() - make_interval(days => $1)`, [config.metricsRetentionDays]);
   }
 }

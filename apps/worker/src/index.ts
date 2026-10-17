@@ -17,7 +17,14 @@ const poller = new Poller(db, source);
 await poller.init();
 
 const app = await buildApi(db);
-await app.listen({ port: config.port, host: "0.0.0.0" });
+// "::" is dual-stack (IPv4 + IPv6) — Railway private networking resolves over IPv6;
+// hosts with IPv6 disabled reject it, so fall back to IPv4 only
+try {
+  await app.listen({ port: config.port, host: "::" });
+} catch (e) {
+  if ((e as NodeJS.ErrnoException).code !== "EAFNOSUPPORT") throw e;
+  await app.listen({ port: config.port, host: "0.0.0.0" });
+}
 console.log(`[api] http://localhost:${config.port}/api/stats`);
 
 await poller.cycle();
