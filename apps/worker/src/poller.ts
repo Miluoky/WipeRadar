@@ -27,7 +27,17 @@ function httpsUrl(v: string | undefined): string | null {
   }
 }
 
+/** What /api/health reports about the discovery loop. */
+export interface PollStatus {
+  startedAt: Date;
+  lastCycleAt: Date | null;
+  lastCycleMs: number | null;
+  lastError: { at: Date; message: string } | null;
+  servers: number;
+}
+
 export class Poller {
+  readonly status: PollStatus = { startedAt: new Date(), lastCycleAt: null, lastCycleMs: null, lastError: null, servers: 0 };
   private known = new Map<string, Known>();
   private lastFullPredict = 0;
   private running = false;
@@ -77,11 +87,17 @@ export class Poller {
         if (server) publish({ type: "wipe", server });
       }
       publish({ type: "tick", stats: await getStats(this.db, config.demo) });
+      Object.assign(this.status, {
+        lastCycleAt: new Date(),
+        lastCycleMs: Math.round(performance.now() - t0),
+        servers: rows.length,
+      });
       console.log(
         `[poll] ${this.source.name}: ${rows.length} servers, ${wiped.all.length} wipes (${wiped.fresh.length} live) in ${Math.round(performance.now() - t0)}ms`,
       );
     } catch (e) {
       console.error("[poll] cycle failed:", e);
+      this.status.lastError = { at: new Date(), message: (e as Error).message ?? String(e) };
     } finally {
       this.running = false;
     }

@@ -16,7 +16,7 @@ console.log(`[worker] source=${source.name} db=${db.kind}`);
 const poller = new Poller(db, source);
 await poller.init();
 
-const app = await buildApi(db);
+const app = await buildApi(db, poller.status);
 // "::" is dual-stack (IPv4 + IPv6) — Railway private networking resolves over IPv6;
 // hosts with IPv6 disabled reject it, so fall back to IPv4 only
 try {

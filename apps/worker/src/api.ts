@@ -5,6 +5,7 @@ import { config } from "./config";
 import type { Db } from "./db";
 import { TtlCache } from "./cache";
 import { subscribe } from "./events";
+import type { PollStatus } from "./poller";
 import { getMetrics, getServer, getStats, listServers, type ListParams } from "./repo";
 
 /** "eu,cis" → ["eu","cis"], dropping anything not in the allow-list. */
@@ -13,9 +14,12 @@ function list<T extends string>(v: unknown, allowed: readonly T[]): T[] | undefi
   const out = v.split(",").filter((x): x is T => (allowed as readonly string[]).includes(x));
   return out.length ? out : undefined;
 }
+/** Health turns 503 when no poll cycle has finished for this long (alerting hook). */
+export const STALE_AFTER_MS = 10 * 60_000;
+
 const num = (v: unknown) => (v !== undefined && v !== "" && Number.isFinite(Number(v)) ? Number(v) : undefined);
 
-export async function buildApi(db: Db) {
+export async function buildApi(db: Db, status?: PollStatus) {
   const app = Fastify({ logger: { level: "warn" } });
   await app.register(cors, { origin: true });
   const cache = new TtlCache();
@@ -24,12 +28,24 @@ export async function buildApi(db: Db) {
   const SHORT = "public, max-age=5, stale-while-revalidate=25";
   const LONG = "public, max-age=60, stale-while-revalidate=300";
 
-  app.get("/api/health", async () => ({
-    ok: true,
-    demo: config.demo,
-    db: db.kind,
-    cache: { hits: cache.hits, misses: cache.misses },
-  }));
+  app.get("/api/health", async (_req, reply) => {
+    // before the first cycle finishes, count from process start so deploy healthchecks pass
+    const last = status ? (status.lastCycleAt ?? status.startedAt) : null;
+    const ok = !last || Date.now() - last.getTime() < STALE_AFTER_MS;
+    reply.header("Cache-Control", "no-store");
+    return reply.code(ok ? 200 : 503).send({
+      ok,
+      demo: config.demo,
+      db: db.kind,
+      poll: status && {
+        lastCycleAt: status.lastCycleAt,
+        lastCycleMs: status.lastCycleMs,
+        servers: status.servers,
+        lastError: status.lastError,
+      },
+      cache: { hits: cache.hits, misses: cache.misses },
+    });
+  });
 
   app.get("/api/stats", async (_req, reply) => {
     reply.header("Cache-Control", SHORT);
