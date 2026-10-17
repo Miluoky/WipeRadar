@@ -7,6 +7,7 @@ import { config } from "./config";
 import type { Db } from "./db";
 import { TtlCache } from "./cache";
 import { subscribe } from "./events";
+import { counters } from "./log";
 import type { PollStatus } from "./poller";
 import { getMetrics, getServer, getStats, listServers, type ListParams } from "./repo";
 
@@ -18,6 +19,8 @@ function list<T extends string>(v: unknown, allowed: readonly T[]): T[] | undefi
 }
 /** Health turns 503 when no poll cycle has finished for this long (alerting hook). */
 export const STALE_AFTER_MS = 10 * 60_000;
+
+const snake = (s: string) => s.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`);
 
 const num = (v: unknown) => (v !== undefined && v !== "" && Number.isFinite(Number(v)) ? Number(v) : undefined);
 
@@ -71,6 +74,19 @@ export async function buildApi(db: Db, status?: PollStatus) {
       },
       cache: { hits: cache.hits, misses: cache.misses },
     });
+  });
+
+  // Prometheus text format. Outside /api on purpose: the site only proxies /api/*, so this stays private.
+  app.get("/metrics", { config: { rateLimit: false } }, async (_req, reply) => {
+    const lines = [
+      ...Object.entries(counters).map(([k, v]) => `wiperadar_${snake(k)}_total ${v}`),
+      `wiperadar_sse_clients ${sse.total}`,
+      `wiperadar_last_cycle_ms ${status?.lastCycleMs ?? 0}`,
+      `wiperadar_last_cycle_age_seconds ${status?.lastCycleAt ? Math.round((Date.now() - status.lastCycleAt.getTime()) / 1000) : -1}`,
+      `wiperadar_servers ${status?.servers ?? 0}`,
+    ];
+    reply.header("Content-Type", "text/plain; version=0.0.4");
+    return lines.join("\n") + "\n";
   });
 
   app.get("/api/stats", async (_req, reply) => {

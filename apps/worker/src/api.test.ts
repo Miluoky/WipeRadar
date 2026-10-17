@@ -80,3 +80,12 @@ test("health is ok while cycles are fresh and 503 when polling stalls", async ()
   assert.equal(res.json().poll.servers, 11_000);
   await app.close();
 });
+
+test("/metrics exposes counters in Prometheus format", async () => {
+  const app = await buildApi(fakeDb().db);
+  const res = await app.inject("/metrics");
+  assert.equal(res.statusCode, 200);
+  assert.match(res.body, /^wiperadar_poll_cycles_total \d+$/m);
+  assert.match(res.body, /^wiperadar_sse_clients 0$/m);
+  await app.close();
+});

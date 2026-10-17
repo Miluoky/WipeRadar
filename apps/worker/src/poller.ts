@@ -6,6 +6,7 @@ import { publish } from "./events";
 import { ShrinkGuard } from "./guard";
 import { deriveRow, detectWipe, wipeKind, type DerivedRow } from "./ingest";
 import { mapLimited } from "./limiter";
+import { counters, log } from "./log";
 import { getServerSummaries, getStats } from "./repo";
 import type { ServerSource } from "./sources/types";
 
@@ -87,7 +88,12 @@ export class Poller {
       // an empty/truncated answer from Steam must not push the rest of the world offline
       const trusted = this.listGuard.accept(rows.length) && !this.source.lastListPartial;
       if (trusted) await this.markMissing(new Set(ids));
-      else console.warn(`[poll] list looks truncated (${rows.length} servers), not marking missing servers offline`);
+      else {
+        counters.truncatedLists++;
+        log.warn(`[poll] list looks truncated (${rows.length} servers), not marking missing servers offline`, {
+          servers: rows.length,
+        });
+      }
       await this.refreshPredictions(wiped);
 
       for (const server of await getServerSummaries(this.db, wiped.fresh)) publish({ type: "wipe", server });
@@ -97,12 +103,18 @@ export class Poller {
         lastCycleMs: Math.round(performance.now() - t0),
         servers: rows.length,
       });
-      console.log(
-        `[poll] ${this.source.name}: ${rows.length} servers, ${wiped.all.length} wipes (${wiped.fresh.length} live) in ${Math.round(performance.now() - t0)}ms`,
+      const ms = Math.round(performance.now() - t0);
+      counters.pollCycles++;
+      counters.wipesDetected += wiped.all.length;
+      counters.liveWipes += wiped.fresh.length;
+      log.info(
+        `[poll] ${this.source.name}: ${rows.length} servers, ${wiped.all.length} wipes (${wiped.fresh.length} live) in ${ms}ms`,
+        { event: "poll", source: this.source.name, servers: rows.length, wipes: wiped.all.length, live: wiped.fresh.length, ms },
       );
       void this.rulesCycle();
     } catch (e) {
-      console.error("[poll] cycle failed:", e);
+      counters.pollFailures++;
+      log.error("[poll] cycle failed", { event: "poll_failed", error: e });
       this.status.lastError = { at: new Date(), message: (e as Error).message ?? String(e) };
     } finally {
       this.running = false;
@@ -112,7 +124,7 @@ export class Poller {
   /** One RULES pass; while one is running, returns that pass instead of starting another. */
   rulesCycle(): Promise<void> {
     this.rulesPass ??= this.refreshRules()
-      .catch((e) => console.error("[rules] pass failed:", e))
+      .catch((e) => log.error("[rules] pass failed", { event: "rules_failed", error: e }))
       .finally(() => (this.rulesPass = null));
     return this.rulesPass;
   }
@@ -256,7 +268,7 @@ export class Poller {
         );
       } catch (e) {
         // prober down or not started — degrade to the in-process client instead of losing the cycle
-        console.warn(`[rules] prober unavailable (${(e as Error).message}), using Node A2S`);
+        log.warn(`[rules] prober unavailable (${(e as Error).message}), using Node A2S`);
       }
     }
     results ??= await mapLimited(
@@ -330,7 +342,9 @@ export class Poller {
         [wipe.id, wipe.at, wipe.seed, wipe.size],
       );
     }
-    console.log(`[rules] ${ok.id.length}/${rows.length} ok`);
+    counters.rulesOk += ok.id.length;
+    counters.rulesFailed += failed.length;
+    log.info(`[rules] ${ok.id.length}/${rows.length} ok`, { event: "rules", ok: ok.id.length, failed: failed.length });
   }
 
   /** Next-wipe predictions: all servers every 10 min, plus wiped/unknown ones every cycle. */
