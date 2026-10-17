@@ -85,7 +85,7 @@ export async function listServers(db: Db, p: ListParams): Promise<Paged<ServerSu
   // calendar ask for quality so real communities aren't buried; "All servers" doesn't.
   if (p.quality) {
     where.push(
-      `(promoted OR (max_players >= 50 AND GREATEST(players, peak_players) >= 5 AND name !~* '(^|[^a-z])(test|testing|dev|staging|debug)([^a-z]|$)'))`,
+      `(promoted OR (max_players >= 50 AND GREATEST(players, peak_players) >= 5 AND name !~* '(^|[^a-z])(test|testing|dev|staging|debug)(server|srv)?([^a-z]|$)'))`,
     );
   }
 
