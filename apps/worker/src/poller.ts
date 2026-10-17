@@ -3,6 +3,7 @@ import { predictNextWipe, stripRichText, type Cadence } from "@wiperadar/shared"
 import { config } from "./config";
 import type { Db } from "./db";
 import { publish } from "./events";
+import { ShrinkGuard } from "./guard";
 import { deriveRow, detectWipe, wipeKind, type DerivedRow } from "./ingest";
 import { mapLimited } from "./limiter";
 import { getServerSummary, getStats } from "./repo";
@@ -30,6 +31,7 @@ export class Poller {
   private known = new Map<string, Known>();
   private lastFullPredict = 0;
   private running = false;
+  private listGuard = new ShrinkGuard();
 
   constructor(
     private db: Db,
@@ -45,6 +47,9 @@ export class Poller {
       `SELECT id, ip, query_port, born_at FROM servers`,
     );
     for (const r of rows) this.known.set(`${r.ip}:${r.query_port}`, { id: r.id, bornAt: r.born_at && new Date(r.born_at) });
+    // after a restart the first snapshot is compared against what was online before it
+    const { rows: online } = await this.db.query<{ n: number }>(`SELECT count(*)::int AS n FROM servers WHERE online`);
+    this.listGuard = new ShrinkGuard(online[0]?.n ?? 0);
   }
 
   /** One discovery cycle: snapshot → upsert → wipes → metrics → offline → rules → predictions. */
@@ -60,7 +65,10 @@ export class Poller {
       const ids = await this.upsert(rows, now);
       const wiped = await this.recordWipes(rows, ids, now);
       await this.recordMetrics(rows, ids, now);
-      await this.markMissing(new Set(ids));
+      // an empty/truncated answer from Steam must not push the rest of the world offline
+      const trusted = this.listGuard.accept(rows.length) && !this.source.lastListPartial;
+      if (trusted) await this.markMissing(new Set(ids));
+      else console.warn(`[poll] list looks truncated (${rows.length} servers), not marking missing servers offline`);
       await this.refreshRules();
       await this.refreshPredictions(wiped);
 
