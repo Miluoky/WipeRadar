@@ -76,7 +76,7 @@ export function inferFromHistory(wipes: Date[]): { periodDays: number; dow: numb
 
 /**
  * Best guess for the next wipe. Priority:
- *   owner schedule > hostname date > history pattern > cadence tag > force wipe.
+ *   owner schedule > official network schedule > hostname date > history pattern > cadence tag > force wipe.
  * Every server wipes on force wipe at the latest, so it's the upper bound.
  */
 export function predictNextWipe(input: {
@@ -86,12 +86,14 @@ export function predictNextWipe(input: {
   history: Date[];
   hostnameDate?: Date | null;
   ownerNext?: Date | null;
+  officialNext?: Date | null;
 }): Prediction {
   const now = input.now ?? new Date();
   const force = { at: nextForceWipe(now), source: "force" as const };
   const capped = (p: Prediction): Prediction => (p.at.getTime() < force.at.getTime() ? p : force);
 
   if (input.ownerNext && input.ownerNext > now) return capped({ at: input.ownerNext, source: "owner" });
+  if (input.officialNext && input.officialNext > now) return capped({ at: input.officialNext, source: "official" });
   if (input.hostnameDate && input.hostnameDate.getTime() + DAY > now.getTime()) {
     // hostname gives a date without time; reuse the hour of the last wipe if known
     const d = new Date(input.hostnameDate);

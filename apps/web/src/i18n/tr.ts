@@ -45,7 +45,14 @@ export const tr: Dict = {
   group: { solo: "Solo", duo: "Duo", trio: "Trio", quad: "Quad", nolimit: "Limitsiz" },
   type: { official: "Resmi", community: "Topluluk", modded: "Modlu", barren: "Barren", softcore: "Softcore", pve: "PVE / Build" },
   cadence: { weekly: "Haftalık", biweekly: "2 haftada bir", monthly: "Aylık" },
-  source: { owner: "sahibinden", hostname: "isimden", history: "geçmişten", tags: "etiketlerden", force: "force wipe" },
+  source: {
+    owner: "sahibinden",
+    official: "resmi takvim",
+    hostname: "isimden",
+    history: "geçmişten",
+    tags: "etiketlerden",
+    force: "force wipe",
+  },
   card: {
     wiped: "Wipe",
     ago: "önce",
@@ -88,6 +95,7 @@ export const tr: Dict = {
     kind: { map: "Harita", full: "Tam", force: "Force" },
     mapNote: "Seed'den şematik önizleme",
     offline: "Sunucu yanıt vermiyor",
+    official: { title: "Resmi wipe takvimi", source: "Kaynak", checked: "Gözlenen wipe’larla doğrulandı" },
     claim: "Bu sunucu senin mi? Sahipliği doğrula ve tam wipe takvimini yayınla.",
     share: "Bağlantı",
     shared: "Bağlantı kopyalandı",

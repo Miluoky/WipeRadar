@@ -207,6 +207,24 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
             />
           </section>
 
+          {s.official && (
+            <section className="p-4 plate">
+              <h2 className="mb-2 flex items-center gap-1.5 font-display text-sm text-ash">
+                <ShieldCheck className="size-4 text-toxic" aria-hidden /> {d.server.official.title}
+              </h2>
+              <blockquote className="border-l-2 border-seam pl-3 text-sm text-bone/90">{s.official.quote}</blockquote>
+              <p className="mt-2 flex flex-wrap gap-x-3 text-xs text-smoke">
+                <a href={s.official.sourceUrl} target="_blank" rel="noopener nofollow" className="text-cold hover:underline">
+                  {d.server.official.source}
+                </a>
+                <span>
+                  {d.server.official.checked}:{" "}
+                  {new Date(`${s.official.checkedAt}T12:00:00Z`).toLocaleDateString(intlLocale(lang), { dateStyle: "medium" })}
+                </span>
+              </p>
+            </section>
+          )}
+
           {s.description && (
             <section className="p-4 plate">
               <h2 className="mb-2 font-display text-sm text-ash">{d.server.description}</h2>

@@ -56,7 +56,14 @@ export const pt: Dict = {
     pve: "PVE / Build",
   },
   cadence: { weekly: "Semanal", biweekly: "Quinzenal", monthly: "Mensal" },
-  source: { owner: "do dono", hostname: "do nome", history: "do histórico", tags: "das tags", force: "force wipe" },
+  source: {
+    owner: "do dono",
+    official: "horário oficial",
+    hostname: "do nome",
+    history: "do histórico",
+    tags: "das tags",
+    force: "force wipe",
+  },
   card: {
     wiped: "Wipe",
     ago: "atrás",
@@ -99,6 +106,7 @@ export const pt: Dict = {
     kind: { map: "Mapa", full: "Completo", force: "Force" },
     mapNote: "Prévia esquemática a partir do seed",
     offline: "O servidor não responde",
+    official: { title: "Horário oficial de wipes", source: "Fonte", checked: "Conferido com os wipes observados" },
     claim: "Este servidor é seu? Verifique a propriedade e publique o horário exato dos wipes.",
     share: "Link",
     shared: "Link copiado",

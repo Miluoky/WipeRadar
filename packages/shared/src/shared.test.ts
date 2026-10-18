@@ -15,6 +15,7 @@ import {
   nextForceWipe,
   predictNextWipe,
 } from "./index";
+import { matchOfficial, nextOfficialWipe } from "./official";
 
 test("parses Rust keywords", () => {
   const kw = parseRustKeywords("mp200,cp57,qp3,v2593,born1728547200,gmrust,cs57813,oxide,monthly,EU,vanilla,ptrak");
@@ -122,6 +123,42 @@ test("predicts from weekly history and caps at force wipe", () => {
   assert.equal(p.at.toISOString(), "2026-10-15T15:00:00.000Z");
   const far = predictNextWipe({ now, lastWipe: null, cadence: null, history: [] });
   assert.equal(far.source, "force");
+});
+
+test("official schedules: weekly slot, DST, and the force-wipe day", () => {
+  const moose = matchOfficial("Rusty Moose |EU Main|")!;
+  assert.equal(moose.network, "rusty-moose");
+  // 15:00 London: BST in October, GMT after the clocks change
+  assert.equal(nextOfficialWipe(moose.schedule!, new Date("2026-10-18T20:00:00Z")).toISOString(), "2026-10-22T14:00:00.000Z");
+  assert.equal(nextOfficialWipe(moose.schedule!, new Date("2026-10-23T00:00:00Z")).toISOString(), "2026-10-29T15:00:00.000Z");
+  // 5 Nov is a force Thursday: the 15:00 slot gives way to the force wipe
+  assert.equal(nextOfficialWipe(moose.schedule!, new Date("2026-10-30T00:00:00Z")).toISOString(), "2026-11-05T19:00:00.000Z");
+});
+
+test("official schedules: biweekly counts from the force wipe", () => {
+  const s = matchOfficial("Rustafied.com - EU Trio")!.schedule!;
+  // force 1 Oct → 15 Oct → 29 Oct → force 5 Nov → 19 Nov
+  assert.equal(nextOfficialWipe(s, new Date("2026-10-16T00:00:00Z")).toISOString(), "2026-10-29T15:00:00.000Z");
+  assert.equal(nextOfficialWipe(s, new Date("2026-11-06T00:00:00Z")).toISOString(), "2026-11-19T15:00:00.000Z");
+});
+
+test("official schedules: exact names only, unconfirmed ones ignored", () => {
+  assert.equal(matchOfficial("Rustoria.co - EU Main Preview Server (Map #5)"), null);
+  assert.equal(matchOfficial("Rustafied.com - EU Trio - Monday"), null);
+  assert.equal(matchOfficial("Magic Rust #13 — Vanilla 2x | Baйп 16.10"), null); // stated time does not match observed wipes
+  assert.equal(matchOfficial("Magic Rust — Main | Kлaccикa x1 | Pyccкий")?.schedule?.tz, "Europe/Moscow");
+});
+
+test("official schedule outranks history in the prediction", () => {
+  const now = new Date("2026-10-18T20:00:00Z");
+  const p = predictNextWipe({
+    now,
+    lastWipe: null,
+    cadence: "weekly",
+    history: [],
+    officialNext: new Date("2026-10-22T14:00:00Z"),
+  });
+  assert.equal(p.source, "official");
 });
 
 test("buildIcs escapes text, folds long lines and uses UTC stamps", () => {

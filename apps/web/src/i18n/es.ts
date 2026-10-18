@@ -59,6 +59,7 @@ export const es: Dict = {
   cadence: { weekly: "Semanal", biweekly: "Cada 2 semanas", monthly: "Mensual" },
   source: {
     owner: "del propietario",
+    official: "horario oficial",
     hostname: "del nombre",
     history: "del historial",
     tags: "de las etiquetas",
@@ -106,6 +107,7 @@ export const es: Dict = {
     kind: { map: "Mapa", full: "Completo", force: "Force" },
     mapNote: "Vista esquemática a partir del seed",
     offline: "El servidor no responde",
+    official: { title: "Horario oficial de wipes", source: "Fuente", checked: "Comprobado con los wipes observados" },
     claim: "¿Es tu servidor? Verifica la propiedad y publica el horario exacto de wipes.",
     share: "Enlace",
     shared: "Enlace copiado",
