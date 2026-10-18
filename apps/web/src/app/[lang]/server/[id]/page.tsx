@@ -16,7 +16,7 @@ import { alternates, getDict, hasLocale, intlLocale } from "@/i18n";
 import { breadcrumbs, JsonLd, SITE } from "@/components/json-ld";
 import { fill } from "@/lib/landing";
 import { api, NotFound } from "@/lib/api";
-import { rustmapsUrl } from "@/lib/time";
+import { formatMiss, rustmapsUrl } from "@/lib/time";
 import { FAV_COOKIE, parseFavorites } from "@/lib/favorites";
 
 async function load(id: string): Promise<ServerDetail | null> {
@@ -51,7 +51,13 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
   const d = getDict(lang);
   const s = await load(id);
   if (!s) notFound();
-  const [metrics, similar] = await Promise.all([api.metrics(s.id, "24h").catch(() => []), api.similar(s.id).catch(() => [])]);
+  const [metrics, similar, accuracy] = await Promise.all([
+    api.metrics(s.id, "24h").catch(() => []),
+    api.similar(s.id).catch(() => []),
+    api.accuracy().catch(() => []),
+  ]);
+  // hit rate of the current prediction's source, once there's enough history to mean something
+  const acc = accuracy.find((a) => a.source === s.nextWipeSource && a.wipes >= 20);
   const fresh = s.lastWipeAt && Date.now() - Date.parse(s.lastWipeAt) < 3 * 3600_000;
   const fav = parseFavorites((await cookies()).get(FAV_COOKIE)?.value).includes(s.id);
   const peak = metrics.reduce((m, p) => Math.max(m, p.players), 0);
@@ -191,6 +197,11 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
               {s.nextWipeSource && <> · {d.source[s.nextWipeSource]}</>}
             </p>
           )}
+          {s.nextWipeAt && acc && (
+            <p className="text-xs text-smoke">
+              {fill(d.server.accuracy, { pct: Math.round((100 * acc.withinHour) / acc.wipes) })}
+            </p>
+          )}
         </div>
       </section>
 
@@ -243,6 +254,16 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
                   <span className="min-w-36 text-bone">
                     <LocalTime iso={w.wipedAt} locale={lang} withWeekday />
                   </span>
+                  {w.predictedAt && (
+                    <span
+                      title={d.server.forecastOff}
+                      className={`font-mono text-xs ${
+                        Math.abs(Date.parse(w.wipedAt) - Date.parse(w.predictedAt)) <= 3600_000 ? "text-toxic" : "text-hazard"
+                      }`}
+                    >
+                      Δ {formatMiss(Date.parse(w.wipedAt) - Date.parse(w.predictedAt), d.units)}
+                    </span>
+                  )}
                   <span className="font-mono text-xs text-smoke">
                     {procedural && w.seed != null && w.worldSize ? (
                       <a href={rustmapsUrl(w.worldSize, w.seed)} target="_blank" rel="noreferrer" className="hover:text-rust-2">

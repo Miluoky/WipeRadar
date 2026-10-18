@@ -143,6 +143,14 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       FROM metrics GROUP BY 1, 2;
     `,
   },
+  {
+    // prediction accuracy: what we promised for each wipe, kept next to what happened
+    id: "007_wipe_predictions",
+    sql: /* sql */ `
+      ALTER TABLE wipes ADD COLUMN predicted_at TIMESTAMPTZ;
+      ALTER TABLE wipes ADD COLUMN predicted_source TEXT;
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */

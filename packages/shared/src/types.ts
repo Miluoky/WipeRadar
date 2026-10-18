@@ -53,6 +53,18 @@ export interface WipeRecord {
   seed: number | null;
   worldSize: number | null;
   map: string | null;
+  /** what the site predicted for this wipe just before it happened, and from which source */
+  predictedAt: string | null;
+  predictedSource: ScheduleSource | null;
+}
+
+/** How close each prediction source landed to the real wipe time (last 30 days). */
+export interface SourceAccuracy {
+  source: ScheduleSource;
+  wipes: number;
+  /** wipes that happened within an hour of the prediction */
+  withinHour: number;
+  medianErrorMinutes: number;
 }
 
 export interface ServerDetail extends ServerSummary {

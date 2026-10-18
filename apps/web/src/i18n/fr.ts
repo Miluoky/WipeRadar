@@ -107,6 +107,8 @@ export const fr: Dict = {
     description: "Description",
     details: "Détails",
     similar: "Serveurs similaires",
+    accuracy: "{pct}% de ces prévisions tombent à ±1 h",
+    forecastOff: "Écart de la prévision",
     firstSeen: "Suivi depuis",
     build: "Build",
     fps: "FPS",

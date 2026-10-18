@@ -86,6 +86,8 @@ export const tr: Dict = {
     description: "Açıklama",
     details: "Ayrıntılar",
     similar: "Benzer sunucular",
+    accuracy: "Bu tahminlerin %{pct}'i ±1 saat içinde",
+    forecastOff: "Tahmin sapması",
     firstSeen: "İzlenme başlangıcı",
     build: "Build",
     fps: "FPS",

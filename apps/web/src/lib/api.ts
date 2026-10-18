@@ -1,5 +1,5 @@
 import "server-only";
-import type { MetricPoint, MetricRange, Paged, ServerDetail, ServerSummary, Stats } from "@wiperadar/shared";
+import type { MetricPoint, MetricRange, Paged, ServerDetail, ServerSummary, SourceAccuracy, Stats } from "@wiperadar/shared";
 
 const API_URL = process.env.API_URL ?? "http://localhost:4000";
 
@@ -16,6 +16,7 @@ export const api = {
   stats: () => get<Stats>("/api/stats"),
   servers: (qs: URLSearchParams) => get<Paged<ServerSummary>>(`/api/servers?${qs}`),
   server: (id: number) => get<ServerDetail>(`/api/servers/${id}`),
+  accuracy: () => get<SourceAccuracy[]>("/api/accuracy"),
   similar: (id: number) => get<ServerSummary[]>(`/api/servers/${id}/similar`),
   metrics: (id: number, range: MetricRange) => get<MetricPoint[]>(`/api/servers/${id}/metrics?range=${range}`),
 };

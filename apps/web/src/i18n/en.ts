@@ -92,6 +92,8 @@ export const en: Dict = {
     description: "Description",
     details: "Details",
     similar: "Similar servers",
+    accuracy: "{pct}% of these land within ±1 h",
+    forecastOff: "Forecast was off by",
     firstSeen: "Tracked since",
     build: "Build",
     fps: "FPS",

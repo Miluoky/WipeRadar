@@ -92,6 +92,8 @@ export const pl: Dict = {
     description: "Opis",
     details: "Szczegóły",
     similar: "Podobne serwery",
+    accuracy: "{pct}% takich prognoz trafia w ±1 h",
+    forecastOff: "Prognoza pomyliła się o",
     firstSeen: "Monitorowany od",
     build: "Build",
     fps: "FPS",

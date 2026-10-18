@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { subscribe } from "./events";
 import { Poller } from "./poller";
+import { getAccuracy } from "./repo";
 import { entry, FakeSource, HOUR, memoryDb } from "./testing";
 
 test("RULES results are written in batches: ok rows, failures and the wipe's seed", async () => {
@@ -119,5 +120,27 @@ test("an empty answer from Steam does not take servers offline", async () => {
   const { rows } = await db.query(`SELECT count(*)::int AS n FROM servers WHERE online`);
   assert.equal(rows[0].n, 2);
   await poller.rulesCycle();
+  await db.close();
+});
+
+test("a wipe keeps the prediction that stood before it, for accuracy stats", async () => {
+  const db = await memoryDb();
+  const src = new FakeSource();
+  src.list = [entry(1, new Date(Date.now() - 7 * 24 * HOUR))];
+  const poller = new Poller(db, src);
+  await poller.init();
+  await poller.cycle();
+
+  const fresh = new Date(Math.floor((Date.now() - 10 * 60_000) / 1000) * 1000);
+  const promised = new Date(fresh.getTime() + 20 * 60_000);
+  await db.query(`UPDATE servers SET next_wipe_at = $1, next_wipe_source = 'owner'`, [promised.toISOString()]);
+  src.list = [entry(1, fresh)];
+  await poller.cycle();
+  await poller.rulesCycle();
+
+  const { rows } = await db.query(`SELECT predicted_at, predicted_source FROM wipes WHERE detected_by = 'born'`);
+  assert.equal(new Date(rows[0].predicted_at).getTime(), promised.getTime());
+  assert.equal(rows[0].predicted_source, "owner");
+  assert.deepEqual(await getAccuracy(db), [{ source: "owner", wipes: 1, withinHour: 1, medianErrorMinutes: 20 }]);
   await db.close();
 });

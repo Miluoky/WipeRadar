@@ -98,6 +98,8 @@ export const es: Dict = {
     description: "Descripción",
     details: "Detalles",
     similar: "Servidores similares",
+    accuracy: "{pct}% de estas previsiones aciertan a ±1 h",
+    forecastOff: "La previsión falló por",
     firstSeen: "Monitorizado desde",
     build: "Build",
     fps: "FPS",

@@ -7,6 +7,7 @@ import {
   type ServerDetail,
   type ServerQuery,
   type ServerSummary,
+  type SourceAccuracy,
   type Stats,
   type WipeRecord,
 } from "@wiperadar/shared";
@@ -163,7 +164,7 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
   if (!r) return null;
   const official = matchOfficial(r.name);
   const wipes = await db.query(
-    `SELECT wiped_at, kind, seed, world_size, map FROM wipes WHERE server_id = $1 ORDER BY wiped_at DESC LIMIT 20`,
+    `SELECT wiped_at, kind, seed, world_size, map, predicted_at, predicted_source FROM wipes WHERE server_id = $1 ORDER BY wiped_at DESC LIMIT 20`,
     [id],
   );
   return {
@@ -183,6 +184,8 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
       seed: w.seed,
       worldSize: w.world_size,
       map: w.map,
+      predictedAt: iso(w.predicted_at),
+      predictedSource: w.predicted_source,
     })),
     official: official && { quote: official.quote, sourceUrl: official.sourceUrl, checkedAt: OFFICIAL_CHECKED_AT },
   };
@@ -206,6 +209,22 @@ export async function getSimilar(db: Db, id: number, limit = 5): Promise<ServerS
     [id],
   );
   return rows.map(toSummary);
+}
+
+/**
+ * Per prediction source: how many real wipes (not first sightings) had a prediction in the last 30 days,
+ * how many landed within an hour of it, and the median miss.
+ */
+export async function getAccuracy(db: Db): Promise<SourceAccuracy[]> {
+  const { rows } = await db.query(
+    `SELECT predicted_source AS source, count(*)::int AS wipes,
+            count(*) FILTER (WHERE abs(extract(epoch FROM wiped_at - predicted_at)) <= 3600)::int AS within_hour,
+            round(percentile_cont(0.5) WITHIN GROUP (ORDER BY abs(extract(epoch FROM wiped_at - predicted_at))) / 60)::int AS median_min
+     FROM wipes
+     WHERE detected_by = 'born' AND predicted_at IS NOT NULL AND wiped_at > now() - interval '30 days'
+     GROUP BY 1 ORDER BY 2 DESC`,
+  );
+  return rows.map((r) => ({ source: r.source, wipes: r.wipes, withinHour: r.within_hour, medianErrorMinutes: r.median_min }));
 }
 
 const RANGE: Record<MetricRange, { span: string; bucket: string }> = {

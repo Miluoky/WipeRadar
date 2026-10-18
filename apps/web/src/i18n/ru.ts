@@ -91,6 +91,8 @@ export const ru = {
     description: "Описание",
     details: "Детали",
     similar: "Похожие серверы",
+    accuracy: "{pct}% таких прогнозов точны до ±1 ч",
+    forecastOff: "Прогноз ошибся на",
     firstSeen: "В мониторинге с",
     build: "Сборка",
     fps: "FPS",
