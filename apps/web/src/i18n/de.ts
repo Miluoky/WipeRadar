@@ -31,6 +31,17 @@ export const de: Dict = {
     force: "Globaler Force-Wipe",
     feed: "WipeRadar: Favoriten",
   },
+  claim: {
+    start: "Besitz bestätigen",
+    contact: "Telegram, Discord oder E-Mail",
+    submit: "Code anfordern",
+    step: "Füge diesen Code in die Serverbeschreibung oder den Namen ein. Wir prüfen innerhalb weniger Minuten; der Code gilt 7 Tage.",
+    check: "Jetzt prüfen",
+    pending: "Noch nicht gefunden: Der Server muss online sein und den Code zeigen.",
+    verified: "Besitz bestätigt",
+    error: "Etwas ist schiefgelaufen, versuch es später erneut.",
+    badge: "Bestätigter Besitzer",
+  },
   filters: {
     title: "Filter",
     search: "Nach Namen suchen…",

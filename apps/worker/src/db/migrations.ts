@@ -151,6 +151,14 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       ALTER TABLE wipes ADD COLUMN predicted_source TEXT;
     `,
   },
+  {
+    // ownership claims: verified once the claim's code shows up in the server's description or name
+    id: "008_owner_verified",
+    sql: /* sql */ `
+      ALTER TABLE servers ADD COLUMN owner_verified_at TIMESTAMPTZ;
+      CREATE INDEX server_claims_pending_idx ON server_claims (server_id) WHERE verified_at IS NULL;
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */

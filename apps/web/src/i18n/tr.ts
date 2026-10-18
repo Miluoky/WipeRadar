@@ -26,6 +26,17 @@ export const tr: Dict = {
     force: "Küresel force wipe",
     feed: "WipeRadar: favori sunucular",
   },
+  claim: {
+    start: "Sahipliği doğrula",
+    contact: "Telegram, Discord veya e-posta",
+    submit: "Kod al",
+    step: "Bu kodu sunucu açıklamasına veya adına ekle. Birkaç dakika içinde kontrol ederiz; kod 7 gün geçerlidir.",
+    check: "Şimdi kontrol et",
+    pending: "Henüz bulunamadı: sunucu çevrimiçi olmalı ve kodu göstermeli.",
+    verified: "Sahiplik doğrulandı",
+    error: "Bir şeyler ters gitti, daha sonra tekrar dene.",
+    badge: "Doğrulanmış sahip",
+  },
   filters: {
     title: "Filtreler",
     search: "İsme göre ara…",

@@ -31,6 +31,17 @@ export const es: Dict = {
     force: "Force wipe global",
     feed: "WipeRadar: servidores favoritos",
   },
+  claim: {
+    start: "Verificar propiedad",
+    contact: "Telegram, Discord o e-mail",
+    submit: "Obtener código",
+    step: "Añade este código a la descripción o al nombre del servidor. Lo comprobamos en pocos minutos; el código vale 7 días.",
+    check: "Comprobar",
+    pending: "Aún no encontrado: el servidor debe estar en línea y mostrar el código.",
+    verified: "Propiedad verificada",
+    error: "Algo salió mal, inténtalo más tarde.",
+    badge: "Propietario verificado",
+  },
   filters: {
     title: "Filtros",
     search: "Buscar por nombre…",

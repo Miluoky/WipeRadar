@@ -1,3 +1,4 @@
+import { ShieldCheck } from "lucide-react";
 import type { Dict } from "@/i18n";
 import type { Region, ServerSummary } from "@wiperadar/shared";
 
@@ -14,6 +15,12 @@ export function Badges({ s, d }: { s: ServerSummary; d: Dict }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       <span className="border-seam bg-ink-2 stamp text-bone">{regionCode(s.region, d)}</span>
+      {s.verified && (
+        <span className="flex items-center gap-1 border-toxic-dark stamp text-toxic" title={d.claim.badge}>
+          <ShieldCheck className="size-3" aria-hidden />
+          <span className="sr-only">{d.claim.badge}</span>
+        </span>
+      )}
       {items.map((b) => (
         <span key={b.label} className={`border-seam stamp ${b.tone}`}>
           {b.label}

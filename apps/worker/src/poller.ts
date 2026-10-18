@@ -1,6 +1,7 @@
 import { joinDescription } from "@wiperadar/a2s";
 import { predictNextWipe, stripRichText, type Cadence } from "@wiperadar/shared";
 import { matchOfficial, nextOfficialWipe } from "@wiperadar/shared/official";
+import { verifyClaims } from "./claims";
 import { config } from "./config";
 import type { Db } from "./db";
 import { publish } from "./events";
@@ -335,6 +336,8 @@ export class Poller {
          WHERE s.id = u.id`,
         [ok.id, ok.seed, ok.size, ok.desc, ok.url, ok.header, ok.fps, ok.ents, ok.logo, ok.mapImg],
       );
+      const verified = await verifyClaims(this.db, ok.id);
+      if (verified.length) log.info(`[claims] verified owners of ${verified.length} server(s)`, { ids: verified });
     }
     if (wipe.id.length) {
       await this.db.query(

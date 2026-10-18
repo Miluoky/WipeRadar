@@ -25,6 +25,17 @@ export const pl: Dict = {
     force: "Globalny force wipe",
     feed: "WipeRadar: ulubione serwery",
   },
+  claim: {
+    start: "Potwierdź własność",
+    contact: "Telegram, Discord lub e-mail",
+    submit: "Pobierz kod",
+    step: "Dodaj ten kod do opisu lub nazwy serwera. Sprawdzamy w ciągu kilku minut; kod jest ważny 7 dni.",
+    check: "Sprawdź teraz",
+    pending: "Jeszcze nie znaleziono: serwer musi być online i pokazywać kod.",
+    verified: "Własność potwierdzona",
+    error: "Coś poszło nie tak, spróbuj później.",
+    badge: "Potwierdzony właściciel",
+  },
   filters: {
     title: "Filtry",
     search: "Szukaj po nazwie…",

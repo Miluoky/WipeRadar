@@ -55,3 +55,13 @@ test("wipes calendar exports an iCalendar file", async ({ request }) => {
   expect(body).toContain("SUMMARY:Wipe: ");
   expect((await request.get("/en/wipes.ics")).status()).toBe(400);
 });
+
+test("owner can request a verification code on a server page", async ({ page }) => {
+  await page.goto("/en/server/1");
+  await page.getByRole("button", { name: "Verify ownership" }).click();
+  await page.getByLabel("Telegram, Discord or e-mail").fill("@e2e");
+  await page.getByRole("button", { name: "Get a code" }).click();
+  await expect(page.getByText(/^WR-[A-Z0-9]{8}$/)).toBeVisible();
+  await page.getByRole("button", { name: "Check now" }).click();
+  await expect(page.getByText(/Not found yet/)).toBeVisible();
+});

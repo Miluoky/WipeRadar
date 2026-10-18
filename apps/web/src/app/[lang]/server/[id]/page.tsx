@@ -6,6 +6,7 @@ import type { ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
 import { LocalTime, Since, Until } from "@/components/clock";
+import { ClaimBox } from "@/components/claim-box";
 import { ConnectButtons } from "@/components/connect";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ShareButton } from "@/components/share-button";
@@ -384,8 +385,7 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
           )}
 
           <section className="border-dashed p-4 text-sm text-ash plate">
-            <ShieldCheck className="mb-2 size-5 text-toxic" aria-hidden />
-            {d.server.claim}
+            <ClaimBox serverId={s.id} verified={s.verified} intro={d.server.claim} t={d.claim} />
           </section>
         </aside>
       </div>
