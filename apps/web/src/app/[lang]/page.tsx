@@ -80,20 +80,7 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
   }
 
   const windowed = tab === "wiped" || tab === "upcoming" ? WINDOWS[tab] : null;
-  const win = windowed ? (windowed.list.find((w) => w.k === one("w")) ?? windowed.list.find((w) => w.k === windowed.def)!) : null;
-
-  const qs = new URLSearchParams(filters);
-  if (tab === "wiped" && win) {
-    applyWindow(qs, "wiped", win);
-    if (!qs.has("sort")) qs.set("sort", "wiped"); // newest first: "1 second ago" on top
-  } else if (tab === "upcoming" && win) {
-    applyWindow(qs, "upcoming", win);
-    if (!qs.has("sort")) qs.set("sort", "next");
-  } else if (tab === "favorites") {
-    qs.set("ids", favorites.join(",") || "0");
-  }
-  qs.set("limit", String(PAGE));
-  qs.set("offset", String((page - 1) * PAGE));
+  const asked = windowed?.list.find((w) => w.k === one("w"));
 
   const feedQs = new URLSearchParams({ wipedWithinHours: "24", sort: "wiped", limit: "14", quality: "1" });
   // per-window counts for the chips (cheap count queries, limit=1)
@@ -110,8 +97,29 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
   let list: Awaited<ReturnType<typeof api.servers>> | null = null;
   let feed: Awaited<ReturnType<typeof api.servers>> | null = null;
   let counts: number[] = [];
+  let win: Win | null = null;
   try {
-    [stats, list, feed, counts] = await Promise.all([api.stats(), api.servers(qs), api.servers(feedQs), Promise.all(countReqs)]);
+    [stats, feed, counts] = await Promise.all([api.stats(), api.servers(feedQs), Promise.all(countReqs)]);
+    // no window picked: the default one, or the nearest one that has servers (quiet hours leave "0–2h" empty)
+    if (windowed) {
+      const def = windowed.list.findIndex((w) => w.k === windowed.def);
+      const firstFull = windowed.list.findIndex((_, i) => counts[i] > 0);
+      win = asked ?? windowed.list[counts[def] || firstFull < 0 ? def : firstFull];
+    }
+
+    const qs = new URLSearchParams(filters);
+    if (tab === "wiped" && win) {
+      applyWindow(qs, "wiped", win);
+      if (!qs.has("sort")) qs.set("sort", "wiped"); // newest first: "1 second ago" on top
+    } else if (tab === "upcoming" && win) {
+      applyWindow(qs, "upcoming", win);
+      if (!qs.has("sort")) qs.set("sort", "next");
+    } else if (tab === "favorites") {
+      qs.set("ids", favorites.join(",") || "0");
+    }
+    qs.set("limit", String(PAGE));
+    qs.set("offset", String((page - 1) * PAGE));
+    list = await api.servers(qs);
   } catch {
     // worker down — render the shell with an error panel
   }
@@ -168,7 +176,8 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
                     return (
                       <Link
                         key={w.k}
-                        href={hrefWith({ w: w.k === windowed.def ? null : w.k, page: null })}
+                        // the default window is implied only when it has servers; otherwise the empty chip must stay pickable
+                        href={hrefWith({ w: w.k === windowed.def && counts[i] ? null : w.k, page: null })}
                         aria-current={on ? "true" : undefined}
                         className={`${on ? "btn-go" : "btn-dim"} flex items-center gap-1.5 px-2.5 py-1 text-[13px]`}
                       >
