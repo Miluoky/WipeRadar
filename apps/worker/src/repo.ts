@@ -193,11 +193,25 @@ const RANGE: Record<MetricRange, { span: string; bucket: string }> = {
   "30d": { span: "30 days", bucket: "4 hours" },
 };
 
+/**
+ * Samples for one server: raw 5-minute rows for 24h; for longer ranges the hourly rollup,
+ * topped up from raw rows for the last ~2 hours the rollup job may not have reached yet.
+ * Each row carries sums and a sample count so buckets average exactly either way.
+ */
+function samples(range: MetricRange, span: string) {
+  if (range === "24h")
+    return `SELECT ts, players AS p, queue AS q, 1 AS n FROM metrics WHERE server_id = $1 AND ts > now() - interval '${span}'`;
+  const cut = `date_bin('1 hour', now() - interval '2 hours', TIMESTAMPTZ '2000-01-01')`;
+  return `SELECT hour AS ts, players_sum AS p, queue_sum AS q, samples AS n FROM metrics_hourly
+          WHERE server_id = $1 AND hour > now() - interval '${span}' AND hour < ${cut}
+          UNION ALL
+          SELECT ts, players, queue, 1 FROM metrics WHERE server_id = $1 AND ts >= ${cut}`;
+}
+
 export async function getMetrics(db: Db, id: number, range: MetricRange): Promise<MetricPoint[]> {
   const { span, bucket } = RANGE[range];
   // Zero samples aren't stored, so empty buckets are filled with 0 — but only from when we
   // started tracking the server, otherwise a new server would show a fake month of zeros.
-  // With TimescaleDB, swap date_bin for time_bucket over a continuous aggregate.
   const { rows } = await db.query(
     `WITH b AS (
        SELECT generate_series(
@@ -206,8 +220,8 @@ export async function getMetrics(db: Db, id: number, range: MetricRange): Promis
        FROM servers s WHERE s.id = $1
      ), m AS (
        SELECT date_bin('${bucket}', ts, TIMESTAMPTZ '2000-01-01') AS t,
-              round(avg(players))::int AS players, round(avg(queue))::int AS queue
-       FROM metrics WHERE server_id = $1 AND ts > now() - interval '${span}'
+              round(sum(p)::numeric / sum(n))::int AS players, round(sum(q)::numeric / sum(n))::int AS queue
+       FROM (${samples(range, span)}) src
        GROUP BY 1
      )
      SELECT b.t, coalesce(m.players, 0) AS players, coalesce(m.queue, 0) AS queue

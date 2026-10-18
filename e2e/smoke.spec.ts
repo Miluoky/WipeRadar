@@ -3,13 +3,15 @@ import { expect, test } from "@playwright/test";
 test("root redirects to a locale and the home page lists servers", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/(en|ru|uk|de|pl|fr|es|pt|tr|zh)$/);
+  // the default tab shows only the last 2h of wipes, which demo data may not have at every hour
+  await page.goto(`${new URL(page.url()).pathname}?tab=all`);
   const cards = page.locator('a[href*="/server/"]');
   await expect(cards.first()).toBeVisible();
   expect(await cards.count()).toBeGreaterThan(3);
 });
 
 test("server page renders and the chart switches range", async ({ page }) => {
-  await page.goto("/en");
+  await page.goto("/en?tab=all");
   const href = await page.locator('a[href*="/server/"]').first().getAttribute("href");
   await page.goto(href!);
   await expect(page.locator("h1")).toBeVisible();

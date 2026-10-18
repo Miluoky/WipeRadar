@@ -30,6 +30,7 @@ console.log(`[api] http://localhost:${config.port}/api/stats`);
 await poller.cycle();
 if (demo) {
   await demo.seedHistory(db, poller.idByAddr);
+  await poller.rollupMetrics(new Date(0));
   poller.forceFullPredict();
   await poller.cycle();
 }
@@ -37,9 +38,11 @@ if (demo) {
 // demo ticks faster so the live feed moves while you watch
 const interval = (config.demo ? 20 : config.listIntervalSec) * 1000;
 setInterval(() => void poller.cycle(), interval);
-// on plain Postgres / PGlite this DELETE is the only retention (TimescaleDB has its own policy)
+// hourly rollup for the 7d/30d charts, then retention (TimescaleDB keeps its own policy for raw metrics)
+const rollup = () => poller.rollupMetrics().catch((e) => console.error("[rollup] failed:", e));
 const prune = () => poller.pruneMetrics().catch((e) => console.error("[prune] failed:", e));
-void prune();
+void rollup().then(prune);
+setInterval(() => void rollup(), 10 * 60_000);
 setInterval(() => void prune(), 3_600_000);
 
 const shutdown = async () => {

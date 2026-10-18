@@ -399,11 +399,30 @@ export class Poller {
   private timescale?: boolean;
 
   async pruneMetrics() {
+    await this.db.query(`DELETE FROM metrics_hourly WHERE hour < now() - make_interval(days => $1)`, [
+      config.metricsHourlyRetentionDays,
+    ]);
     if (this.db.kind === "postgres") {
-      // timescale's retention policy handles it; plain Postgres (e.g. Railway) needs the DELETE
+      // timescale's retention policy handles raw metrics; plain Postgres (e.g. Railway) needs the DELETE
       this.timescale ??= (await this.db.query(`SELECT 1 FROM schema_migrations WHERE id = 'timescale'`)).rows.length > 0;
       if (this.timescale) return;
     }
     await this.db.query(`DELETE FROM metrics WHERE ts < now() - make_interval(days => $1)`, [config.metricsRetentionDays]);
+  }
+
+  /**
+   * Re-aggregates raw samples from `since` (default: the last 3 whole hours) into metrics_hourly.
+   * Charts read the rollup only for hours older than 2h, so running this every few minutes keeps them exact.
+   */
+  async rollupMetrics(since = new Date(Date.now() - 3 * 3_600_000)) {
+    await this.db.query(
+      `INSERT INTO metrics_hourly (server_id, hour, players_sum, queue_sum, samples)
+       SELECT server_id, date_bin('1 hour', ts, TIMESTAMPTZ '2000-01-01'), sum(players), sum(queue), count(*)
+       FROM metrics WHERE ts >= date_bin('1 hour', $1::timestamptz, TIMESTAMPTZ '2000-01-01')
+       GROUP BY 1, 2
+       ON CONFLICT (server_id, hour) DO UPDATE
+         SET players_sum = EXCLUDED.players_sum, queue_sum = EXCLUDED.queue_sum, samples = EXCLUDED.samples`,
+      [since.toISOString()],
+    );
   }
 }
