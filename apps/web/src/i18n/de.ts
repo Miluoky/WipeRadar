@@ -89,6 +89,7 @@ export const de: Dict = {
     chart: "Spielerzahl",
     description: "Beschreibung",
     details: "Details",
+    similar: "Ähnliche Server",
     firstSeen: "Erfasst seit",
     build: "Build",
     fps: "FPS",

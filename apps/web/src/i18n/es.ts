@@ -89,6 +89,7 @@ export const es: Dict = {
     chart: "Población",
     description: "Descripción",
     details: "Detalles",
+    similar: "Servidores similares",
     firstSeen: "Monitorizado desde",
     build: "Build",
     fps: "FPS",

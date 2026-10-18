@@ -77,6 +77,7 @@ export const pl: Dict = {
     chart: "Gracze",
     description: "Opis",
     details: "Szczegóły",
+    similar: "Podobne serwery",
     firstSeen: "Monitorowany od",
     build: "Build",
     fps: "FPS",

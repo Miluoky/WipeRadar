@@ -70,6 +70,7 @@ export const zh: Dict = {
     chart: "在线人数",
     description: "简介",
     details: "详情",
+    similar: "类似服务器",
     firstSeen: "收录时间",
     build: "版本",
     fps: "FPS",

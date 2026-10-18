@@ -82,6 +82,7 @@ export const uk: Dict = {
     chart: "Онлайн",
     description: "Опис",
     details: "Деталі",
+    similar: "Схожі сервери",
     firstSeen: "У моніторингу з",
     build: "Збірка",
     fps: "FPS",

@@ -77,6 +77,7 @@ export const en: Dict = {
     chart: "Population",
     description: "Description",
     details: "Details",
+    similar: "Similar servers",
     firstSeen: "Tracked since",
     build: "Build",
     fps: "FPS",

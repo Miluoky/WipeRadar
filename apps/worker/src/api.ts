@@ -9,7 +9,7 @@ import { TtlCache } from "./cache";
 import { subscribe } from "./events";
 import { counters } from "./log";
 import type { PollStatus } from "./poller";
-import { getMetrics, getServer, getStats, listServers, type ListParams } from "./repo";
+import { getMetrics, getServer, getSimilar, getStats, listServers, type ListParams } from "./repo";
 
 /** "eu,cis" → ["eu","cis"], dropping anything not in the allow-list. */
 function list<T extends string>(v: unknown, allowed: readonly T[]): T[] | undefined {
@@ -132,6 +132,13 @@ export async function buildApi(db: Db, status?: PollStatus) {
     if (!s) return reply.code(404).send({ error: "not found" });
     reply.header("Cache-Control", SHORT);
     return s;
+  });
+
+  app.get("/api/servers/:id/similar", async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    if (!id) return reply.code(400).send({ error: "bad request" });
+    reply.header("Cache-Control", LONG);
+    return cache.get(`similar:${id}`, 60_000, () => getSimilar(db, id));
   });
 
   app.get("/api/servers/:id/metrics", async (req, reply) => {
