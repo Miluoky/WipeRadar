@@ -18,6 +18,13 @@ export const en: Dict = {
   tabs: { justWiped: "Just wiped", upcoming: "Wiping soon", all: "All servers", favorites: "Favorites" },
   windows: { all: "All", label: "Window" },
   favorites: { empty: "Star servers to pin them here — they'll be waiting on every visit." },
+  ics: {
+    add: "Add to calendar",
+    subscribe: "Subscribe in calendar",
+    wipe: "Wipe",
+    force: "Global force wipe",
+    feed: "WipeRadar: favorite servers",
+  },
   filters: {
     title: "Filters",
     search: "Search by name…",

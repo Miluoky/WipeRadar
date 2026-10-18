@@ -18,6 +18,13 @@ export const pl: Dict = {
   tabs: { justWiped: "Właśnie zwipowane", upcoming: "Wkrótce wipe", all: "Wszystkie serwery", favorites: "Ulubione" },
   windows: { all: "Wszystkie", label: "Okno" },
   favorites: { empty: "Oznacz serwery gwiazdką — pojawią się tutaj przy każdej wizycie." },
+  ics: {
+    add: "Do kalendarza",
+    subscribe: "Subskrybuj w kalendarzu",
+    wipe: "Wipe",
+    force: "Globalny force wipe",
+    feed: "WipeRadar: ulubione serwery",
+  },
   filters: {
     title: "Filtry",
     search: "Szukaj po nazwie…",

@@ -17,6 +17,13 @@ export const ru = {
   tabs: { justWiped: "Свежие вайпы", upcoming: "Скоро вайп", all: "Все серверы", favorites: "Избранное" },
   windows: { all: "Все", label: "Окно" },
   favorites: { empty: "Отмечайте серверы звёздочкой — они появятся здесь и будут видны при каждом визите." },
+  ics: {
+    add: "В календарь",
+    subscribe: "Подписка в календаре",
+    wipe: "Вайп",
+    force: "Глобальный вайп",
+    feed: "WipeRadar: избранные серверы",
+  },
   filters: {
     title: "Фильтры",
     search: "Поиск по названию…",

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { CalendarClock, Clock3, Flame, Radar, ServerCrash, Star, Users, Zap } from "lucide-react";
+import { CalendarClock, CalendarPlus, Clock3, Flame, Radar, ServerCrash, Star, Users, Zap } from "lucide-react";
 import type { Stats } from "@wiperadar/shared";
 import { Countdown } from "@/components/clock";
 import { FilterBar } from "@/components/filter-bar";
@@ -70,6 +70,8 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
   const page = Math.max(1, Number(one("page")) || 1);
   const favorites = parseFavorites((await cookies()).get(FAV_COOKIE)?.value);
   const favSet = new Set(favorites);
+  const hdr = await headers();
+  const host = hdr.get("x-forwarded-host") ?? hdr.get("host");
 
   const filters = new URLSearchParams();
   for (const k of FILTER_KEYS) {
@@ -150,6 +152,15 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
                 {title}
               </h2>
               {list && <span className="font-mono text-xs text-smoke">{list.total.toLocaleString(intlLocale(lang))}</span>}
+              {tab === "favorites" && favorites.length > 0 && (
+                <a
+                  href={`webcal://${host}/${lang}/wipes.ics?ids=${favorites.join(",")}`}
+                  className="flex items-center gap-1.5 px-2.5 py-1 btn-dim text-[13px] sm:ml-auto"
+                >
+                  <CalendarPlus className="size-3.5" aria-hidden />
+                  {d.ics.subscribe}
+                </a>
+              )}
               {windowed && (
                 <nav className="flex flex-wrap gap-1 sm:ml-auto" aria-label={d.windows.label}>
                   {windowed.list.map((w, i) => {
