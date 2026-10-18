@@ -34,7 +34,9 @@ export const config = {
   perHostConcurrency: Number(env("PER_HOST_CONCURRENCY") ?? 3),
   rulesTtlHours: Number(env("RULES_TTL_HOURS") ?? 6),
   offlineAfterMisses: 3,
-  metricsRetentionDays: Number(env("METRICS_RETENTION_DAYS") ?? 35),
+  /** raw 5-minute samples: the 24h chart and card sparklines; older history lives in the hourly rollup */
+  metricsRetentionDays: Number(env("METRICS_RETENTION_DAYS") ?? 8),
+  metricsHourlyRetentionDays: Number(env("METRICS_HOURLY_RETENTION_DAYS") ?? 400),
   /** Public site origin; the only origin CORS allows. Unset → no cross-origin access (the site proxies /api). */
   siteUrl: env("SITE_URL"),
   /** Requests per minute per client IP on proxied (public) traffic. */

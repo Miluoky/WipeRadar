@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Poller } from "./poller";
-import { listServers } from "./repo";
+import { getMetrics, listServers } from "./repo";
 import { entry, FakeSource, HOUR, memoryDb } from "./testing";
 
 /** Five servers wiped 1h, 3h, 5h, 30h and 10 days ago; one is a test box, one is empty. */
@@ -56,5 +56,30 @@ test("sort and paging", async () => {
     ["Восток RU x2", "testserver"],
   );
   assert.equal(page.total, 5);
+  await db.close();
+});
+
+test("7d chart reads the hourly rollup once raw samples are pruned", async () => {
+  const db = await world();
+  const { rows } = await db.query<{ id: number }>(`SELECT id FROM servers WHERE name = 'Old Monthly'`);
+  const id = rows[0].id;
+  await db.query(`UPDATE servers SET first_seen_at = now() - interval '7 days'`);
+  // two days ago: 12 samples of 30 players, 12 of 50 in the same hour → hourly average 40
+  const hour = new Date(Math.floor((Date.now() - 48 * HOUR) / HOUR) * HOUR);
+  for (let i = 0; i < 24; i++) {
+    await db.query(`INSERT INTO metrics (server_id, ts, players, queue) VALUES ($1, $2, $3, 0) ON CONFLICT DO NOTHING`, [
+      id,
+      new Date(hour.getTime() + i * 150_000).toISOString(),
+      i < 12 ? 30 : 50,
+    ]);
+  }
+  const poller = new Poller(db, new FakeSource());
+  await poller.rollupMetrics(new Date(0));
+  await db.query(`DELETE FROM metrics WHERE ts < now() - interval '1 day'`);
+
+  const points = await getMetrics(db, id, "7d");
+  const at = points.find((p) => p.t === hour.toISOString());
+  assert.equal(at?.players, 40);
+  assert.equal(points.filter((p) => p.players > 0 && p.t !== hour.toISOString()).length <= 1, true);
   await db.close();
 });

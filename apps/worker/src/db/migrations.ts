@@ -124,6 +124,25 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       UPDATE servers SET map_image = NULL WHERE map_image LIKE 'http:%';
     `,
   },
+  {
+    // Hourly rollup for the 7d/30d charts: sums + sample count so any coarser bucket averages exactly.
+    // Outlives the raw 5-minute table (works on plain Postgres, no TimescaleDB needed).
+    id: "006_metrics_hourly",
+    sql: /* sql */ `
+      CREATE TABLE metrics_hourly (
+        server_id   INT NOT NULL,
+        hour        TIMESTAMPTZ NOT NULL,
+        players_sum INT NOT NULL,
+        queue_sum   INT NOT NULL,
+        samples     INT NOT NULL,
+        PRIMARY KEY (server_id, hour)
+      );
+      CREATE INDEX metrics_hourly_hour_idx ON metrics_hourly (hour);
+      INSERT INTO metrics_hourly (server_id, hour, players_sum, queue_sum, samples)
+      SELECT server_id, date_bin('1 hour', ts, TIMESTAMPTZ '2000-01-01'), sum(players), sum(queue), count(*)
+      FROM metrics GROUP BY 1, 2;
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */
@@ -172,6 +191,12 @@ export async function migrate(db: Db) {
       // e.g. no privilege to create extensions — search still works, just unindexed
       console.warn("[db] pg_trgm search index skipped:", (e as Error).message);
     }
+  }
+  if (!done.has("timescale") && !done.has("metrics_ts_brin")) {
+    // plain Postgres / PGlite: rollup and prune scan metrics by time, and the PK leads with server_id.
+    // BRIN fits append-ordered timestamps and costs next to nothing on insert. (Hypertables index ts already.)
+    await db.exec(`CREATE INDEX IF NOT EXISTS metrics_ts_brin ON metrics USING brin (ts)`);
+    await db.query(`INSERT INTO schema_migrations (id) VALUES ('metrics_ts_brin')`);
   }
   if (done.has("timescale")) {
     // re-applied on every start so METRICS_RETENTION_DAYS changes take effect
