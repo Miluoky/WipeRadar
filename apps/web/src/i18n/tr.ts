@@ -71,6 +71,7 @@ export const tr: Dict = {
     chart: "Oyuncu sayısı",
     description: "Açıklama",
     details: "Ayrıntılar",
+    similar: "Benzer sunucular",
     firstSeen: "İzlenme başlangıcı",
     build: "Build",
     fps: "FPS",

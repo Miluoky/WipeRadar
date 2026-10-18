@@ -82,6 +82,7 @@ export const ru = {
     chart: "Онлайн",
     description: "Описание",
     details: "Детали",
+    similar: "Похожие серверы",
     firstSeen: "В мониторинге с",
     build: "Сборка",
     fps: "FPS",
