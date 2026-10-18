@@ -13,8 +13,6 @@ export const de: Dict = {
       "Frisch gewipte Server, exakte Zeiten der nächsten Wipes in deiner Zeitzone, Live-Spielerzahlen und Warteschlangen.",
     forceWipe: "Force-Wipe in",
     note: "direkt von Steam, alle 2 Min. aktualisiert",
-    islandHint: "Klick = Map wipen",
-    islandLabel: "Interaktive 3D-Karte: prozedurale Insel im Rust-Stil",
   },
   stats: {
     servers: "Server online",

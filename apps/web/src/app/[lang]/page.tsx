@@ -6,7 +6,6 @@ import { CalendarClock, Clock3, Flame, Radar, ServerCrash, Star, Users, Zap } fr
 import type { Stats } from "@wiperadar/shared";
 import { Countdown } from "@/components/clock";
 import { FilterBar } from "@/components/filter-bar";
-import { Island3D } from "@/components/island-3d";
 import { ServerCard } from "@/components/server-card";
 import { WipeTicker } from "@/components/wipe-ticker";
 import { getDict, hasLocale, intlLocale, type Dict, type Locale } from "@/i18n";
@@ -226,7 +225,7 @@ function Hero({ d, stats, locale }: { d: Dict; stats: Stats | null; locale: Loca
       ]
     : [];
   return (
-    <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,480px)] lg:items-center">
+    <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
       <div className="space-y-3">
         <p className="flex items-center gap-2 font-display text-[13px] text-rust-2">
           <Zap className="size-3.5" aria-hidden />
@@ -263,18 +262,14 @@ function Hero({ d, stats, locale }: { d: Dict; stats: Stats | null; locale: Loca
         )}
       </div>
 
-      {/* the "map table": 3D island with the force-wipe countdown taped to its corner */}
-      <div className="relative">
-        <Island3D label={d.hero.islandLabel} hint={d.hero.islandHint} />
-        {stats && (
-          <div className="stained taped bolted -mt-6 ml-0 w-fit max-w-full -rotate-1 plate sm:absolute sm:bottom-1 sm:left-0 sm:mt-0">
-            <p className="px-3 py-2 panel-head text-[12px]">{d.hero.forceWipe}</p>
-            <div className="p-3">
-              <Countdown iso={stats.nextForceWipe} units={d.units} />
-            </div>
+      {stats && (
+        <div className="stained taped bolted w-fit max-w-full -rotate-1 plate lg:justify-self-end">
+          <p className="px-3 py-2 panel-head text-[12px]">{d.hero.forceWipe}</p>
+          <div className="p-3">
+            <Countdown iso={stats.nextForceWipe} units={d.units} />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

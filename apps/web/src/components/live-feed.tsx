@@ -25,7 +25,6 @@ export function LiveFeed({ d, locale, refreshOnWipe }: { d: Dict; locale: Locale
     es.onerror = () => setOnline(false); // EventSource reconnects by itself
     es.addEventListener("wipe", (msg) => {
       const e = JSON.parse((msg as MessageEvent).data) as Extract<LiveEvent, { type: "wipe" }>;
-      window.dispatchEvent(new CustomEvent("wr:wipe", { detail: e.server.id })); // the 3D island draws a ring
       setToasts((t) => [e.server, ...t.filter((x) => x.id !== e.server.id)].slice(0, 3));
       setTimeout(() => setToasts((t) => t.filter((x) => x.id !== e.server.id)), 9000);
       if (refreshOnWipe && Date.now() - lastRefresh.current > 5000) {
