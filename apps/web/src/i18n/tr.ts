@@ -123,6 +123,13 @@ export const tr: Dict = {
     kind: { map: "Harita", full: "Tam", force: "Force" },
     mapNote: "Seed'den şematik önizleme",
     offline: "Sunucu yanıt vermiyor",
+    audit: {
+      title: "Oyuncu sayısı şişirilmiş görünüyor",
+      short: "Sunucu {reported} oyuncu bildiriyor, ancak oyuncu listesinde yalnızca {listed} kişi var.",
+      clones: "Listenin çoğu aynı saniyede girmiş ya da aynı adı taşıyor; bu botlara özgüdür.",
+      flat: "Oyuncu sayısı tam bir gün boyunca değişmedi; gerçek sunucularda bu olmaz.",
+      checked: "Son kontrol",
+    },
     official: { title: "Resmi wipe takvimi", source: "Kaynak", checked: "Gözlenen wipe’larla doğrulandı" },
     claim: "Bu sunucu senin mi? Sahipliği doğrula ve tam wipe takvimini yayınla.",
     share: "Bağlantı",

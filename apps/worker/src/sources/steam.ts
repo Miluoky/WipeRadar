@@ -1,4 +1,4 @@
-import { queryRules } from "@wiperadar/a2s";
+import { queryPlayers, queryRules } from "@wiperadar/a2s";
 import { ShrinkGuard } from "../guard";
 import { log } from "../log";
 import { probeRules } from "./prober";
@@ -98,6 +98,10 @@ export class SteamSource implements ServerSource {
 
   fetchRules(ip: string, queryPort: number) {
     return queryRules(ip, queryPort, { timeoutMs: 2500, retries: 1 });
+  }
+
+  fetchPlayers(ip: string, queryPort: number) {
+    return queryPlayers(ip, queryPort, { timeoutMs: 2500, retries: 1 });
   }
 
   /** Present only when the Rust prober is configured; otherwise the poller uses fetchRules. */

@@ -129,6 +129,13 @@ export const en: Dict = {
     kind: { map: "Map", full: "Full", force: "Force" },
     mapNote: "Schematic preview from seed",
     offline: "Server is not responding",
+    audit: {
+      title: "Population looks inflated",
+      short: "The server advertises {reported} players, but only {listed} are in its player list.",
+      clones: "Most of the player list joined in the same second or shares a name, which is typical of bot fillers.",
+      flat: "The online count hasn't moved for a whole day, which real servers never do.",
+      checked: "Last check",
+    },
     official: { title: "Official wipe schedule", source: "Source", checked: "Checked against observed wipes" },
     claim: "Is this your server? Verify ownership and publish the exact wipe schedule.",
     share: "Link",

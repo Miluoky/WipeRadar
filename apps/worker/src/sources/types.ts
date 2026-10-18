@@ -1,3 +1,5 @@
+import type { A2SPlayer } from "@wiperadar/a2s";
+
 /** One row of a server-list snapshot (shape of Steam GetServerList). */
 export interface ListEntry {
   ip: string;
@@ -20,5 +22,7 @@ export interface ServerSource {
   readonly lastListPartial?: boolean;
   fetchRules(ip: string, queryPort: number): Promise<Record<string, string>>;
   /** Optional bulk path (Rust prober). Result order matches `targets`; a failed target is an Error. */
+  /** A2S_PLAYER, for the population audit; sources without it are never audited. */
+  fetchPlayers?(ip: string, queryPort: number): Promise<A2SPlayer[]>;
   fetchRulesBatch?(targets: { ip: string; queryPort: number }[]): Promise<(Record<string, string> | Error)[]>;
 }

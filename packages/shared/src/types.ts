@@ -85,6 +85,17 @@ export interface ServerDetail extends ServerSummary {
   official: OfficialInfo | null;
   /** schedule published by the verified owner */
   ownerSchedule: OwnerSchedule | null;
+  /** why the population looks inflated, when the audit flagged it */
+  audit: ServerAudit | null;
+}
+
+export interface ServerAudit {
+  /** short: the player list holds far fewer than advertised; clones: bot-like list; flat: online never moves */
+  reason: "short" | "clones" | "flat";
+  /** players in the A2S_PLAYER list at the last audit (null when the list wasn't readable) */
+  listed: number | null;
+  reported: number;
+  at: string;
 }
 
 export interface OfficialInfo {

@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, CalendarPlus, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  CalendarPlus,
+  ExternalLink,
+  Flame,
+  Map as MapIcon,
+  ShieldCheck,
+  Timer,
+  Users,
+} from "lucide-react";
 import type { OwnerSchedule, ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
@@ -239,6 +249,20 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
               locale={lang}
             />
           </section>
+
+          {s.audit && (
+            <section className="p-4 ring-1 plate ring-hazard/40" data-testid="audit">
+              <h2 className="mb-2 flex items-center gap-1.5 font-display text-sm text-hazard">
+                <AlertTriangle className="size-4" aria-hidden /> {d.server.audit.title}
+              </h2>
+              <p className="text-sm text-bone/90">
+                {fill(d.server.audit[s.audit.reason], { listed: s.audit.listed ?? 0, reported: s.audit.reported })}
+              </p>
+              <p className="mt-2 text-xs text-smoke">
+                {d.server.audit.checked}: <Since iso={s.audit.at} units={d.units} suffix={d.card.ago} />
+              </p>
+            </section>
+          )}
 
           {s.official && (
             <section className="p-4 plate">

@@ -1,3 +1,4 @@
+import type { A2SPlayer } from "@wiperadar/a2s";
 import { lastForceWipe, type Cadence, type Region } from "@wiperadar/shared";
 import type { Db } from "../db";
 import type { ListEntry, ServerSource } from "./types";
@@ -351,6 +352,20 @@ export class DemoSource implements ServerSource {
       description_0: s.description,
       build: "2593",
     };
+  }
+
+  /** Honest lists, except every 29th server, which advertises about three times its real crowd. */
+  async fetchPlayers(ip: string, queryPort: number): Promise<A2SPlayer[]> {
+    const i = this.servers.findIndex((x) => x.ip === ip && x.queryPort === queryPort);
+    if (i < 0) throw new Error("unknown demo server");
+    const s = this.servers[i];
+    const { players } = demoLoad(s, Date.now(), s.bornAt, 0.5);
+    const real = i % 29 === 7 ? Math.round(players / 3) : players;
+    return Array.from({ length: Math.min(real, 255) }, (_, n) => ({
+      name: `survivor_${(s.seed + n * 7919) % 100_000}`,
+      score: 0,
+      durationSec: Math.round(this.rand() * 4 * 3600),
+    }));
   }
 
   private wipe(s: DemoServer, at: number) {

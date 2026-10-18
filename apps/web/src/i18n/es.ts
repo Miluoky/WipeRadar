@@ -135,6 +135,13 @@ export const es: Dict = {
     kind: { map: "Mapa", full: "Completo", force: "Force" },
     mapNote: "Vista esquemática a partir del seed",
     offline: "El servidor no responde",
+    audit: {
+      title: "La población parece inflada",
+      short: "El servidor anuncia {reported} jugadores, pero su lista de jugadores solo tiene {listed}.",
+      clones: "La mayoría de la lista entró en el mismo segundo o comparte nombre, algo típico de bots.",
+      flat: "La cifra de jugadores no se ha movido en todo un día, algo que no pasa en servidores reales.",
+      checked: "Última comprobación",
+    },
     official: { title: "Horario oficial de wipes", source: "Fuente", checked: "Comprobado con los wipes observados" },
     claim: "¿Es tu servidor? Verifica la propiedad y publica el horario exacto de wipes.",
     share: "Enlace",

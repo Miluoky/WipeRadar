@@ -135,6 +135,13 @@ export const de: Dict = {
     kind: { map: "Map", full: "Voll", force: "Force" },
     mapNote: "Schematische Vorschau aus dem Seed",
     offline: "Server antwortet nicht",
+    audit: {
+      title: "Spielerzahl wirkt aufgebläht",
+      short: "Der Server meldet {reported} Spieler, aber in seiner Spielerliste stehen nur {listed}.",
+      clones: "Ein Großteil der Spielerliste ist in derselben Sekunde beigetreten oder trägt denselben Namen, typisch für Bots.",
+      flat: "Die Spielerzahl hat sich einen ganzen Tag lang nicht bewegt, das passiert bei echten Servern nie.",
+      checked: "Zuletzt geprüft",
+    },
     official: { title: "Offizieller Wipe-Plan", source: "Quelle", checked: "Mit beobachteten Wipes abgeglichen" },
     claim: "Ist das dein Server? Bestätige den Besitz und veröffentliche den genauen Wipe-Plan.",
     share: "Link",
