@@ -83,6 +83,8 @@ export interface ServerDetail extends ServerSummary {
   wipes: WipeRecord[];
   /** wipe schedule the network publishes itself, when we have a checked one */
   official: OfficialInfo | null;
+  /** schedule published by the verified owner */
+  ownerSchedule: OwnerSchedule | null;
 }
 
 export interface OfficialInfo {
@@ -98,6 +100,18 @@ export interface ClaimStatus {
   serverId: number;
   verified: boolean;
   expiresAt: string;
+  /** owner key, returned once when the claim is created; with a verified claim it edits the schedule */
+  key?: string;
+}
+
+/** Wipe schedule an owner publishes: weekday + wall-clock time slots in their own time zone. */
+export interface OwnerSchedule {
+  /** weekly: every slot; biweekly: every other week, counted from the month's force wipe */
+  kind: "weekly" | "biweekly";
+  /** day 0=Sun..6=Sat, time "HH:MM" */
+  slots: { day: number; time: string }[];
+  /** IANA zone, e.g. "Europe/Moscow" */
+  tz: string;
 }
 
 export interface MetricPoint {

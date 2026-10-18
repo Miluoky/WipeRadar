@@ -43,6 +43,18 @@ export const fr: Dict = {
     error: "Une erreur est survenue, réessaie plus tard.",
     badge: "Propriétaire vérifié",
   },
+  schedule: {
+    title: "Calendrier des wipes",
+    weekly: "Chaque semaine",
+    biweekly: "Toutes les 2 semaines",
+    time: "Heure",
+    tz: "Fuseau horaire",
+    save: "Enregistrer",
+    saved: "Enregistré : le site prévoit désormais les wipes d'après lui.",
+    remove: "Supprimer",
+    again: "Vérifie à nouveau la propriété pour modifier le calendrier.",
+    owner: "Calendrier du propriétaire",
+  },
   filters: {
     title: "Filtres",
     search: "Rechercher par nom…",

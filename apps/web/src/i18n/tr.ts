@@ -37,6 +37,18 @@ export const tr: Dict = {
     error: "Bir şeyler ters gitti, daha sonra tekrar dene.",
     badge: "Doğrulanmış sahip",
   },
+  schedule: {
+    title: "Wipe takvimi",
+    weekly: "Her hafta",
+    biweekly: "2 haftada bir",
+    time: "Saat",
+    tz: "Saat dilimi",
+    save: "Takvimi kaydet",
+    saved: "Kaydedildi: site wipe'ları artık buna göre hesaplıyor.",
+    remove: "Kaldır",
+    again: "Takvimi düzenlemek için sahipliği tekrar doğrula.",
+    owner: "Sahibin takvimi",
+  },
   filters: {
     title: "Filtreler",
     search: "İsme göre ara…",

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import type { ClaimStatus } from "@wiperadar/shared";
+import { predictNextWipe, type ClaimStatus, type OwnerSchedule } from "@wiperadar/shared";
+import { ownerNext } from "./claims";
 import { buildApi } from "./api";
 import { Poller } from "./poller";
 import { getServer } from "./repo";
@@ -36,6 +37,45 @@ test("an ownership claim is verified once its code shows up in the server descri
   const after = await app.inject({ url: `/api/claims/${claim.code}`, headers: visitor });
   assert.equal(after.json<ClaimStatus>().verified, true);
   assert.equal((await getServer(db, 1))?.verified, true);
+
+  // the claim's key now publishes a schedule: Thursdays 18:00 Moscow time
+  assert.ok(claim.key && claim.key.length >= 16);
+  const schedule = { kind: "weekly", slots: [{ day: 4, time: "18:00" }], tz: "Europe/Moscow" };
+  const put = (key: string, payload: unknown) =>
+    app.inject({
+      method: "PUT",
+      url: "/api/servers/1/schedule",
+      payload: payload as object,
+      headers: { ...visitor, authorization: `Bearer ${key}` },
+    });
+  assert.equal((await put("not-the-owner-key-000", schedule)).statusCode, 403);
+  assert.equal((await put(claim.key, { ...schedule, tz: "Mars/Olympus" })).statusCode, 400);
+  assert.equal((await put(claim.key, { ...schedule, slots: [{ day: 4, time: "25:00" }] })).statusCode, 400);
+  assert.equal((await put(claim.key, schedule)).statusCode, 204);
+  const s = await getServer(db, 1);
+  assert.deepEqual(s?.ownerSchedule, schedule);
+  // Thursday 18:00 MSK = 15:00 UTC, unless the monthly force wipe comes first
+  const expected = predictNextWipe({
+    lastWipe: null,
+    cadence: null,
+    history: [],
+    ownerNext: ownerNext(schedule as OwnerSchedule),
+  });
+  assert.equal(s?.nextWipeAt, expected.at.toISOString());
+  assert.equal(s?.nextWipeSource, expected.source);
+  if (expected.source === "owner") assert.equal(`${expected.at.getUTCDay()} ${expected.at.getUTCHours()}`, "4 15");
+  // still the owner's after the poller's own prediction pass
+  poller.forceFullPredict();
+  await poller.cycle();
+  assert.equal((await getServer(db, 1))?.nextWipeAt, s?.nextWipeAt);
+
+  const del = await app.inject({
+    method: "DELETE",
+    url: "/api/servers/1/schedule",
+    headers: { ...visitor, authorization: `Bearer ${claim.key}` },
+  });
+  assert.equal(del.statusCode, 204);
+  assert.equal((await getServer(db, 1))?.ownerSchedule, null);
 
   await app.close();
   await db.close();

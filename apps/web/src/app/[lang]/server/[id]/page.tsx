@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CalendarPlus, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
-import type { ServerDetail } from "@wiperadar/shared";
+import type { OwnerSchedule, ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
 import { LocalTime, Since, Until } from "@/components/clock";
@@ -13,7 +13,7 @@ import { ShareButton } from "@/components/share-button";
 import { MapPreview } from "@/components/map-preview";
 import { PlayersChart } from "@/components/players-chart";
 import { cookies } from "next/headers";
-import { alternates, getDict, hasLocale, intlLocale } from "@/i18n";
+import { alternates, getDict, hasLocale, intlLocale, type Dict, type Locale } from "@/i18n";
 import { breadcrumbs, JsonLd, SITE } from "@/components/json-ld";
 import { fill } from "@/lib/landing";
 import { api, NotFound } from "@/lib/api";
@@ -44,6 +44,21 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/server/[id
     // dead servers shouldn't compete in search; they come back on their own when the server does
     ...(s.online ? {} : { robots: { index: false, follow: true } }),
   };
+}
+
+/** "Mon, Thu 18:00 · every week (Europe/Moscow)" in the visitor's language. */
+function describeSchedule(sch: OwnerSchedule, lang: Locale, d: Dict) {
+  const day = new Intl.DateTimeFormat(intlLocale(lang), { weekday: "short", timeZone: "UTC" });
+  const byTime = new Map<string, number[]>();
+  for (const s of sch.slots) byTime.set(s.time, [...(byTime.get(s.time) ?? []), s.day]);
+  const parts = [...byTime].map(
+    ([time, days]) =>
+      `${days
+        .sort((a, b) => ((a + 6) % 7) - ((b + 6) % 7))
+        .map((n) => day.format(new Date(Date.UTC(2023, 0, 1 + n))))
+        .join(", ")} ${time}`,
+  );
+  return `${parts.join("; ")} · ${d.schedule[sch.kind].toLowerCase()} (${sch.tz})`;
 }
 
 export default async function ServerPage({ params }: PageProps<"/[lang]/server/[id]">) {
@@ -196,6 +211,11 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
             <p className="text-xs text-smoke">
               <LocalTime iso={s.nextWipeAt} locale={lang} withWeekday />
               {s.nextWipeSource && <> · {d.source[s.nextWipeSource]}</>}
+            </p>
+          )}
+          {s.ownerSchedule && (
+            <p className="text-xs text-toxic">
+              {d.schedule.owner}: {describeSchedule(s.ownerSchedule, lang, d)}
             </p>
           )}
           {s.nextWipeAt && acc && (
@@ -385,7 +405,15 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
           )}
 
           <section className="border-dashed p-4 text-sm text-ash plate">
-            <ClaimBox serverId={s.id} verified={s.verified} intro={d.server.claim} t={d.claim} />
+            <ClaimBox
+              serverId={s.id}
+              verified={s.verified}
+              intro={d.server.claim}
+              schedule={s.ownerSchedule}
+              locale={lang}
+              t={d.claim}
+              ts={d.schedule}
+            />
           </section>
         </aside>
       </div>

@@ -36,6 +36,18 @@ export const en: Dict = {
     error: "Something went wrong, try again later.",
     badge: "Verified owner",
   },
+  schedule: {
+    title: "Wipe schedule",
+    weekly: "Every week",
+    biweekly: "Every 2 weeks",
+    time: "Time",
+    tz: "Time zone",
+    save: "Save schedule",
+    saved: "Saved: the site now predicts wipes from it.",
+    remove: "Remove",
+    again: "Verify again to edit the schedule.",
+    owner: "Owner's schedule",
+  },
   filters: {
     title: "Filters",
     search: "Search by name…",

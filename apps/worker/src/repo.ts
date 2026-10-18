@@ -158,7 +158,9 @@ export async function getServerSummaries(db: Db, ids: number[]): Promise<ServerS
 
 export async function getServer(db: Db, id: number): Promise<ServerDetail | null> {
   const { rows } = await db.query(
-    `SELECT ${SUMMARY_COLS}, description, url, tags, build, fps, entities, map_image, first_seen_at, last_seen_at FROM servers WHERE id = $1`,
+    `SELECT ${SUMMARY_COLS}, description, url, tags, build, fps, entities, map_image, first_seen_at, last_seen_at,
+            (SELECT schedule FROM wipe_schedules ws WHERE ws.server_id = servers.id AND ws.source = 'owner') AS owner_schedule
+     FROM servers WHERE id = $1`,
     [id],
   );
   const r = rows[0];
@@ -189,6 +191,7 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
       predictedSource: w.predicted_source,
     })),
     official: official && { quote: official.quote, sourceUrl: official.sourceUrl, checkedAt: OFFICIAL_CHECKED_AT },
+    ownerSchedule: r.owner_schedule ?? null,
   };
 }
 

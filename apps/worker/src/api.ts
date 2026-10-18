@@ -3,7 +3,7 @@ import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import type { FastifyRequest } from "fastify";
 import { CADENCES, GROUP_LIMITS, RATES, REGIONS, SERVER_TYPES, type MetricRange } from "@wiperadar/shared";
-import { createClaim, getClaim } from "./claims";
+import { createClaim, getClaim, isOwner, parseSchedule, setSchedule } from "./claims";
 import { config } from "./config";
 import type { Db } from "./db";
 import { TtlCache } from "./cache";
@@ -166,6 +166,28 @@ export async function buildApi(db: Db, status?: PollStatus) {
     if (!res.ok) return reply.code(res.error === "not found" ? 404 : 429).send({ error: res.error });
     reply.header("Cache-Control", "no-store");
     return reply.code(201).send(res.claim);
+  });
+
+  // Owner schedule: only with the key of a verified claim on this server (Authorization: Bearer <key>)
+  const ownerRoute = { config: { rateLimit: { max: 30, timeWindow: 3_600_000 } } };
+  const ownerKey = (req: FastifyRequest) => /^Bearer ([\w-]{16,64})$/.exec(req.headers.authorization ?? "")?.[1];
+  app.put("/api/servers/:id/schedule", ownerRoute, async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    const key = ownerKey(req);
+    if (!id || !key || !(await isOwner(db, id, key))) return reply.code(403).send({ error: "forbidden" });
+    const schedule = parseSchedule(req.body);
+    if (!schedule) return reply.code(400).send({ error: "bad schedule" });
+    await setSchedule(db, id, schedule);
+    cache.delete(`server:${id}`); // the owner sees the change on reload
+    return reply.code(204).send();
+  });
+  app.delete("/api/servers/:id/schedule", ownerRoute, async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    const key = ownerKey(req);
+    if (!id || !key || !(await isOwner(db, id, key))) return reply.code(403).send({ error: "forbidden" });
+    await setSchedule(db, id, null);
+    cache.delete(`server:${id}`); // the owner sees the change on reload
+    return reply.code(204).send();
   });
 
   app.get("/api/claims/:code", async (req, reply) => {
