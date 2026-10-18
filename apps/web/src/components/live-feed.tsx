@@ -2,19 +2,27 @@
 
 import Link from "next/link";
 import { Flame, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { LiveEvent, ServerSummary } from "@wiperadar/shared";
 import type { Dict, Locale } from "@/i18n";
 
+const REFRESH_EVERY_MS = 30_000;
+
 /**
  * SSE subscription to /api/live:
- *  - "wipe" → toast + refresh the server-rendered list (throttled)
+ *  - "wipe" → toast + refresh the server-rendered list on the home page (throttled, visible tabs only)
  *  - connection status pill in the header
  */
 export function LiveFeed({ d, locale, refreshOnWipe }: { d: Dict; locale: Locale; refreshOnWipe: boolean }) {
   const router = useRouter();
+  // only the home page lists fresh wipes; elsewhere a refresh would just re-render the page for nothing
+  const onHome = useRef(false);
+  const pathname = usePathname();
+  useEffect(() => {
+    onHome.current = /^\/[a-z]{2}\/?$/.test(pathname);
+  }, [pathname]);
   const [online, setOnline] = useState(false);
   const [toasts, setToasts] = useState<ServerSummary[]>([]);
   const lastRefresh = useRef(0);
@@ -27,7 +35,8 @@ export function LiveFeed({ d, locale, refreshOnWipe }: { d: Dict; locale: Locale
       const e = JSON.parse((msg as MessageEvent).data) as Extract<LiveEvent, { type: "wipe" }>;
       setToasts((t) => [e.server, ...t.filter((x) => x.id !== e.server.id)].slice(0, 3));
       setTimeout(() => setToasts((t) => t.filter((x) => x.id !== e.server.id)), 9000);
-      if (refreshOnWipe && Date.now() - lastRefresh.current > 5000) {
+      // a force wipe brings thousands of events in minutes: at most one server render per visitor per 30s
+      if (refreshOnWipe && onHome.current && !document.hidden && Date.now() - lastRefresh.current > REFRESH_EVERY_MS) {
         lastRefresh.current = Date.now();
         router.refresh();
       }
