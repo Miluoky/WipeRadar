@@ -427,6 +427,8 @@ export class DemoSource implements ServerSource {
        ON CONFLICT DO NOTHING`,
       [wipeSid, wipeAt, wipeKind, wipeSeed, wipePredicted],
     );
+    // the history above predates the servers' first sighting; charts start drawing from first_seen_at
+    await db.query(`UPDATE servers SET first_seen_at = LEAST(first_seen_at, now() - interval '95 days')`);
     // mark a few servers as promoted so the UI shows the ad slot
     await db.query(`UPDATE servers SET promoted = true WHERE id IN (SELECT id FROM servers ORDER BY id LIMIT 2)`);
     console.log(`[demo] seeded ${wipeSid.length} wipes`);
