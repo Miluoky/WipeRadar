@@ -79,6 +79,8 @@ export const zh: Dict = {
     description: "简介",
     details: "详情",
     similar: "类似服务器",
+    accuracy: "此类预测 {pct}% 误差在 ±1 小时内",
+    forecastOff: "预测误差",
     firstSeen: "收录时间",
     build: "版本",
     fps: "FPS",

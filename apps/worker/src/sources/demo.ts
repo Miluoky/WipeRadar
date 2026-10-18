@@ -376,6 +376,9 @@ export class DemoSource implements ServerSource {
     const wipeAt: string[] = [];
     const wipeKind: string[] = [];
     const wipeSeed: number[] = [];
+    // what the site "had predicted" for each wipe: mostly close, sometimes hours off (own RNG keeps metrics stable)
+    const wipePredicted: string[] = [];
+    const rp = mulberry32(11);
     for (const s of this.servers) {
       const id = idByAddr.get(`${s.ip}:${s.queryPort}`);
       if (!id) continue;
@@ -390,6 +393,8 @@ export class DemoSource implements ServerSource {
         wipeAt.push(new Date(w).toISOString());
         wipeKind.push(w === lastForceWipe(new Date(w + 1000)).getTime() ? "force" : "map");
         wipeSeed.push(Math.floor(r() * 2_147_483_647));
+        const missMin = rp() < 0.8 ? (rp() - 0.5) * 60 : (rp() - 0.5) * 600;
+        wipePredicted.push(new Date(w + Math.round(missMin) * 60_000).toISOString());
       }
 
       const sid: number[] = [];
@@ -416,11 +421,11 @@ export class DemoSource implements ServerSource {
       );
     }
     await db.query(
-      `INSERT INTO wipes (server_id, wiped_at, kind, seed, map, detected_by)
-       SELECT sid, at, kind, seed, 'Procedural Map', 'demo'
-       FROM unnest($1::int[], $2::timestamptz[], $3::text[], $4::bigint[]) AS t(sid, at, kind, seed)
+      `INSERT INTO wipes (server_id, wiped_at, kind, seed, map, detected_by, predicted_at, predicted_source)
+       SELECT sid, at, kind, seed, 'Procedural Map', 'demo', pred, 'history'
+       FROM unnest($1::int[], $2::timestamptz[], $3::text[], $4::bigint[], $5::timestamptz[]) AS t(sid, at, kind, seed, pred)
        ON CONFLICT DO NOTHING`,
-      [wipeSid, wipeAt, wipeKind, wipeSeed],
+      [wipeSid, wipeAt, wipeKind, wipeSeed, wipePredicted],
     );
     // mark a few servers as promoted so the UI shows the ad slot
     await db.query(`UPDATE servers SET promoted = true WHERE id IN (SELECT id FROM servers ORDER BY id LIMIT 2)`);

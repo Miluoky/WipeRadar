@@ -208,8 +208,9 @@ export class Poller {
     });
     if (sid.length) {
       await this.db.query(
-        `INSERT INTO wipes (server_id, wiped_at, kind, map, detected_by)
-         SELECT u.sid, u.at, u.kind, s.map, u.by
+        // the prediction standing at detection time is saved with the wipe (accuracy stats), then cleared below
+        `INSERT INTO wipes (server_id, wiped_at, kind, map, detected_by, predicted_at, predicted_source)
+         SELECT u.sid, u.at, u.kind, s.map, u.by, s.next_wipe_at, s.next_wipe_source
          FROM unnest($1::int[], $2::timestamptz[], $3::text[], $4::text[]) AS u(sid, at, kind, by)
          JOIN servers s ON s.id = u.sid
          ON CONFLICT DO NOTHING`,

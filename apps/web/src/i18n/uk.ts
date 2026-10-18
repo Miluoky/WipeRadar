@@ -97,6 +97,8 @@ export const uk: Dict = {
     description: "Опис",
     details: "Деталі",
     similar: "Схожі сервери",
+    accuracy: "{pct}% таких прогнозів точні до ±1 год",
+    forecastOff: "Прогноз помилився на",
     firstSeen: "У моніторингу з",
     build: "Збірка",
     fps: "FPS",

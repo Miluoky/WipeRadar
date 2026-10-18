@@ -9,7 +9,7 @@ import { TtlCache } from "./cache";
 import { subscribe } from "./events";
 import { counters } from "./log";
 import type { PollStatus } from "./poller";
-import { getMetrics, getServer, getSimilar, getStats, listServers, type ListParams } from "./repo";
+import { getAccuracy, getMetrics, getServer, getSimilar, getStats, listServers, type ListParams } from "./repo";
 
 /** "eu,cis" → ["eu","cis"], dropping anything not in the allow-list. */
 function list<T extends string>(v: unknown, allowed: readonly T[]): T[] | undefined {
@@ -92,6 +92,11 @@ export async function buildApi(db: Db, status?: PollStatus) {
   app.get("/api/stats", async (_req, reply) => {
     reply.header("Cache-Control", SHORT);
     return cache.get("stats", 5_000, () => getStats(db, config.demo));
+  });
+
+  app.get("/api/accuracy", async (_req, reply) => {
+    reply.header("Cache-Control", LONG);
+    return cache.get("accuracy", 600_000, () => getAccuracy(db));
   });
 
   app.get("/api/servers", async (req, reply) => {
