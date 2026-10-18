@@ -42,6 +42,18 @@ export const de: Dict = {
     error: "Etwas ist schiefgelaufen, versuch es später erneut.",
     badge: "Bestätigter Besitzer",
   },
+  schedule: {
+    title: "Wipe-Plan",
+    weekly: "Jede Woche",
+    biweekly: "Alle 2 Wochen",
+    time: "Uhrzeit",
+    tz: "Zeitzone",
+    save: "Plan speichern",
+    saved: "Gespeichert: Die Seite rechnet Wipes jetzt danach.",
+    remove: "Entfernen",
+    again: "Bestätige den Besitz erneut, um den Plan zu ändern.",
+    owner: "Plan des Besitzers",
+  },
   filters: {
     title: "Filter",
     search: "Nach Namen suchen…",

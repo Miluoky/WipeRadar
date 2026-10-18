@@ -42,6 +42,18 @@ export const es: Dict = {
     error: "Algo salió mal, inténtalo más tarde.",
     badge: "Propietario verificado",
   },
+  schedule: {
+    title: "Horario de wipes",
+    weekly: "Cada semana",
+    biweekly: "Cada 2 semanas",
+    time: "Hora",
+    tz: "Zona horaria",
+    save: "Guardar horario",
+    saved: "Guardado: el sitio ahora calcula los wipes con él.",
+    remove: "Eliminar",
+    again: "Verifica la propiedad de nuevo para editar el horario.",
+    owner: "Horario del propietario",
+  },
   filters: {
     title: "Filtros",
     search: "Buscar por nombre…",

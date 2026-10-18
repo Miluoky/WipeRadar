@@ -36,6 +36,18 @@ export const pl: Dict = {
     error: "Coś poszło nie tak, spróbuj później.",
     badge: "Potwierdzony właściciel",
   },
+  schedule: {
+    title: "Harmonogram wipe'ów",
+    weekly: "Co tydzień",
+    biweekly: "Co 2 tygodnie",
+    time: "Godzina",
+    tz: "Strefa czasowa",
+    save: "Zapisz harmonogram",
+    saved: "Zapisano: strona liczy teraz wipe'y według niego.",
+    remove: "Usuń",
+    again: "Potwierdź własność ponownie, aby zmienić harmonogram.",
+    owner: "Harmonogram właściciela",
+  },
   filters: {
     title: "Filtry",
     search: "Szukaj po nazwie…",

@@ -159,6 +159,14 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       CREATE INDEX server_claims_pending_idx ON server_claims (server_id) WHERE verified_at IS NULL;
     `,
   },
+  {
+    // owner key (hash only) for verified owners to publish a schedule; the schedule itself as weekday/time slots
+    id: "009_owner_schedule",
+    sql: /* sql */ `
+      ALTER TABLE server_claims ADD COLUMN key_hash TEXT;
+      ALTER TABLE wipe_schedules ADD COLUMN schedule JSONB;
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */

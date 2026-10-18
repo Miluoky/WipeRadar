@@ -53,6 +53,10 @@ export class TtlCache {
     }
   }
 
+  delete(key: string) {
+    this.map.delete(key);
+  }
+
   clear() {
     this.map.clear();
   }
