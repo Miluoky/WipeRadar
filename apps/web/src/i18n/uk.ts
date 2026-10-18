@@ -12,8 +12,6 @@ export const uk: Dict = {
     subtitle: "Щойно вайпнуті сервери, точний час наступних вайпів у твоєму часовому поясі, онлайн і черги в реальному часі.",
     forceWipe: "Глобальний вайп через",
     note: "дані зі Steam, оновлення кожні 2 хв",
-    islandHint: "клікни — вайпну карту",
-    islandLabel: "Інтерактивна 3D-мапа: процедурний острів у стилі Rust",
   },
   stats: {
     servers: "серверів онлайн",
@@ -25,6 +23,13 @@ export const uk: Dict = {
   tabs: { justWiped: "Свіжі вайпи", upcoming: "Скоро вайп", all: "Усі сервери", favorites: "Обране" },
   windows: { all: "Усі", label: "Вікно" },
   favorites: { empty: "Позначайте сервери зірочкою — вони з'являться тут і будуть доступні під час кожного візиту." },
+  ics: {
+    add: "До календаря",
+    subscribe: "Підписка в календарі",
+    wipe: "Вайп",
+    force: "Глобальний вайп",
+    feed: "WipeRadar: обрані сервери",
+  },
   filters: {
     title: "Фільтри",
     search: "Пошук за назвою…",
@@ -91,6 +96,7 @@ export const uk: Dict = {
     chart: "Онлайн",
     description: "Опис",
     details: "Деталі",
+    similar: "Схожі сервери",
     firstSeen: "У моніторингу з",
     build: "Збірка",
     fps: "FPS",

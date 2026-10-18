@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Poller } from "./poller";
-import { getMetrics, listServers } from "./repo";
+import { getMetrics, getSimilar, listServers } from "./repo";
 import { entry, FakeSource, HOUR, memoryDb } from "./testing";
 
 /** Five servers wiped 1h, 3h, 5h, 30h and 10 days ago; one is a test box, one is empty. */
@@ -81,5 +81,18 @@ test("7d chart reads the hourly rollup once raw samples are pruned", async () =>
   const at = points.find((p) => p.t === hour.toISOString());
   assert.equal(at?.players, 40);
   assert.equal(points.filter((p) => p.players > 0 && p.t !== hour.toISOString()).length <= 1, true);
+  await db.close();
+});
+
+test("similar servers: same region or rate first, real servers only, never itself", async () => {
+  const db = await world();
+  await db.query(
+    `UPDATE servers SET region = 'eu', rate = 'x2' WHERE name IN ('Rustoria EU Main', 'Восток RU x2', 'testserver')`,
+  );
+  await db.query(`UPDATE servers SET region = 'eu', rate = 'vanilla' WHERE name = 'Old Monthly'`);
+  const { rows } = await db.query<{ id: number }>(`SELECT id FROM servers WHERE name = 'Rustoria EU Main'`);
+  const similar = (await getSimilar(db, rows[0].id)).map((s) => s.name);
+  // test box and empty server are filtered out; the full match ranks above the region-only one
+  assert.deepEqual(similar, ["Восток RU x2", "Old Monthly"]);
   await db.close();
 });

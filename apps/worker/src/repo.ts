@@ -50,6 +50,8 @@ function toSummary(r: Row): ServerSummary {
   };
 }
 
+const QUALITY = `(promoted OR (max_players >= 50 AND GREATEST(players, peak_players) >= 5 AND name !~* '(^|[^a-z])(test|testing|dev|staging|debug)(server|srv)?([^a-z]|$)'))`;
+
 export interface ListParams extends ServerQuery {
   wipedWithinHours?: number;
   wipedFromHours?: number;
@@ -85,11 +87,7 @@ export async function listServers(db: Db, p: ListParams): Promise<Paged<ServerSu
   if (p.nextFromHours) where.push(`next_wipe_at >= now() + ${arg(p.nextFromHours)}::float8 * interval '1 hour'`);
   // Live data is ~75% empty or dev boxes ("testserver", 0/2 slots). Feeds and the
   // calendar ask for quality so real communities aren't buried; "All servers" doesn't.
-  if (p.quality) {
-    where.push(
-      `(promoted OR (max_players >= 50 AND GREATEST(players, peak_players) >= 5 AND name !~* '(^|[^a-z])(test|testing|dev|staging|debug)(server|srv)?([^a-z]|$)'))`,
-    );
-  }
+  if (p.quality) where.push(QUALITY);
 
   const order =
     p.sort === "hot"
@@ -188,6 +186,26 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
     })),
     official: official && { quote: official.quote, sourceUrl: official.sourceUrl, checkedAt: OFFICIAL_CHECKED_AT },
   };
+}
+
+/**
+ * "Similar servers" for a server page: online, real (same quality bar as the feeds), ranked by how many
+ * of region / rate / group / cadence / type match, then by population. Needs at least region or rate to match.
+ */
+export async function getSimilar(db: Db, id: number, limit = 5): Promise<ServerSummary[]> {
+  const { rows } = await db.query(
+    `WITH me AS (SELECT region AS r, rate AS ra, group_limit AS g, cadence AS c, type AS t FROM servers WHERE id = $1),
+     cand AS (SELECT ${SUMMARY_COLS} FROM servers WHERE online AND id <> $1 AND ${QUALITY})
+     SELECT cand.* FROM cand, me
+     WHERE region = me.r OR rate = me.ra
+     ORDER BY 3 * (region IS NOT DISTINCT FROM me.r)::int + 2 * (rate IS NOT DISTINCT FROM me.ra)::int
+              + 2 * (group_limit IS NOT DISTINCT FROM me.g)::int + (cadence IS NOT DISTINCT FROM me.c)::int
+              + (type = me.t)::int DESC,
+              players + queue DESC, id
+     LIMIT ${Math.min(Math.max(limit, 1), 20)}`,
+    [id],
+  );
+  return rows.map(toSummary);
 }
 
 const RANGE: Record<MetricRange, { span: string; bucket: string }> = {

@@ -43,3 +43,15 @@ test("live feed connects over SSE", async ({ page }) => {
   await page.goto("/en");
   await live;
 });
+
+test("wipes calendar exports an iCalendar file", async ({ request }) => {
+  const list = await (await request.get("/api/servers?sort=next&limit=3")).json();
+  const ids = list.items.map((s: { id: number }) => s.id).join(",");
+  const res = await request.get(`/en/wipes.ics?ids=${ids}`);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toContain("text/calendar");
+  const body = await res.text();
+  expect(body).toMatch(/^BEGIN:VCALENDAR\r\n/);
+  expect(body).toContain("SUMMARY:Wipe: ");
+  expect((await request.get("/en/wipes.ics")).status()).toBe(400);
+});

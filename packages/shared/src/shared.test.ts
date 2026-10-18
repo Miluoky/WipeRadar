@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  buildIcs,
   parseRustKeywords,
   parseRate,
   parseGroupLimit,
@@ -158,4 +159,28 @@ test("official schedule outranks history in the prediction", () => {
     officialNext: new Date("2026-10-22T14:00:00Z"),
   });
   assert.equal(p.source, "official");
+});
+
+test("buildIcs escapes text, folds long lines and uses UTC stamps", () => {
+  const ics = buildIcs(
+    "WipeRadar",
+    [
+      {
+        uid: "wipe-1-1@wiperadar",
+        start: new Date("2026-10-22T15:00:00Z"),
+        minutes: 60,
+        summary: "Вайп: Rustoria, EU; main",
+        description: "client.connect 1.2.3.4:28015\n" + "x".repeat(120),
+        alarmMinutes: 15,
+      },
+    ],
+    new Date("2026-10-18T00:00:00Z"),
+  );
+  assert.ok(ics.includes("DTSTART:20261022T150000Z\r\n"));
+  assert.ok(ics.includes("SUMMARY:Вайп: Rustoria\\, EU\; main\r\n"));
+  assert.ok(ics.includes("TRIGGER:-PT15M"));
+  for (const line of ics.split("\r\n")) assert.ok(Buffer.byteLength(line) <= 75, line);
+  // unfolding restores the original content line
+  assert.ok(ics.replace(/\r\n /g, "").includes("DESCRIPTION:client.connect 1.2.3.4:28015\\n" + "x".repeat(120)));
+  assert.ok(ics.endsWith("END:VCALENDAR\r\n"));
 });

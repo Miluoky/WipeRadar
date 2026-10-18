@@ -13,8 +13,6 @@ export const es: Dict = {
       "Servidores recién wipeados, hora exacta de los próximos wipes en tu zona horaria, jugadores y colas en tiempo real.",
     forceWipe: "Force wipe en",
     note: "directo de Steam, cada 2 min",
-    islandHint: "haz clic para wipear el mapa",
-    islandLabel: "Mapa 3D interactivo: isla procedural al estilo Rust",
   },
   stats: {
     servers: "servidores en línea",
@@ -26,6 +24,13 @@ export const es: Dict = {
   tabs: { justWiped: "Recién wipeados", upcoming: "Wipe pronto", all: "Todos los servidores", favorites: "Favoritos" },
   windows: { all: "Todos", label: "Ventana" },
   favorites: { empty: "Marca servidores con la estrella y aparecerán aquí en cada visita." },
+  ics: {
+    add: "Añadir al calendario",
+    subscribe: "Suscribirse en el calendario",
+    wipe: "Wipe",
+    force: "Force wipe global",
+    feed: "WipeRadar: servidores favoritos",
+  },
   filters: {
     title: "Filtros",
     search: "Buscar por nombre…",
@@ -92,6 +97,7 @@ export const es: Dict = {
     chart: "Población",
     description: "Descripción",
     details: "Detalles",
+    similar: "Servidores similares",
     firstSeen: "Monitorizado desde",
     build: "Build",
     fps: "FPS",

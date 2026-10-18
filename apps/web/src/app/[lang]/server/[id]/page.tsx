@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
+import { ArrowLeft, CalendarPlus, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
 import type { ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
@@ -51,7 +51,7 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
   const d = getDict(lang);
   const s = await load(id);
   if (!s) notFound();
-  const metrics = await api.metrics(s.id, "24h").catch(() => []);
+  const [metrics, similar] = await Promise.all([api.metrics(s.id, "24h").catch(() => []), api.similar(s.id).catch(() => [])]);
   const fresh = s.lastWipeAt && Date.now() - Date.parse(s.lastWipeAt) < 3 * 3600_000;
   const fav = parseFavorites((await cookies()).get(FAV_COOKIE)?.value).includes(s.id);
   const peak = metrics.reduce((m, p) => Math.max(m, p.players), 0);
@@ -127,6 +127,16 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
               size="lg"
               labels={{ connect: d.card.connect, copy: d.card.copy, copied: d.card.copied }}
             />
+            {s.nextWipeAt && (
+              <a
+                href={`/${lang}/wipes.ics?ids=${s.id}`}
+                title={d.ics.add}
+                className="flex items-center gap-1.5 px-4 py-3 btn-dim text-base"
+              >
+                <CalendarPlus className="size-4" aria-hidden />
+                <span className="hidden sm:inline">{d.ics.add}</span>
+              </a>
+            )}
             <ShareButton labels={{ share: d.server.share, shared: d.server.shared }} />
           </div>
         </div>
@@ -320,6 +330,37 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
               </a>
             )}
           </section>
+
+          {similar.length > 0 && (
+            <section className="p-4 plate">
+              <h2 className="mb-3 font-display text-sm text-ash">{d.server.similar}</h2>
+              <ul className="space-y-2">
+                {similar.map((o) => (
+                  <li key={o.id}>
+                    <Link
+                      href={`/${lang}/server/${o.id}`}
+                      className="flex items-center gap-3 border border-transparent p-1.5 hover:border-seam hover:bg-steel-3/40"
+                    >
+                      <ServerLogo name={o.name} src={o.logoImage} size={32} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm text-bone">{o.name}</span>
+                        <span className="block font-mono text-xs text-smoke">
+                          {o.players}/{o.maxPlayers}
+                          {o.region && <> · {d.region[o.region]}</>}
+                          {o.lastWipeAt && (
+                            <>
+                              {" · "}
+                              <Since iso={o.lastWipeAt} units={d.units} suffix={d.card.ago} />
+                            </>
+                          )}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <section className="border-dashed p-4 text-sm text-ash plate">
             <ShieldCheck className="mb-2 size-5 text-toxic" aria-hidden />
