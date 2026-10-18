@@ -43,6 +43,8 @@ export interface ServerSummary {
   peakPlayers: number;
   promoted: boolean;
   suspicious: boolean;
+  /** the owner proved control by putting a WipeRadar code into the server description or name */
+  verified: boolean;
   /** hourly average players for the last 24h (list endpoints only) */
   spark?: number[];
 }
@@ -89,6 +91,13 @@ export interface OfficialInfo {
   sourceUrl: string;
   /** YYYY-MM-DD when we last checked it against observed wipes */
   checkedAt: string;
+}
+
+export interface ClaimStatus {
+  code: string;
+  serverId: number;
+  verified: boolean;
+  expiresAt: string;
 }
 
 export interface MetricPoint {

@@ -20,7 +20,7 @@ type Row = Record<string, any>;
 const iso = (d: unknown) => (d ? new Date(d as string).toISOString() : null);
 
 const SUMMARY_COLS = `id, ip, game_port, name, region, country, players, max_players, queue, map, seed, world_size,
-  rate, group_limit, type, cadence, last_wipe_at, next_wipe_at, next_wipe_source, online, header_image, logo_image, promoted, suspicious, peak_players`;
+  rate, group_limit, type, cadence, last_wipe_at, next_wipe_at, next_wipe_source, online, header_image, logo_image, promoted, suspicious, peak_players, owner_verified_at`;
 
 function toSummary(r: Row): ServerSummary {
   return {
@@ -48,6 +48,7 @@ function toSummary(r: Row): ServerSummary {
     peakPlayers: r.peak_players ?? 0,
     promoted: r.promoted,
     suspicious: r.suspicious,
+    verified: r.owner_verified_at != null,
   };
 }
 

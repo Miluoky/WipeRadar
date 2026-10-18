@@ -3,6 +3,7 @@ import cors from "@fastify/cors";
 import rateLimit from "@fastify/rate-limit";
 import type { FastifyRequest } from "fastify";
 import { CADENCES, GROUP_LIMITS, RATES, REGIONS, SERVER_TYPES, type MetricRange } from "@wiperadar/shared";
+import { createClaim, getClaim } from "./claims";
 import { config } from "./config";
 import type { Db } from "./db";
 import { TtlCache } from "./cache";
@@ -152,6 +153,27 @@ export async function buildApi(db: Db, status?: PollStatus) {
     if (!id || !["24h", "7d", "30d"].includes(range)) return reply.code(400).send({ error: "bad request" });
     reply.header("Cache-Control", LONG);
     return cache.get(`metrics:${id}:${range}`, range === "24h" ? 30_000 : 300_000, () => getMetrics(db, id, range));
+  });
+
+  // Ownership claims. Tight per-IP limit: each claim is a stored row and forces a RULES re-read.
+  app.post("/api/servers/:id/claims", { config: { rateLimit: { max: 5, timeWindow: 3_600_000 } } }, async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    const contact = (req.body as { contact?: unknown } | null)?.contact;
+    if (!id || typeof contact !== "string" || !contact.trim() || contact.length > 120) {
+      return reply.code(400).send({ error: "bad request" });
+    }
+    const res = await createClaim(db, id, contact.trim());
+    if (!res.ok) return reply.code(res.error === "not found" ? 404 : 429).send({ error: res.error });
+    reply.header("Cache-Control", "no-store");
+    return reply.code(201).send(res.claim);
+  });
+
+  app.get("/api/claims/:code", async (req, reply) => {
+    const code = (req.params as { code: string }).code.toUpperCase();
+    const claim = /^WR-[A-Z0-9]{8}$/.test(code) ? await getClaim(db, code) : null;
+    if (!claim) return reply.code(404).send({ error: "not found" });
+    reply.header("Cache-Control", "no-store");
+    return claim;
   });
 
   /** Server-Sent Events: live wipes + stats ticks. */
