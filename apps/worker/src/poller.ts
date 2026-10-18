@@ -1,5 +1,6 @@
 import { joinDescription } from "@wiperadar/a2s";
 import { predictNextWipe, stripRichText, type Cadence } from "@wiperadar/shared";
+import { matchOfficial, nextOfficialWipe } from "@wiperadar/shared/official";
 import { config } from "./config";
 import type { Db } from "./db";
 import { publish } from "./events";
@@ -353,13 +354,14 @@ export class Poller {
     if (full) this.lastFullPredict = Date.now();
     const { rows } = await this.db.query<{
       id: number;
+      name: string;
       cadence: Cadence | null;
       last_wipe_at: Date | null;
       hostname_wipe_date: string | Date | null;
       owner_next: Date | null;
       history: (string | Date)[] | null;
     }>(
-      `SELECT s.id, s.cadence, s.last_wipe_at, s.hostname_wipe_date, ws.next_at AS owner_next,
+      `SELECT s.id, s.name, s.cadence, s.last_wipe_at, s.hostname_wipe_date, ws.next_at AS owner_next,
               (SELECT array_agg(w.wiped_at ORDER BY w.wiped_at) FROM wipes w
                 WHERE w.server_id = s.id AND w.wiped_at > now() - interval '120 days') AS history
        FROM servers s LEFT JOIN wipe_schedules ws ON ws.server_id = s.id
@@ -372,6 +374,7 @@ export class Poller {
     const at: string[] = [];
     const src: string[] = [];
     for (const r of rows) {
+      const official = matchOfficial(r.name);
       const p = predictNextWipe({
         now,
         lastWipe: r.last_wipe_at && new Date(r.last_wipe_at),
@@ -379,6 +382,7 @@ export class Poller {
         history: (r.history ?? []).map((d) => new Date(d)),
         hostnameDate: r.hostname_wipe_date ? new Date(r.hostname_wipe_date) : null,
         ownerNext: r.owner_next && new Date(r.owner_next),
+        officialNext: official?.schedule ? nextOfficialWipe(official.schedule, now) : null,
       });
       ids.push(r.id);
       at.push(p.at.toISOString());

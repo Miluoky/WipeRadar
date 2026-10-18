@@ -1,0 +1,2475 @@
+{
+  "checkedAt": "2026-10-18",
+  "about": "Official wipe schedules published by the networks themselves (server description shown in the in-game browser, mirrored by Rustalyzer, or the network website). Every quote is verbatim. status: confirmed = time and zone stated and observed wipes match; zone_inferred = time stated without zone, zone taken from observed wipes; time_unstated / mismatch = not used for predictions.",
+  "forceWipe": {
+    "rule": "First Thursday of every month, with the monthly Facepunch update",
+    "time": "14:00 America/New_York (= 19:00 London while both are on standard or both on summer time)",
+    "dateSource": "https://rust.facepunch.com/news",
+    "dateEvidence": "Facepunch monthly updates are dated Thursday 01 Oct 2026, 03 Sep 2026, 06 Aug 2026, 02 Jul 2026 (first Thursdays).",
+    "timeEvidence": "Facepunch does not print the hour on its news pages. Networks state \"First Thursday @ 2PM EST / 19:00 London\" (Rustafied, Rusty Moose descriptions). Observed on 1 Oct 2026: servers wiped 17:37-18:04 UTC (= 13:37-14:04 EDT).",
+    "next": [
+      "2026-11-05T19:00:00Z",
+      "2026-12-03T19:00:00Z",
+      "2027-01-07T19:00:00Z"
+    ],
+    "extra": "Facepunch announced a mandatory server+client update (Halloween) on 22 Oct 2026 at 18:00 BST / 13:00 EST. It is an update, not announced as a wipe (source: https://rust.facepunch.com/news/livestock)."
+  },
+  "networks": {
+    "rusty-moose": {
+      "name": "Rusty Moose",
+      "website": "https://moose.gg"
+    },
+    "rustoria": {
+      "name": "Rustoria",
+      "website": "https://rustoria.co/servers"
+    },
+    "rustafied": {
+      "name": "Rustafied",
+      "website": "https://rustafied.com/servers"
+    },
+    "rusticated": {
+      "name": "Rusticated",
+      "website": "https://rusticated.com"
+    },
+    "reddit-playrust": {
+      "name": "Reddit /r/PlayRust",
+      "website": "https://redditplayrust.com"
+    },
+    "atlas": {
+      "name": "Atlas",
+      "website": "https://store.atlasrustservers.com"
+    },
+    "vital": {
+      "name": "Vital Rust",
+      "website": "https://store.vitalrust.com"
+    },
+    "rustopia": {
+      "name": "Rustopia",
+      "website": "https://rustopia.gg"
+    },
+    "stevious": {
+      "name": "Stevious",
+      "website": "https://stevious.io"
+    },
+    "bestrust": {
+      "name": "Bestrust",
+      "website": "https://bestrustservers.com"
+    },
+    "survivors": {
+      "name": "SURVIVORS.GG",
+      "website": "https://survivors.gg"
+    },
+    "rustvikings": {
+      "name": "RustVikings",
+      "website": "https://rustvikings.com"
+    },
+    "magic-rust": {
+      "name": "Magic Rust",
+      "website": "https://magicrust.gg"
+    },
+    "mirage": {
+      "name": "MIRAGE RUST",
+      "website": "https://miragerust.com"
+    },
+    "ggrust": {
+      "name": "GGRust",
+      "website": "https://ggrust.ru"
+    },
+    "grand-rust": {
+      "name": "GRAND RUST",
+      "website": "https://grand-rust.ru"
+    }
+  },
+  "servers": [
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |EU Main|",
+      "match": "^Rusty Moose \\|EU Main\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map: Thursdays @ 15:00 London Time (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/1686415431",
+      "address": "main.eu.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |EU Mondays|",
+      "match": "^Rusty Moose \\|EU Mondays\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map: Mondays @ 15:00 London Time (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/223451583",
+      "address": "monday.eu.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |Hapis Mondays|",
+      "match": "^Rusty Moose \\|Hapis Mondays\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map: Mondays @ 15:00 London Time (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064586",
+      "address": "hapis.eu.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |EU Biweekly|",
+      "match": "^Rusty Moose \\|EU Biweekly\\|$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map: Biweekly (every other Thursday) @ 15:00 London Time (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064584",
+      "address": "biweekly.eu.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |EU Monthly|",
+      "match": "^Rusty Moose \\|EU Monthly\\|$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map: Monthly @ Force Wipe",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064381",
+      "address": "monthly.eu.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Main|",
+      "match": "^Rusty Moose \\|US Main\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Thursdays @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/1464951304",
+      "address": "main.us-premium.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Medium|",
+      "match": "^Rusty Moose \\|US Medium\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Thursdays @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/1271923393",
+      "address": "medium.us.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Mini|",
+      "match": "^Rusty Moose \\|US Mini\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Thursdays @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065377",
+      "address": "mini.us.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Mondays|",
+      "match": "^Rusty Moose \\|US Mondays\\|$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Mondays @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/1262973087",
+      "address": "monday.us.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Biweekly|",
+      "match": "^Rusty Moose \\|US Biweekly\\|$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Biweekly (every other Thursday) @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/343817100",
+      "address": "biweekly.us.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Low|",
+      "match": "^Rusty Moose \\|US Low\\|$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Biweekly (every other Thursday) @ 3pm EST (unless force wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065466",
+      "address": "low.us.moose.gg:28010",
+      "website": "https://moose.gg",
+      "note": "\"EST\" in the text is New York local time: observed wipes land at 15:00 EDT in summer."
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Monthly|",
+      "match": "^Rusty Moose \\|US Monthly\\|$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Monthly @ Force Wipe",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065310",
+      "address": "monthly.us.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rusty-moose",
+      "name": "Rusty Moose |US Small|",
+      "match": "^Rusty Moose \\|US Small\\|$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map: Monthly @ Force Wipe",
+      "sourceUrl": "https://www.rustalyzer.com/server/1263009417",
+      "address": "small.us.moose.gg:28010",
+      "website": "https://moose.gg"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU Main",
+      "match": "^Rustoria\\.co - EU Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Thursdays @ 3PM UK / 4PM CEST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/181829956",
+      "address": "main.rustoria.uk:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU Small",
+      "match": "^Rustoria\\.co - EU Small$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Weekly on Thursdays @ 3PM UK / 4PM CEST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065883",
+      "address": "small.rustoria.uk:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU Mondays",
+      "match": "^Rustoria\\.co - EU Mondays$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Mondays @ 3PM UK / 4PM CET, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065902",
+      "address": "mon.rustoria.uk:28012",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU East Medium",
+      "match": "^Rustoria\\.co - EU East Medium$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Bi-Weekly on Thursdays @ 3PM UK/4PM CET/5PM MSK, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/1815235694",
+      "address": "medium.eueast.rustoria.co:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "\"5PM MSK\" holds only while the UK is on GMT; in summer 15:00 UK is 17:00 MSK too, so both read the same."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - US Main",
+      "match": "^Rustoria\\.co - US Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Thursdays @ 3PM EST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/181822514",
+      "address": "main.rustoria.us:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "\"EST\" = New York local time (observed 15:00 EDT)."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - US Small",
+      "match": "^Rustoria\\.co - US Small$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Weekly on Thursdays @ 3PM EST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/393420952",
+      "address": "small.rustoria.us:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "\"EST\" = New York local time (observed 15:00 EDT)."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - US Medium Premium",
+      "match": "^Rustoria\\.co - US Medium Premium$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Bi-Weekly on Thursdays @ 3PM EST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/351425216",
+      "address": "medium.rustoria.us:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "\"EST\" = New York local time (observed 15:00 EDT)."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - BR Main",
+      "match": "^Rustoria\\.co - BR Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "18:00"
+          }
+        ],
+        "tz": "America/Sao_Paulo"
+      },
+      "status": "confirmed",
+      "quote": "Map - Thursdays @ 6PM BRT, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066158",
+      "address": "main.rustoria.lat:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - SEA Main",
+      "match": "^Rustoria\\.co - SEA Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Asia/Seoul"
+      },
+      "status": "confirmed",
+      "quote": "Map - Thursdays @ 3PM CST/4PM KST/5PM AEST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/899101415",
+      "address": "main.rustoria.asia:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "CST here is China time (UTC+8); observed 07:00 UTC. \"5PM AEST\" is wrong while Sydney is on daylight time (AEDT)."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - SEA Medium",
+      "match": "^Rustoria\\.co - SEA Medium$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Asia/Seoul"
+      },
+      "status": "confirmed",
+      "quote": "Map - Bi-Weekly on Thursdays @ 3PM CST/4PM KST/5PM AEST, or when force updates occur.",
+      "sourceUrl": "https://www.rustalyzer.com/server/1599356399",
+      "address": "medium.rustoria.asia:28010",
+      "website": "https://rustoria.co/servers",
+      "note": "See SEA Main."
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU Long",
+      "match": "^Rustoria\\.co - EU Long$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/108753146",
+      "address": "long.rustoria.uk:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU East Long",
+      "match": "^Rustoria\\.co - EU East Long$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/824638714",
+      "address": "long.eueast.rustoria.co:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - EU Low Pop",
+      "match": "^Rustoria\\.co - EU Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065928",
+      "address": "lowpop.rustoria.uk",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - US Long Premium",
+      "match": "^Rustoria\\.co - US Long Premium$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066975",
+      "address": "long.rustoria.us:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - US Low Pop",
+      "match": "^Rustoria\\.co - US Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067049",
+      "address": "lowpop.rustoria.us",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - BR Long",
+      "match": "^Rustoria\\.co - BR Long$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066159",
+      "address": "long.rustoria.lat:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustoria",
+      "name": "Rustoria.co - SEA Long",
+      "match": "^Rustoria\\.co - SEA Long$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Map - Monthly @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/924687481",
+      "address": "long.rustoria.asia:28010",
+      "website": "https://rustoria.co/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Main",
+      "match": "^Rustafied\\.com - EU Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ 15:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065906",
+      "address": "eumain.rustafied.com",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Solo",
+      "match": "^Rustafied\\.com - EU Solo$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ 15:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066041",
+      "address": "64.40.9.138",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Trio",
+      "match": "^Rustafied\\.com - EU Trio$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Biweekly map wipe @ 15:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065943",
+      "address": "195.60.166.152",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Medium - Large",
+      "match": "^Rustafied\\.com - EU Medium - Large$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Biweekly map wipe @ 15:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066031",
+      "address": "195.60.166.148",
+      "website": "https://rustafied.com/servers",
+      "note": "Its description gives the force wipe as \"First Friday @ 6AM AEDT/AEST\" (copied from an AU server); the other EU servers say First Thursday 19:00 London."
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Medium - Small",
+      "match": "^Rustafied\\.com - EU Medium - Small$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Biweekly map wipe @ 15:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066043",
+      "address": "64.40.9.2",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Friday",
+      "match": "^Rustafied\\.com - EU Friday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ Fridays 17:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066042",
+      "address": "195.60.166.150",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Small - Friday",
+      "match": "^Rustafied\\.com - EU Small - Friday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ Fridays 17:00 London Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066033",
+      "address": "64.40.9.41",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Long - Large",
+      "match": "^Rustafied\\.com - EU Long - Large$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly BP + Map Wipe @ Force Wipe First Thursday @ 2PM EST / 19:00 London",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065926",
+      "address": "195.60.166.130",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Long - Small",
+      "match": "^Rustafied\\.com - EU Long - Small$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly BP + Map Wipe @ Force Wipe First Thursday @ 2PM EST / 19:00 London",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065975",
+      "address": "64.40.9.31",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - EU Low Pop",
+      "match": "^Rustafied\\.com - EU Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly BP + Map Wipe @ Force Wipe First Thursday @ 2PM EST / 19:00 London",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066037",
+      "address": "64.40.9.34",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Main",
+      "match": "^Rustafied\\.com - US Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ 15:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067070",
+      "address": "104.143.2.214",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Solo",
+      "match": "^Rustafied\\.com - US Solo$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ 15:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067060",
+      "address": "104.143.2.174",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Trio",
+      "match": "^Rustafied\\.com - US Trio$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Biweekly map wipe @ 15:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067051",
+      "address": "104.129.132.208",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Medium - Large",
+      "match": "^Rustafied\\.com - US Medium - Large$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Biweekly map wipe @ 15:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067038",
+      "address": "104.143.2.1",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Friday",
+      "match": "^Rustafied\\.com - US Friday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ Fridays 17:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067062",
+      "address": "104.143.2.124",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Small - Friday",
+      "match": "^Rustafied\\.com - US Small - Friday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly map wipe @ Fridays 17:00 New York Time (unless forced wipe)",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067054",
+      "address": "104.143.3.3",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Low Pop",
+      "match": "^Rustafied\\.com - US Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly BP + Map Wipe @ Force Wipe First Thursday @ 2PM EST / 19:00 London",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067044",
+      "address": "104.129.132.137",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rustafied",
+      "name": "Rustafied.com - US Long - Large",
+      "match": "^Rustafied\\.com - US Long - Large$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly BP + Map Wipe @ Force Wipe First Thursday @ 2PM EST / 19:00 London",
+      "sourceUrl": "https://www.rustalyzer.com/server/13067079",
+      "address": "104.143.2.103",
+      "website": "https://rustafied.com/servers"
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Main",
+      "match": "^Rusticated\\.com - EU Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066049",
+      "address": "9.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Premium Medium",
+      "match": "^Rusticated\\.com - EU Premium Medium$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/456659851",
+      "address": "19.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Premium Trio",
+      "match": "^Rusticated\\.com - EU Premium Trio",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066048",
+      "address": "12.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Hardcore Trio",
+      "match": "^Rusticated\\.com - EU Hardcore Trio",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 16 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/1048353640",
+      "address": "20.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Trio | Monday",
+      "match": "^Rusticated\\.com - EU Trio \\| Monday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Monday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 6 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066046",
+      "address": "11.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU | 2x Vanilla | Monday",
+      "match": "^Rusticated\\.com - EU \\| 2x Vanilla \\| Monday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Monday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 6 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066047",
+      "address": "13.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU | 2x Vanilla | Thursday",
+      "match": "^Rusticated\\.com - EU \\| 2x Vanilla \\| Thursday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 2 PM BST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066050",
+      "address": "14.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - EU Premium Long",
+      "match": "^Rusticated\\.com - EU Premium Long$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Monthly wipes @ force",
+      "sourceUrl": "https://www.rustalyzer.com/server/13090054",
+      "address": "10.rustfavorites.com:28010",
+      "website": "https://rusticated.com"
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - US Premium Medium",
+      "match": "^Rusticated\\.com - US Premium Medium$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 3 PM EDT",
+      "sourceUrl": "https://www.rustalyzer.com/server/323675956",
+      "address": "2.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - US Premium Trio",
+      "match": "^Rusticated\\.com - US Premium Trio",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 3 PM EDT",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066955",
+      "address": "4.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - US | 2x Vanilla | Thursday",
+      "match": "^Rusticated\\.com - US \\| 2x Vanilla \\| Thursday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Thursday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 9 at 3 PM EDT",
+      "sourceUrl": "https://www.rustalyzer.com/server/323706723",
+      "address": "7.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - US | 2x Vanilla | Monday",
+      "match": "^Rusticated\\.com - US \\| 2x Vanilla \\| Monday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Monday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 6 at 3 PM EDT",
+      "sourceUrl": "https://www.rustalyzer.com/server/323788562",
+      "address": "6.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "rusticated",
+      "name": "Rusticated.com - US Trio | Monday",
+      "match": "^Rusticated\\.com - US Trio \\| Monday",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "12:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Info: Monday Weekly wipes Blueprints wipe @ force Next Wipe: Jul 6 at 12 PM EDT",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066976",
+      "address": "3.rustfavorites.com:28010",
+      "website": "https://rusticated.com",
+      "note": "The \"Next Wipe\" date in this description is stale (July); the weekday and time match the wipes we observe."
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Main",
+      "match": "^Reddit\\.com/r/PlayRust - EU Main$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Thursdays @ 3PM UK / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/1237149527",
+      "address": "194.69.160.117",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Trio",
+      "match": "^Reddit\\.com/r/PlayRust - EU Trio$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Thursdays @ 3PM UK / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/416168496",
+      "address": "eu.trio.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Monday",
+      "match": "^Reddit\\.com/r/PlayRust - EU Monday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Mondays @ 3PM UK / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/1012240476",
+      "address": "eu.monday.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Monthly",
+      "match": "^Reddit\\.com/r/PlayRust - EU Monthly$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/1237173943",
+      "address": "eu.monthly.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Low Pop",
+      "match": "^Reddit\\.com/r/PlayRust - EU Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/403408269",
+      "address": "194.69.160.106",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - EU Hardcore",
+      "match": "^Reddit\\.com/r/PlayRust - EU Hardcore$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe & BP Wipe @ Force",
+      "sourceUrl": "https://www.rustalyzer.com/server/1012253468",
+      "address": "194.69.160.82",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Trio",
+      "match": "^Reddit\\.com/r/PlayRust - US Trio$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Thursdays @ 3PM EST / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/345671374",
+      "address": "us.trio.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Small",
+      "match": "^Reddit\\.com/r/PlayRust - US Small$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Thursdays @ 3PM EST / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/345745798",
+      "address": "us.small.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Monday",
+      "match": "^Reddit\\.com/r/PlayRust - US Monday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Mondays @ 3PM EST / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/108629627",
+      "address": "us.monday.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Friday",
+      "match": "^Reddit\\.com/r/PlayRust - US Friday$",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "16:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Map: Fridays @ 4PM EST / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/348900625",
+      "address": "us.main.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Biweekly",
+      "match": "^Reddit\\.com/r/PlayRust - US Biweekly$",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "15:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Bi-Weekly Map: Thursday @ 3PM EST / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/1012492120",
+      "address": "us.medium.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Monthly Quad",
+      "match": "^Reddit\\.com/r/PlayRust - US Monthly Quad$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/348968604",
+      "address": "us.premium.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Monthly",
+      "match": "^Reddit\\.com/r/PlayRust - US Monthly$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/108618927",
+      "address": "us.monthly.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - US Low Pop",
+      "match": "^Reddit\\.com/r/PlayRust - US Low Pop$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/1012376497",
+      "address": "us.lowpop.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "reddit-playrust",
+      "name": "Reddit.com/r/PlayRust - AU Softcore",
+      "match": "^Reddit\\.com/r/PlayRust - AU Softcore$",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Monthly Map Wipe @ Force / BP Wipe @ Forced",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065643",
+      "address": "au.softcore.rplayrust.com",
+      "website": "https://redditplayrust.com"
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 10x",
+      "match": "^Atlas - EU 10x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "17:00"
+          },
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe times 5:00 PM GMT Monday 5:00 PM GMT Friday",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064404",
+      "address": "10x.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com",
+      "note": "\"GMT\" in the text is UK local time: observed wipes land at 17:00 BST in summer."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 5x",
+      "match": "^Atlas - EU 5x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 3,
+            "time": "16:00"
+          },
+          {
+            "day": 6,
+            "time": "13:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe times 4PM GMT Wednesday 1PM GMT Saturday",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064446",
+      "address": "5x.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com",
+      "note": "\"GMT\" in the text is UK local time: observed wipes land at 17:00 BST in summer."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - US 10x",
+      "match": "^Atlas - US 10x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "17:00"
+          },
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "confirmed",
+      "quote": "Wipe times 5:00 PM EST Monday 5:00 PM EST Friday",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065448",
+      "address": "10x.atlasrust.us",
+      "website": "https://store.atlasrustservers.com",
+      "note": "\"EST\" = New York local time (observed 17:00 EDT)."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 2X Medium",
+      "match": "^Atlas - EU 2X Medium",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "zone_inferred",
+      "quote": "Map Wipes: 1st, 3rd & 5th Thursday of every month 7PM Force wipe | 5PM Bi-weekly",
+      "sourceUrl": "https://www.rustalyzer.com/server/375498904",
+      "address": "2xmedium.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com",
+      "note": "No time zone in the text; observed EU wipes land at 17:00 London time."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - US 2X Medium",
+      "match": "^Atlas - US 2X Medium",
+      "schedule": {
+        "kind": "biweekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "17:00"
+          }
+        ],
+        "tz": "America/New_York"
+      },
+      "status": "zone_inferred",
+      "quote": "Map Wipes: 1st, 3rd & 5th Thursday of every month 7PM Force wipe | 5PM Bi-weekly",
+      "sourceUrl": "https://www.rustalyzer.com/server/1583181270",
+      "address": "2xmedium.atlasrust.us:28010",
+      "website": "https://store.atlasrustservers.com",
+      "note": "No time zone in the text; observed US wipes land at 17:00 New York time."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 3x | No BPs | Mondays",
+      "match": "^Atlas - EU 3x",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Map Wipes: Every Monday",
+      "sourceUrl": "https://www.rustalyzer.com/server/976658659",
+      "address": "3x.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com",
+      "note": "Weekday only, no time published (observed about 15:00 London)."
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 2X Monthly |",
+      "match": "^Atlas - EU 2X Monthly \\|",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map Wipes: Force Wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/1686124450",
+      "address": "2xmonthly.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com"
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - US 2X Monthly |",
+      "match": "^Atlas - US 2X Monthly \\|",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map Wipes: Force Wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/13065353",
+      "address": "2xmonthly.atlasrust.us:28010",
+      "website": "https://store.atlasrustservers.com"
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU 2X Monthly Solo",
+      "match": "^Atlas - EU 2X Monthly Solo",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map Wipes: Force Wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/13068227",
+      "address": "2xmonthlyquad.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com"
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - US 2X Monthly Solo",
+      "match": "^Atlas - US 2X Monthly Solo",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Map Wipes: Force Wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/1030543308",
+      "address": "2xmonthlyquad.atlasrust.us:28010",
+      "website": "https://store.atlasrustservers.com"
+    },
+    {
+      "network": "atlas",
+      "name": "Atlas - EU Long",
+      "match": "^Atlas - EU Long",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipes: Force Wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/1564050949",
+      "address": "long.atlasrust.uk:28010",
+      "website": "https://store.atlasrustservers.com"
+    },
+    {
+      "network": "vital",
+      "name": "Vital Rust - EU Mondays",
+      "match": "^Vital Rust - EU Mondays",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Weekly Wipe: Mondays @ 2PM London Time",
+      "sourceUrl": "https://www.rustalyzer.com/server/1877188113",
+      "address": "eu-mondays.vitalrust.com:28014",
+      "website": "https://store.vitalrust.com"
+    },
+    {
+      "network": "vital",
+      "name": "Vital Rust - EU Long",
+      "match": "^Vital Rust - EU Long",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/London"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Schedule: First Thursday of every month @ 7pm London Time",
+      "sourceUrl": "https://www.rustalyzer.com/server/1046732325",
+      "address": "eu-long.vitalrust.com:28014",
+      "website": "https://store.vitalrust.com"
+    },
+    {
+      "network": "vital",
+      "name": "Vital Rust - EU Medium",
+      "match": "^Vital Rust - EU Medium",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Wipe Schedule: First Thursday of every month @ 7pm London Time then biweekly afterwards",
+      "sourceUrl": "https://www.rustalyzer.com/server/1877253072",
+      "address": "eu-medium.vitalrust.com:28014",
+      "website": "https://store.vitalrust.com",
+      "note": "The biweekly wipe has no published time (observed about 17:00 London)."
+    },
+    {
+      "network": "vital",
+      "name": "Vital Rust - EU Monthly",
+      "match": "^Vital Rust - EU Monthly",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Wipe Schedule: A week prior to force @ 5pm London Time and First Thursday of every month @ 7pm London Time",
+      "sourceUrl": "https://www.rustalyzer.com/server/1877214082",
+      "address": "eu-monthly.vitalrust.com:28014",
+      "website": "https://store.vitalrust.com",
+      "note": "Two wipes a month (a week before force at 17:00 London, and at force); not modelled yet."
+    },
+    {
+      "network": "rustopia",
+      "name": "Rustopia.gg - EU Main",
+      "match": "^Rustopia\\.gg - EU Main$",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Map Wipe - Weekly",
+      "sourceUrl": "https://www.rustalyzer.com/server/437924109",
+      "address": "eumain.rustopia.gg",
+      "website": "https://rustopia.gg",
+      "note": "Cadence only; no weekday or time published."
+    },
+    {
+      "network": "rustopia",
+      "name": "Rustopia.gg - EU Medium",
+      "match": "^Rustopia\\.gg - EU Medium$",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Map Wipe - Every 2 Weeks",
+      "sourceUrl": "https://www.rustalyzer.com/server/437942784",
+      "address": "eumedium.rustopia.gg",
+      "website": "https://rustopia.gg",
+      "note": "Cadence only; no weekday or time published."
+    },
+    {
+      "network": "rustopia",
+      "name": "Rustopia.gg - US Main Premium",
+      "match": "^Rustopia\\.gg - US Main Premium$",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Map Wipe - Weekly",
+      "sourceUrl": "https://www.rustalyzer.com/server/548296074",
+      "address": "usmain.rustopia.gg",
+      "website": "https://rustopia.gg",
+      "note": "Cadence only; no weekday or time published."
+    },
+    {
+      "network": "rustopia",
+      "name": "Rustopia.gg - US Medium",
+      "match": "^Rustopia\\.gg - US Medium$",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Map Wipe - Every 2 Weeks",
+      "sourceUrl": "https://www.rustalyzer.com/server/548367640",
+      "address": "usmedium.rustopia.gg",
+      "website": "https://rustopia.gg",
+      "note": "Cadence only; no weekday or time published."
+    },
+    {
+      "network": "stevious",
+      "name": "[EU] Stevious 2x Main",
+      "match": "^\\[EU\\] Stevious 2x Main",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Weekly wipes",
+      "sourceUrl": "https://www.rustalyzer.com/server/1534731894",
+      "address": "eu-main.stevious.io:28010",
+      "website": "https://stevious.io",
+      "note": "No weekday or time published."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo 2x |",
+      "match": "^Bestrust Solo/Duo 2x \\|",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "14:45"
+          },
+          {
+            "day": 4,
+            "time": "15:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Sunday at 14:45 CEST • Fullwipes Every Thursday at 15:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064243",
+      "address": "duo-2x.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo/Trio 2x |",
+      "match": "^Bestrust Solo/Duo/Trio 2x \\|",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "11:45"
+          },
+          {
+            "day": 4,
+            "time": "18:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Sunday at 11:45 CEST • Fullwipes Every Thursday at 18:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13064249",
+      "address": "trio-2x.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo 2x #2",
+      "match": "^Bestrust Solo/Duo 2x \\#2",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 6,
+            "time": "11:45"
+          },
+          {
+            "day": 3,
+            "time": "16:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Saturday at 11:45 CEST • Fullwipes Every Wednesday at 16:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/13068231",
+      "address": "duo-2x-2.bestrustservers.com:32015",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo 2x #14",
+      "match": "^Bestrust Solo/Duo 2x \\#14",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "18:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Map wipes Every Sunday at 18:45 CEST - Last Wipe: 18.10 18:45 CEST Type: Map Wipe - Next Wipe: 25.10 18:45 CET",
+      "sourceUrl": "https://www.rustalyzer.com/server/2014178016",
+      "address": "duo-2x-14.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo 3x |",
+      "match": "^Bestrust Solo/Duo 3x \\|",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "11:45"
+          },
+          {
+            "day": 4,
+            "time": "11:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Sunday at 11:45 CEST • Fullwipes Every Thursday at 11:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/2124307383",
+      "address": "duo-3x.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo ONLY 3x |",
+      "match": "^Bestrust Solo ONLY 3x \\|",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 2,
+            "time": "12:45"
+          },
+          {
+            "day": 6,
+            "time": "17:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Tuesday at 12:45 CEST • Fullwipes Every Saturday at 17:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/1527782196",
+      "address": "solo-3x.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo/Trio/Quad/Max5 2x #2",
+      "match": "^Bestrust Solo/Duo/Trio/Quad/Max5 2x \\#2",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 6,
+            "time": "12:45"
+          },
+          {
+            "day": 2,
+            "time": "13:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Saturday at 12:45 CEST • Fullwipes Every Tuesday at 13:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/1527794372",
+      "address": "max5-2x-2.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo/Duo 3x #2",
+      "match": "^Bestrust Solo/Duo 3x \\#2",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 3,
+            "time": "13:45"
+          },
+          {
+            "day": 6,
+            "time": "15:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Wednesday at 13:45 CEST • Fullwipes Every Saturday at 15:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/1531015612",
+      "address": "duo-3x-2.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Solo ONLY 3x #2",
+      "match": "^Bestrust Solo ONLY 3x \\#2",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 3,
+            "time": "17:45"
+          },
+          {
+            "day": 0,
+            "time": "16:45"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes Every Wednesday at 17:45 CEST • Fullwipes Every Sunday at 16:45 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/1531040121",
+      "address": "solo-3x-2.bestrustservers.com",
+      "website": "https://bestrustservers.com",
+      "note": "Times are Central European local time: the description's own \"Next Wipe\" line switches from CEST to CET across the 25 Oct clock change."
+    },
+    {
+      "network": "bestrust",
+      "name": "Bestrust Main 2x Monthly",
+      "match": "^Bestrust Main 2x Monthly",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Wipe Schedule: - First Thursday of every month at 19:40 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/349481292",
+      "address": "main-2x-monthly.bestrustservers.com:28010",
+      "website": "https://bestrustservers.com",
+      "note": "Wipes right after the force wipe; \"19:40 CEST\" only holds in summer."
+    },
+    {
+      "network": "survivors",
+      "name": "SURVIVORS.GG #1",
+      "match": "^SURVIVORS\\.GG \\#1",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "14:00"
+          },
+          {
+            "day": 1,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes every Thursday 14:00 CEST Map Wipes every Monday 14:00 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/2123238117",
+      "address": "s1.survivors.gg:28024",
+      "website": "https://survivors.gg",
+      "note": "Assumed to stay 14:00 Central European local time after the 25 Oct clock change; not stated."
+    },
+    {
+      "network": "survivors",
+      "name": "SURVIVORS.GG [ 2x Solo/Duo ]",
+      "match": "^SURVIVORS\\.GG \\[ 2x Solo/Duo \\]",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 6,
+            "time": "17:00"
+          },
+          {
+            "day": 2,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/Berlin"
+      },
+      "status": "confirmed",
+      "quote": "Fullwipes every Saturday at 17:00 CEST Map wipes every Tuesday at 14:00 CEST",
+      "sourceUrl": "https://www.rustalyzer.com/server/2129555508",
+      "address": "duo.survivors.gg:28014",
+      "website": "https://survivors.gg",
+      "note": "Assumed to stay Central European local time after the 25 Oct clock change; not stated."
+    },
+    {
+      "network": "rustvikings",
+      "name": "RustVikings | Solo/Duo | Sundays",
+      "match": "^RustVikings \\| Solo/Duo \\| Sundays",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "15:00"
+          }
+        ],
+        "tz": "UTC"
+      },
+      "status": "confirmed",
+      "quote": "Last Wipe: 18/10 17:00CEST [FullWipe], Next Wipe: 25/10 16:00CET [FullWipe]",
+      "sourceUrl": "https://www.rustalyzer.com/server/1576074584",
+      "address": "37.156.35.90:28036",
+      "website": "https://rustvikings.com",
+      "note": "Fixed UTC time: their description lists the next wipe after the clock change as 16:00 CET, i.e. still 15:00 UTC."
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust — Main",
+      "match": "^Magic Rust — Main",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп Карты: каждый четверг в 17:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/13066349",
+      "address": "main.magicrust.gg:10000",
+      "website": "https://magicrust.gg"
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust — Long",
+      "match": "^Magic Rust — Long",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп Карты: каждый первый четверг месяца в 21:00 МСК",
+      "sourceUrl": "https://magicrust.gg/serv52",
+      "address": "80.242.59.250:10000",
+      "website": "https://magicrust.gg",
+      "note": "21:00 МСК — летнее время форсвайпа; зимой (как 5 ноября) форсвайп в 22:00 МСК."
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust #13",
+      "match": "^Magic\\ Rust\\ \\#13 ",
+      "schedule": null,
+      "status": "mismatch",
+      "quote": "Вайп Карты: каждую пятницу в 14:00",
+      "sourceUrl": "https://www.rustalyzer.com/server/13194665",
+      "address": "13.magicrust.gg:10000",
+      "website": "https://magicrust.gg",
+      "note": "Время без часового пояса. Фактические вайпы — в 10:00 UTC (13:00 МСК), что не сходится с «14:00» по Москве; на сайт не выводим, пока не уточним."
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust #14",
+      "match": "^Magic\\ Rust\\ \\#14 ",
+      "schedule": null,
+      "status": "mismatch",
+      "quote": "Вайп Карты: каждую пятницу в 14:00",
+      "sourceUrl": "https://www.rustalyzer.com/server/1691319960",
+      "address": "14.magicrust.gg:10000",
+      "website": "https://magicrust.gg",
+      "note": "Время без часового пояса. Фактические вайпы — в 10:00 UTC (13:00 МСК), что не сходится с «14:00» по Москве; на сайт не выводим, пока не уточним."
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust #24",
+      "match": "^Magic\\ Rust\\ \\#24 ",
+      "schedule": null,
+      "status": "mismatch",
+      "quote": "Вайп Карты: каждый понедельник в 14:00",
+      "sourceUrl": "https://www.rustalyzer.com/server/23827356",
+      "address": "24.magicrust.gg:10000",
+      "website": "https://magicrust.gg",
+      "note": "Время без часового пояса. Фактические вайпы — в 10:00 UTC (13:00 МСК), что не сходится с «14:00» по Москве; на сайт не выводим, пока не уточним."
+    },
+    {
+      "network": "magic-rust",
+      "name": "Magic Rust #22",
+      "match": "^Magic\\ Rust\\ \\#22 ",
+      "schedule": null,
+      "status": "mismatch",
+      "quote": "Вайп Карты: каждые 2 недели, начиная с первого вайпа в 14:00",
+      "sourceUrl": "https://www.rustalyzer.com/server/13194860",
+      "address": "22.magicrust.gg:10000",
+      "website": "https://magicrust.gg",
+      "note": "Время без часового пояса. Фактические вайпы — в 10:00 UTC (13:00 МСК), что не сходится с «14:00» по Москве; на сайт не выводим, пока не уточним."
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | MAIN 2x",
+      "match": "^MIRAGE RUST \\| MAIN 2x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждую пятницу в 17:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/17850359",
+      "address": "main.miragerust.com:35000",
+      "website": "https://miragerust.com"
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | FRIDAY 2x",
+      "match": "^MIRAGE RUST \\| FRIDAY 2x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждую пятницу в 17:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/2014353469",
+      "address": "friday.miragerust.com:35000",
+      "website": "https://miragerust.com"
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | SUNDAY 2x",
+      "match": "^MIRAGE RUST \\| SUNDAY 2x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 0,
+            "time": "14:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждое воскресенье в 14:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/1808944752",
+      "address": "sunday.miragerust.com:35000",
+      "website": "https://miragerust.com"
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | WEDNESDAY 2x",
+      "match": "^MIRAGE RUST \\| WEDNESDAY 2x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 3,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждую среду в 17:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/1785630361",
+      "address": "wednesday.miragerust.com:35000",
+      "website": "https://miragerust.com"
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | MIDDLE 2x",
+      "match": "^MIRAGE RUST \\| MIDDLE 2x",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 4,
+            "time": "17:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждый четверг в 17:00 МСК; кроме первого четверга месяца (ближайший: 05.11.2026 в 22:00 МСК)",
+      "sourceUrl": "https://www.rustalyzer.com/server/1533080148",
+      "address": "middle.miragerust.com:35000",
+      "website": "https://miragerust.com"
+    },
+    {
+      "network": "mirage",
+      "name": "MIRAGE RUST | MONTHLY 2x",
+      "match": "^MIRAGE RUST \\| MONTHLY 2x",
+      "schedule": {
+        "kind": "force",
+        "slots": [],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп карты: каждый первый четверг месяца в 22:30 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/1490855653",
+      "address": "monthly.miragerust.com:35000",
+      "website": "https://miragerust.com",
+      "note": "Около 30 минут после форсвайпа (1 октября вайпнулся в 21:30 МСК)."
+    },
+    {
+      "network": "ggrust",
+      "name": "VANILLA x2 | GGRust #4",
+      "match": "GGRust\\ \\#4 ",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп каждую пятницу в 16:00 по МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/337455509",
+      "address": "r1.ggrust.ru:35000",
+      "website": "https://ggrust.ru",
+      "note": "Фактически сервер перезапускается примерно в 15:40 МСК, за ~20 минут до заявленного времени."
+    },
+    {
+      "network": "ggrust",
+      "name": "КЛАССИКА x3 | GGRust #3",
+      "match": "GGRust\\ \\#3 ",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп каждую пятницу в 16:00 по МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/337385898",
+      "address": "p1.ggrust.ru:35100",
+      "website": "https://ggrust.ru",
+      "note": "Фактически сервер перезапускается примерно в 15:40 МСК, за ~20 минут до заявленного времени."
+    },
+    {
+      "network": "ggrust",
+      "name": "КЛАССИКА x2 | GGRust #1",
+      "match": "GGRust\\ \\#1 ",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 5,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Вайп каждую пятницу в 16:00 по МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/337385897",
+      "address": "x2.ggrust.ru:35000",
+      "website": "https://ggrust.ru",
+      "note": "Фактически сервер перезапускается примерно в 15:40 МСК, за ~20 минут до заявленного времени."
+    },
+    {
+      "network": "ggrust",
+      "name": "VANILLA 2x2 | GGRust #6",
+      "match": "GGRust\\ \\#6 ",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 3,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Глобал вайп каждую среду в 16:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/337553809",
+      "address": "2x2.ggrust.ru:35100",
+      "website": "https://ggrust.ru",
+      "note": "Фактически сервер перезапускается примерно в 15:40 МСК, за ~20 минут до заявленного времени."
+    },
+    {
+      "network": "ggrust",
+      "name": "MONDAY x2 | GGRust #2",
+      "match": "GGRust\\ \\#2 ",
+      "schedule": {
+        "kind": "weekly",
+        "slots": [
+          {
+            "day": 1,
+            "time": "16:00"
+          }
+        ],
+        "tz": "Europe/Moscow"
+      },
+      "status": "confirmed",
+      "quote": "Глобал вайп каждый понедельник в 16:00 МСК",
+      "sourceUrl": "https://www.rustalyzer.com/server/320454008",
+      "address": "m1.ggrust.ru:35000",
+      "website": "https://ggrust.ru",
+      "note": "Фактически сервер перезапускается примерно в 15:40 МСК, за ~20 минут до заявленного времени."
+    },
+    {
+      "network": "ggrust",
+      "name": "РОССИЙСКИЙ x2 | GGRust #5",
+      "match": "GGRust #5 ",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Вайп раз в 2 недели по четвергам",
+      "sourceUrl": "https://www.rustalyzer.com/server/337455510",
+      "address": "r2.ggrust.ru:35100",
+      "website": "https://ggrust.ru",
+      "note": "Время не указано (фактически около 15:50 МСК)."
+    },
+    {
+      "network": "grand-rust",
+      "name": "GRAND RUST #1",
+      "match": "^GRAND RUST #1 ",
+      "schedule": null,
+      "status": "time_unstated",
+      "quote": "Сервер с еженедельным вайпом",
+      "sourceUrl": "https://www.rustalyzer.com/server/222758257",
+      "address": "1.grand-rust.ru:35100",
+      "website": "https://grand-rust.ru",
+      "note": "День только в названии (FRIDAY), время не указано; фактически около 13:00 МСК."
+    }
+  ]
+}

@@ -51,7 +51,14 @@ export const uk: Dict = {
     pve: "PVE / Build",
   },
   cadence: { weekly: "Щотижня", biweekly: "Раз на 2 тижні", monthly: "Щомісяця" },
-  source: { owner: "від власника", hostname: "з назви", history: "за історією", tags: "за тегами", force: "глобальний вайп" },
+  source: {
+    owner: "від власника",
+    official: "офіційний розклад",
+    hostname: "з назви",
+    history: "за історією",
+    tags: "за тегами",
+    force: "глобальний вайп",
+  },
   card: {
     wiped: "Вайп",
     ago: "тому",
@@ -93,6 +100,7 @@ export const uk: Dict = {
     kind: { map: "Мапа", full: "Повний", force: "Глобальний" },
     mapNote: "Схематичне прев'ю за сідом",
     offline: "Сервер не відповідає",
+    official: { title: "Офіційний розклад вайпів", source: "Джерело", checked: "Звірено з фактичними вайпами" },
     claim: "Це ваш сервер? Підтвердіть володіння та вкажіть точний розклад вайпів.",
     share: "Посилання",
     shared: "Посилання скопійовано",

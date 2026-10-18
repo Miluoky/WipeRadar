@@ -15,7 +15,7 @@ export const CADENCES = ["weekly", "biweekly", "monthly"] as const;
 export type Cadence = (typeof CADENCES)[number];
 
 export type WipeKind = "map" | "full" | "force";
-export type ScheduleSource = "owner" | "hostname" | "tags" | "history" | "force";
+export type ScheduleSource = "owner" | "official" | "hostname" | "tags" | "history" | "force";
 
 export interface ServerSummary {
   id: number;
@@ -67,6 +67,16 @@ export interface ServerDetail extends ServerSummary {
   firstSeenAt: string;
   lastSeenAt: string;
   wipes: WipeRecord[];
+  /** wipe schedule the network publishes itself, when we have a checked one */
+  official: OfficialInfo | null;
+}
+
+export interface OfficialInfo {
+  /** the network's own words, verbatim (English or Russian, as published) */
+  quote: string;
+  sourceUrl: string;
+  /** YYYY-MM-DD when we last checked it against observed wipes */
+  checkedAt: string;
 }
 
 export interface MetricPoint {

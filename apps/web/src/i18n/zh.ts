@@ -39,7 +39,14 @@ export const zh: Dict = {
   group: { solo: "单人", duo: "双人", trio: "三人", quad: "四人", nolimit: "不限" },
   type: { official: "官方", community: "社区", modded: "模组", barren: "Barren", softcore: "Softcore", pve: "PVE / 建造" },
   cadence: { weekly: "每周", biweekly: "每两周", monthly: "每月" },
-  source: { owner: "服主提供", hostname: "来自名称", history: "根据历史", tags: "根据标签", force: "强制刷新" },
+  source: {
+    owner: "服主提供",
+    official: "官方时间表",
+    hostname: "来自名称",
+    history: "根据历史",
+    tags: "根据标签",
+    force: "强制刷新",
+  },
   card: {
     wiped: "刷新",
     ago: "前",
@@ -81,6 +88,7 @@ export const zh: Dict = {
     kind: { map: "地图", full: "全刷", force: "强制" },
     mapNote: "根据种子生成的示意图",
     offline: "服务器无响应",
+    official: { title: "官方刷新时间表", source: "来源", checked: "已与实际刷新核对" },
     claim: "这是你的服务器吗？验证所有权并发布准确的刷新时间表。",
     share: "链接",
     shared: "链接已复制",

@@ -10,6 +10,7 @@ import {
   type Stats,
   type WipeRecord,
 } from "@wiperadar/shared";
+import { matchOfficial, OFFICIAL_CHECKED_AT } from "@wiperadar/shared/official";
 import type { Db } from "./db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- untyped SQL rows, mapped field by field below
@@ -162,6 +163,7 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
   );
   const r = rows[0];
   if (!r) return null;
+  const official = matchOfficial(r.name);
   const wipes = await db.query(
     `SELECT wiped_at, kind, seed, world_size, map FROM wipes WHERE server_id = $1 ORDER BY wiped_at DESC LIMIT 20`,
     [id],
@@ -184,6 +186,7 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
       worldSize: w.world_size,
       map: w.map,
     })),
+    official: official && { quote: official.quote, sourceUrl: official.sourceUrl, checkedAt: OFFICIAL_CHECKED_AT },
   };
 }
 

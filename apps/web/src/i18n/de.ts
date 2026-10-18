@@ -54,6 +54,7 @@ export const de: Dict = {
   cadence: { weekly: "Wöchentlich", biweekly: "Alle 2 Wochen", monthly: "Monatlich" },
   source: {
     owner: "vom Betreiber",
+    official: "offizieller Plan",
     hostname: "aus dem Namen",
     history: "aus dem Verlauf",
     tags: "aus Tags",
@@ -100,6 +101,7 @@ export const de: Dict = {
     kind: { map: "Map", full: "Voll", force: "Force" },
     mapNote: "Schematische Vorschau aus dem Seed",
     offline: "Server antwortet nicht",
+    official: { title: "Offizieller Wipe-Plan", source: "Quelle", checked: "Mit beobachteten Wipes abgeglichen" },
     claim: "Ist das dein Server? Bestätige den Besitz und veröffentliche den genauen Wipe-Plan.",
     share: "Link",
     shared: "Link kopiert",
