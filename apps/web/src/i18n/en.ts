@@ -6,6 +6,11 @@ export const en: Dict = {
     description: "Just-wiped Rust servers, wipe calendar, live population and queues. EU, CIS, NA, Asia.",
   },
   nav: { home: "Servers", calendar: "Calendar", language: "Language" },
+  down: {
+    title: "Data is temporarily unavailable",
+    body: "We can't reach our server monitor right now. It usually comes back within a minute.",
+    retry: "Try again",
+  },
   hero: {
     kicker: "Rust wipe tracker",
     title: "Be there in the first minutes of the wipe",

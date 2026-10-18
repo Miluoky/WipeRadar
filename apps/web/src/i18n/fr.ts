@@ -7,6 +7,11 @@ export const fr: Dict = {
       "Serveurs Rust fraîchement wipés, calendrier des wipes, joueurs et files d'attente en direct. EU, CEI, NA, Asie.",
   },
   nav: { home: "Serveurs", calendar: "Calendrier", language: "Langue" },
+  down: {
+    title: "Données temporairement indisponibles",
+    body: "Notre moniteur de serveurs ne répond pas pour le moment. Il revient en général en moins d'une minute.",
+    retry: "Réessayer",
+  },
   hero: {
     kicker: "Suivi des wipes Rust",
     title: "Sois là dès les premières minutes du wipe",

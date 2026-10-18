@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ApiDown } from "@/components/api-down";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -74,8 +75,10 @@ export default async function LandingPage({ params }: PageProps<"/[lang]/rust/[s
         <div className="space-y-1.5 p-2 sm:p-3">
           {list?.items.length ? (
             list.items.map((s) => <ServerCard key={s.id} s={s} d={d} locale={lang} fav={favSet.has(s.id)} />)
-          ) : (
+          ) : list ? (
             <p className="p-8 text-center text-sm text-ash">{d.empty.title}</p>
+          ) : (
+            <ApiDown t={d.down} href={`/${lang}/rust/${slug}`} />
           )}
         </div>
       </section>
