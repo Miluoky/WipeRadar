@@ -23,6 +23,13 @@ export const uk: Dict = {
   tabs: { justWiped: "Свіжі вайпи", upcoming: "Скоро вайп", all: "Усі сервери", favorites: "Обране" },
   windows: { all: "Усі", label: "Вікно" },
   favorites: { empty: "Позначайте сервери зірочкою — вони з'являться тут і будуть доступні під час кожного візиту." },
+  ics: {
+    add: "До календаря",
+    subscribe: "Підписка в календарі",
+    wipe: "Вайп",
+    force: "Глобальний вайп",
+    feed: "WipeRadar: обрані сервери",
+  },
   filters: {
     title: "Фільтри",
     search: "Пошук за назвою…",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
+import { ArrowLeft, CalendarPlus, ExternalLink, Flame, Map as MapIcon, ShieldCheck, Timer, Users } from "lucide-react";
 import type { ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
@@ -127,6 +127,16 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
               size="lg"
               labels={{ connect: d.card.connect, copy: d.card.copy, copied: d.card.copied }}
             />
+            {s.nextWipeAt && (
+              <a
+                href={`/${lang}/wipes.ics?ids=${s.id}`}
+                title={d.ics.add}
+                className="flex items-center gap-1.5 px-4 py-3 btn-dim text-base"
+              >
+                <CalendarPlus className="size-4" aria-hidden />
+                <span className="hidden sm:inline">{d.ics.add}</span>
+              </a>
+            )}
             <ShareButton labels={{ share: d.server.share, shared: d.server.shared }} />
           </div>
         </div>

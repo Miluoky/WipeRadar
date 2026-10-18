@@ -19,6 +19,13 @@ export const tr: Dict = {
   tabs: { justWiped: "Yeni wipe atanlar", upcoming: "Yakında wipe", all: "Tüm sunucular", favorites: "Favoriler" },
   windows: { all: "Tümü", label: "Aralık" },
   favorites: { empty: "Sunucuları yıldızla işaretle — her ziyaretinde burada olacaklar." },
+  ics: {
+    add: "Takvime ekle",
+    subscribe: "Takvimde abone ol",
+    wipe: "Wipe",
+    force: "Küresel force wipe",
+    feed: "WipeRadar: favori sunucular",
+  },
   filters: {
     title: "Filtreler",
     search: "İsme göre ara…",

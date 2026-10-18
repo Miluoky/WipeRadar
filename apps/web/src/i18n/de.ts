@@ -24,6 +24,13 @@ export const de: Dict = {
   tabs: { justWiped: "Gerade gewipt", upcoming: "Bald Wipe", all: "Alle Server", favorites: "Favoriten" },
   windows: { all: "Alle", label: "Zeitraum" },
   favorites: { empty: "Markiere Server mit dem Stern – sie erscheinen hier bei jedem Besuch." },
+  ics: {
+    add: "Zum Kalender",
+    subscribe: "Im Kalender abonnieren",
+    wipe: "Wipe",
+    force: "Globaler Force-Wipe",
+    feed: "WipeRadar: Favoriten",
+  },
   filters: {
     title: "Filter",
     search: "Nach Namen suchen…",

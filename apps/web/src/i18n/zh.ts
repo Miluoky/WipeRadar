@@ -18,6 +18,7 @@ export const zh: Dict = {
   tabs: { justWiped: "刚刚刷新", upcoming: "即将刷新", all: "全部服务器", favorites: "收藏" },
   windows: { all: "全部", label: "时间段" },
   favorites: { empty: "点击星标收藏服务器，每次访问都会显示在这里。" },
+  ics: { add: "添加到日历", subscribe: "在日历中订阅", wipe: "刷新", force: "全局强制刷新", feed: "WipeRadar：收藏的服务器" },
   filters: {
     title: "筛选",
     search: "按名称搜索…",
