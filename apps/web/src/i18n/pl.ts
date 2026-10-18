@@ -129,6 +129,13 @@ export const pl: Dict = {
     kind: { map: "Mapa", full: "Pełny", force: "Force" },
     mapNote: "Schematyczny podgląd z seeda",
     offline: "Serwer nie odpowiada",
+    audit: {
+      title: "Liczba graczy wygląda na zawyżoną",
+      short: "Serwer podaje {reported} graczy, ale na liście graczy jest tylko {listed}.",
+      clones: "Większość listy dołączyła w tej samej sekundzie lub ma ten sam nick, co jest typowe dla botów.",
+      flat: "Liczba graczy nie zmieniła się przez całą dobę, a na prawdziwych serwerach tak nie bywa.",
+      checked: "Ostatnie sprawdzenie",
+    },
     official: { title: "Oficjalny harmonogram wipe’ów", source: "Źródło", checked: "Sprawdzone z faktycznymi wipe’ami" },
     claim: "To twój serwer? Potwierdź własność i podaj dokładny harmonogram wipe'ów.",
     share: "Link",

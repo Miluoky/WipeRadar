@@ -1,4 +1,5 @@
 import { buildApi } from "./api";
+import { auditPlayers } from "./audit";
 import { config } from "./config";
 import { openDb } from "./db";
 import { initGeo } from "./geo";
@@ -35,6 +36,8 @@ if (demo) {
   await poller.rollupMetrics(new Date(0));
   poller.forceFullPredict();
   await poller.cycle();
+  // two back-to-back audits so the demo shows flagged servers right away
+  for (let i = 0; i < 2; i++) await auditPlayers(db, demo, { minAgeHours: 0 });
 }
 
 // demo ticks faster so the live feed moves while you watch
@@ -46,6 +49,10 @@ const prune = () => poller.pruneMetrics().catch((e) => console.error("[prune] fa
 void rollup().then(prune);
 setInterval(() => void rollup(), 10 * 60_000);
 setInterval(() => void prune(), 3_600_000);
+// population audit: A2S_PLAYER against the advertised count, busiest servers first
+const audit = () => auditPlayers(db, source).catch((e) => console.error("[audit] failed:", e));
+setTimeout(() => void audit(), 60_000);
+setInterval(() => void audit(), 15 * 60_000);
 setInterval(() => void stats.flush().catch((e) => console.error("[stats] flush failed:", e)), 60_000);
 
 const shutdown = async () => {

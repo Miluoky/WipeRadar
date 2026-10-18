@@ -34,4 +34,5 @@ export const counters = {
   liveWipes: 0,
   rulesOk: 0,
   rulesFailed: 0,
+  auditStrikes: 0,
 };

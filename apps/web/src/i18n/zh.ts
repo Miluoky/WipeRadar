@@ -116,6 +116,13 @@ export const zh: Dict = {
     kind: { map: "地图", full: "全刷", force: "强制" },
     mapNote: "根据种子生成的示意图",
     offline: "服务器无响应",
+    audit: {
+      title: "在线人数疑似虚高",
+      short: "服务器声称有 {reported} 名玩家，但玩家列表里只有 {listed} 人。",
+      clones: "列表中大部分玩家在同一秒加入或使用相同名字，这是机器人的典型特征。",
+      flat: "在线人数一整天都没有变化，真实服务器不会这样。",
+      checked: "上次检查",
+    },
     official: { title: "官方刷新时间表", source: "来源", checked: "已与实际刷新核对" },
     claim: "这是你的服务器吗？验证所有权并发布准确的刷新时间表。",
     share: "链接",

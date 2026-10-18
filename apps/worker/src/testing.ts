@@ -1,3 +1,4 @@
+import type { A2SPlayer } from "@wiperadar/a2s";
 // Shared fixtures for the worker's integration tests.
 import { PGlite, types } from "@electric-sql/pglite";
 import type { Db } from "./db";
@@ -41,6 +42,12 @@ export class FakeSource implements ServerSource {
   rules = new Map<string, Record<string, string> | Error>();
   async fetchList() {
     return this.list;
+  }
+  players = new Map<string, A2SPlayer[]>();
+  async fetchPlayers(ip: string) {
+    const p = this.players.get(ip);
+    if (!p) throw new Error("timeout");
+    return p;
   }
   async fetchRules(ip: string) {
     const r = this.rules.get(ip);

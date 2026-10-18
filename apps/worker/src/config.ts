@@ -33,6 +33,8 @@ export const config = {
   /** parallel UDP queries to a single host IP — hosting anti-DDoS hates bursts */
   perHostConcurrency: Number(env("PER_HOST_CONCURRENCY") ?? 3),
   rulesTtlHours: Number(env("RULES_TTL_HOURS") ?? 6),
+  /** servers per A2S_PLAYER audit pass (every 15 minutes, busiest first, each at most every 6 hours) */
+  auditBatch: Number(env("AUDIT_BATCH") ?? 300),
   offlineAfterMisses: 3,
   /** raw 5-minute samples: the 24h chart and card sparklines; older history lives in the hourly rollup */
   metricsRetentionDays: Number(env("METRICS_RETENTION_DAYS") ?? 8),

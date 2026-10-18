@@ -180,6 +180,18 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       );
     `,
   },
+  {
+    // population audit (A2S_PLAYER vs the advertised count, flat 24h curve); flagged at 2+ strikes
+    id: "011_population_audit",
+    sql: /* sql */ `
+      ALTER TABLE servers
+        ADD COLUMN audit_at       TIMESTAMPTZ,
+        ADD COLUMN audit_listed   INT,
+        ADD COLUMN audit_reported INT,
+        ADD COLUMN audit_reason   TEXT,
+        ADD COLUMN audit_strikes  SMALLINT NOT NULL DEFAULT 0;
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */

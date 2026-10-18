@@ -12,6 +12,7 @@ import {
   type WipeRecord,
 } from "@wiperadar/shared";
 import { matchOfficial, OFFICIAL_CHECKED_AT } from "@wiperadar/shared/official";
+import { STRIKES_TO_FLAG } from "./audit";
 import type { Db } from "./db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- untyped SQL rows, mapped field by field below
@@ -20,7 +21,8 @@ type Row = Record<string, any>;
 const iso = (d: unknown) => (d ? new Date(d as string).toISOString() : null);
 
 const SUMMARY_COLS = `id, ip, game_port, name, region, country, players, max_players, queue, map, seed, world_size,
-  rate, group_limit, type, cadence, last_wipe_at, next_wipe_at, next_wipe_source, online, header_image, logo_image, promoted, suspicious, peak_players, owner_verified_at`;
+  rate, group_limit, type, cadence, last_wipe_at, next_wipe_at, next_wipe_source, online, header_image, logo_image, promoted,
+  (suspicious OR audit_strikes >= ${STRIKES_TO_FLAG}) AS suspicious, peak_players, owner_verified_at`;
 
 function toSummary(r: Row): ServerSummary {
   return {
@@ -159,6 +161,7 @@ export async function getServerSummaries(db: Db, ids: number[]): Promise<ServerS
 export async function getServer(db: Db, id: number): Promise<ServerDetail | null> {
   const { rows } = await db.query(
     `SELECT ${SUMMARY_COLS}, description, url, tags, build, fps, entities, map_image, first_seen_at, last_seen_at,
+            audit_at, audit_listed, audit_reported, audit_reason, audit_strikes,
             (SELECT schedule FROM wipe_schedules ws WHERE ws.server_id = servers.id AND ws.source = 'owner') AS owner_schedule
      FROM servers WHERE id = $1`,
     [id],
@@ -192,6 +195,10 @@ export async function getServer(db: Db, id: number): Promise<ServerDetail | null
     })),
     official: official && { quote: official.quote, sourceUrl: official.sourceUrl, checkedAt: OFFICIAL_CHECKED_AT },
     ownerSchedule: r.owner_schedule ?? null,
+    audit:
+      r.audit_strikes >= STRIKES_TO_FLAG && r.audit_reason
+        ? { reason: r.audit_reason, listed: r.audit_listed, reported: r.audit_reported, at: iso(r.audit_at)! }
+        : null,
   };
 }
 

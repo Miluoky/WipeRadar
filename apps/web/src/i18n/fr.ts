@@ -144,6 +144,13 @@ export const fr: Dict = {
     kind: { map: "Map", full: "Complet", force: "Force" },
     mapNote: "Aperçu schématique d'après le seed",
     offline: "Le serveur ne répond pas",
+    audit: {
+      title: "Population qui semble gonflée",
+      short: "Le serveur annonce {reported} joueurs, mais sa liste de joueurs n'en contient que {listed}.",
+      clones: "La plupart des joueurs listés se sont connectés à la même seconde ou portent le même nom, signe typique de bots.",
+      flat: "Le nombre de joueurs n'a pas bougé de toute une journée, ce qui n'arrive jamais sur un vrai serveur.",
+      checked: "Dernière vérification",
+    },
     official: { title: "Planning officiel des wipes", source: "Source", checked: "Vérifié avec les wipes observés" },
     claim: "C'est ton serveur ? Vérifie la propriété et publie le calendrier exact des wipes.",
     share: "Lien",
