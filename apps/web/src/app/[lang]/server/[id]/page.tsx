@@ -7,7 +7,7 @@ import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
 import { LocalTime, Since, Until } from "@/components/clock";
 import { ClaimBox } from "@/components/claim-box";
-import { ConnectButtons } from "@/components/connect";
+import { ConnectButtons, ViewBeacon } from "@/components/connect";
 import { FavoriteButton } from "@/components/favorite-button";
 import { ShareButton } from "@/components/share-button";
 import { MapPreview } from "@/components/map-preview";
@@ -146,6 +146,7 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
           <div className="flex flex-wrap gap-1.5">
             <ConnectButtons
               addr={s.addr}
+              serverId={s.id}
               size="lg"
               labels={{ connect: d.card.connect, copy: d.card.copy, copied: d.card.copied }}
             />
@@ -405,6 +406,7 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
           )}
 
           <section className="border-dashed p-4 text-sm text-ash plate">
+            <ViewBeacon serverId={s.id} />
             <ClaimBox
               serverId={s.id}
               verified={s.verified}

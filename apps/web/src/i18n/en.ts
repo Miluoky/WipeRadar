@@ -47,6 +47,9 @@ export const en: Dict = {
     remove: "Remove",
     again: "Verify again to edit the schedule.",
     owner: "Owner's schedule",
+    stats: "Last 30 days",
+    views: "Page views",
+    connects: "Play / copy clicks",
   },
   filters: {
     title: "Filters",

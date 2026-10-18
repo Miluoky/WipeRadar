@@ -7,11 +7,7 @@
     "dateSource": "https://rust.facepunch.com/news",
     "dateEvidence": "Facepunch monthly updates are dated Thursday 01 Oct 2026, 03 Sep 2026, 06 Aug 2026, 02 Jul 2026 (first Thursdays).",
     "timeEvidence": "Facepunch does not print the hour on its news pages. Networks state \"First Thursday @ 2PM EST / 19:00 London\" (Rustafied, Rusty Moose descriptions). Observed on 1 Oct 2026: servers wiped 17:37-18:04 UTC (= 13:37-14:04 EDT).",
-    "next": [
-      "2026-11-05T19:00:00Z",
-      "2026-12-03T19:00:00Z",
-      "2027-01-07T19:00:00Z"
-    ],
+    "next": ["2026-11-05T19:00:00Z", "2026-12-03T19:00:00Z", "2027-01-07T19:00:00Z"],
     "extra": "Facepunch announced a mandatory server+client update (Halloween) on 22 Oct 2026 at 18:00 BST / 13:00 EST. It is an update, not announced as a wipe (source: https://rust.facepunch.com/news/livestock)."
   },
   "networks": {

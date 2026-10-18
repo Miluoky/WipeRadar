@@ -105,7 +105,11 @@ export function ServerCard({ s, d, locale, fav = false }: { s: ServerSummary; d:
         </div>
       </div>
 
-      <ConnectButtons addr={s.addr} labels={{ connect: d.card.connect, copy: d.card.copy, copied: d.card.copied }} />
+      <ConnectButtons
+        addr={s.addr}
+        serverId={s.id}
+        labels={{ connect: d.card.connect, copy: d.card.copy, copied: d.card.copied }}
+      />
     </article>
   );
 }

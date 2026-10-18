@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Check, Copy, ShieldCheck } from "lucide-react";
-import type { ClaimStatus, OwnerSchedule } from "@wiperadar/shared";
+import type { ClaimStatus, DayStats, OwnerSchedule } from "@wiperadar/shared";
 import type { Dict } from "@/i18n";
 import { intlLocale, type Locale } from "@/i18n/meta";
 
@@ -94,6 +94,7 @@ export function ClaimBox({
         <p className="flex items-center gap-2 text-toxic">
           <ShieldCheck className="size-5" aria-hidden /> {t.verified}
         </p>
+        <OwnerStats serverId={serverId} ownerKey={claim.key} locale={locale} t={ts} />
         <ScheduleForm serverId={serverId} ownerKey={claim.key} initial={schedule} locale={locale} t={ts} error={t.error} />
       </div>
     );
@@ -156,6 +157,65 @@ export function ClaimBox({
         </button>
       )}
       {state === "error" && <p className="text-xs text-rust-2">{t.error}</p>}
+    </div>
+  );
+}
+
+/** Last 30 days of page views and Play/copy clicks, one visitor counted once a day. */
+function OwnerStats({
+  serverId,
+  ownerKey,
+  locale,
+  t,
+}: {
+  serverId: number;
+  ownerKey: string;
+  locale: Locale;
+  t: Dict["schedule"];
+}) {
+  const [days, setDays] = useState<DayStats[] | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    fetch(`/api/servers/${serverId}/stats`, { headers: { Authorization: `Bearer ${ownerKey}` }, cache: "no-store" })
+      .then((r) => (r.ok ? (r.json() as Promise<DayStats[]>) : null))
+      .then((d) => live && d && setDays(d))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [serverId, ownerKey]);
+
+  if (!days) return null;
+  const fmt = new Intl.NumberFormat(intlLocale(locale));
+  const views = days.reduce((a, d) => a + d.views, 0);
+  const connects = days.reduce((a, d) => a + d.connects, 0);
+  const peak = Math.max(1, ...days.map((d) => d.views));
+  return (
+    <div className="space-y-2 border-t border-seam pt-3" data-testid="owner-stats">
+      <p className="font-display text-xs text-bone">{t.stats}</p>
+      <dl className="grid grid-cols-2 gap-2 text-xs">
+        <div>
+          <dt>{t.views}</dt>
+          <dd className="font-mono text-lg text-bone">{fmt.format(views)}</dd>
+        </div>
+        <div>
+          <dt>{t.connects}</dt>
+          <dd className="font-mono text-lg text-bone">{fmt.format(connects)}</dd>
+        </div>
+      </dl>
+      {days.length > 1 && (
+        <div className="flex h-8 items-end gap-px" aria-hidden>
+          {days.map((d) => (
+            <span
+              key={d.day}
+              title={`${d.day}: ${d.views} / ${d.connects}`}
+              className="flex-1 bg-toxic/60"
+              style={{ height: `${Math.max(4, (d.views / peak) * 100)}%` }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

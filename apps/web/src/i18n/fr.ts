@@ -54,6 +54,9 @@ export const fr: Dict = {
     remove: "Supprimer",
     again: "Vérifie à nouveau la propriété pour modifier le calendrier.",
     owner: "Calendrier du propriétaire",
+    stats: "30 derniers jours",
+    views: "Vues de la page",
+    connects: "Clics Jouer / copier",
   },
   filters: {
     title: "Filtres",

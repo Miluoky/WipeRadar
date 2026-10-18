@@ -8,6 +8,7 @@ import { config } from "./config";
 import type { Db } from "./db";
 import { TtlCache } from "./cache";
 import { subscribe } from "./events";
+import { getDayStats, StatsCounter, type HitKind } from "./stats";
 import { counters } from "./log";
 import type { PollStatus } from "./poller";
 import { getAccuracy, getMetrics, getServer, getSimilar, getStats, listServers, type ListParams } from "./repo";
@@ -42,7 +43,7 @@ export function clientIp(req: FastifyRequest): string | null {
   return first || null;
 }
 
-export async function buildApi(db: Db, status?: PollStatus) {
+export async function buildApi(db: Db, status?: PollStatus, stats = new StatsCounter(db)) {
   const app = Fastify({ logger: { level: "warn" } });
   await app.register(cors, { origin: config.siteUrl ? new URL(config.siteUrl).origin : false });
   await app.register(rateLimit, {
@@ -188,6 +189,23 @@ export async function buildApi(db: Db, status?: PollStatus) {
     await setSchedule(db, id, null);
     cache.delete(`server:${id}`); // the owner sees the change on reload
     return reply.code(204).send();
+  });
+
+  // view / Play-click beacons from the site (navigator.sendBeacon); counted in memory, flushed in batches
+  app.post("/api/servers/:id/hit", { config: { rateLimit: { max: 60, timeWindow: 60_000 } } }, async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    const kind = (req.query as { kind?: string }).kind as HitKind;
+    if (!id || (kind !== "view" && kind !== "connect")) return reply.code(400).send({ error: "bad request" });
+    stats.hit(id, kind, clientIp(req) ?? "internal");
+    return reply.code(204).send();
+  });
+
+  app.get("/api/servers/:id/stats", ownerRoute, async (req, reply) => {
+    const id = num((req.params as { id: string }).id);
+    const key = ownerKey(req);
+    if (!id || !key || !(await isOwner(db, id, key))) return reply.code(403).send({ error: "forbidden" });
+    reply.header("Cache-Control", "no-store");
+    return getDayStats(db, id);
   });
 
   app.get("/api/claims/:code", async (req, reply) => {

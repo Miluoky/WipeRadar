@@ -47,6 +47,9 @@ export const pl: Dict = {
     remove: "Usuń",
     again: "Potwierdź własność ponownie, aby zmienić harmonogram.",
     owner: "Harmonogram właściciela",
+    stats: "Ostatnie 30 dni",
+    views: "Wyświetlenia",
+    connects: "Kliknięcia Graj / kopiuj",
   },
   filters: {
     title: "Filtry",

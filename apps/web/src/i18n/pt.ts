@@ -52,6 +52,9 @@ export const pt: Dict = {
     remove: "Remover",
     again: "Verifique a propriedade de novo para editar o horário.",
     owner: "Horário do dono",
+    stats: "Últimos 30 dias",
+    views: "Visualizações",
+    connects: "Cliques em Jogar / copiar",
   },
   filters: {
     title: "Filtros",
