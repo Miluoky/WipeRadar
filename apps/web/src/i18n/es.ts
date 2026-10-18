@@ -13,8 +13,6 @@ export const es: Dict = {
       "Servidores recién wipeados, hora exacta de los próximos wipes en tu zona horaria, jugadores y colas en tiempo real.",
     forceWipe: "Force wipe en",
     note: "directo de Steam, cada 2 min",
-    islandHint: "haz clic para wipear el mapa",
-    islandLabel: "Mapa 3D interactivo: isla procedural al estilo Rust",
   },
   stats: {
     servers: "servidores en línea",

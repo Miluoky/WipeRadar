@@ -12,8 +12,6 @@ export const pl: Dict = {
     subtitle: "Świeżo zwipowane serwery, dokładny czas kolejnych wipe'ów w twojej strefie czasowej, gracze i kolejki na żywo.",
     forceWipe: "Force wipe za",
     note: "prosto ze Steam, odświeżane co 2 min",
-    islandHint: "kliknij — wipe'nę mapę",
-    islandLabel: "Interaktywna mapa 3D: proceduralna wyspa w stylu Rust",
   },
   stats: { servers: "serwerów online", players: "graczy teraz", wiped: "wipe'ów w 24 h", upcoming: "wipe'ów w ciągu 24 h" },
   feed: { title: "Ostatnie wipe'y" },

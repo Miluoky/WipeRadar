@@ -12,8 +12,6 @@ export const zh: Dict = {
     subtitle: "刚刚刷新的服务器、按你所在时区显示的下次刷新时间、实时在线人数与排队。",
     forceWipe: "强制刷新倒计时",
     note: "直接来自 Steam，每 2 分钟刷新",
-    islandHint: "点击即可刷新地图",
-    islandLabel: "交互式 3D 地图：Rust 风格的程序生成岛屿",
   },
   stats: { servers: "在线服务器", players: "当前玩家", wiped: "24 小时内刷新", upcoming: "未来 24 小时刷新" },
   feed: { title: "最新刷新" },

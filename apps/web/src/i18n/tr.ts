@@ -13,8 +13,6 @@ export const tr: Dict = {
       "Yeni wipe atmış sunucular, kendi saat diliminde sonraki wipe'ların tam zamanı, canlı oyuncu sayıları ve kuyruklar.",
     forceWipe: "Force wipe'a kalan",
     note: "doğrudan Steam'den, 2 dakikada bir güncellenir",
-    islandHint: "tıkla, haritayı wipe'la",
-    islandLabel: "Etkileşimli 3D harita: Rust tarzı prosedürel ada",
   },
   stats: { servers: "çevrimiçi sunucu", players: "şu an oyuncu", wiped: "24 saatteki wipe", upcoming: "sonraki 24 saatte wipe" },
   feed: { title: "Son wipe'lar" },
