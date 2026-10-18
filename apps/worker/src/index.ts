@@ -3,6 +3,7 @@ import { config } from "./config";
 import { openDb } from "./db";
 import { initGeo } from "./geo";
 import { Poller } from "./poller";
+import { StatsCounter } from "./stats";
 import { DemoSource } from "./sources/demo";
 import { SteamSource } from "./sources/steam";
 
@@ -16,7 +17,8 @@ console.log(`[worker] source=${source.name} db=${db.kind}`);
 const poller = new Poller(db, source);
 await poller.init();
 
-const app = await buildApi(db, poller.status);
+const stats = new StatsCounter(db);
+const app = await buildApi(db, poller.status, stats);
 // "::" is dual-stack (IPv4 + IPv6) — Railway private networking resolves over IPv6;
 // hosts with IPv6 disabled reject it, so fall back to IPv4 only
 try {
@@ -44,9 +46,11 @@ const prune = () => poller.pruneMetrics().catch((e) => console.error("[prune] fa
 void rollup().then(prune);
 setInterval(() => void rollup(), 10 * 60_000);
 setInterval(() => void prune(), 3_600_000);
+setInterval(() => void stats.flush().catch((e) => console.error("[stats] flush failed:", e)), 60_000);
 
 const shutdown = async () => {
   await app.close();
+  await stats.flush().catch(() => {});
   await db.close();
   process.exit(0);
 };

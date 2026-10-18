@@ -48,6 +48,9 @@ export const tr: Dict = {
     remove: "Kaldır",
     again: "Takvimi düzenlemek için sahipliği tekrar doğrula.",
     owner: "Sahibin takvimi",
+    stats: "Son 30 gün",
+    views: "Sayfa görüntüleme",
+    connects: "Oyna / kopyala tıklamaları",
   },
   filters: {
     title: "Filtreler",

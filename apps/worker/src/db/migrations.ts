@@ -167,6 +167,19 @@ const MIGRATIONS: { id: string; sql: string }[] = [
       ALTER TABLE wipe_schedules ADD COLUMN schedule JSONB;
     `,
   },
+  {
+    // per-day page views and Play/IP clicks, shown to the verified owner
+    id: "010_server_stats",
+    sql: /* sql */ `
+      CREATE TABLE server_stats (
+        server_id INT NOT NULL REFERENCES servers(id) ON DELETE CASCADE,
+        day       DATE NOT NULL,
+        views     INT NOT NULL DEFAULT 0,
+        connects  INT NOT NULL DEFAULT 0,
+        PRIMARY KEY (server_id, day)
+      );
+    `,
+  },
 ];
 
 /** Applied only on real Postgres with the timescaledb extension available. */

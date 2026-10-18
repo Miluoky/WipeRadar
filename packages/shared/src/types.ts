@@ -114,6 +114,12 @@ export interface OwnerSchedule {
   tz: string;
 }
 
+export interface DayStats {
+  day: string; // YYYY-MM-DD (UTC)
+  views: number;
+  connects: number;
+}
+
 export interface MetricPoint {
   t: string; // ISO bucket start
   players: number;

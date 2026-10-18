@@ -53,6 +53,9 @@ export const de: Dict = {
     remove: "Entfernen",
     again: "Bestätige den Besitz erneut, um den Plan zu ändern.",
     owner: "Plan des Besitzers",
+    stats: "Letzte 30 Tage",
+    views: "Seitenaufrufe",
+    connects: "Klicks auf Spielen / Kopieren",
   },
   filters: {
     title: "Filter",
