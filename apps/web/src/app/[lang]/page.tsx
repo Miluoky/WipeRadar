@@ -2,7 +2,8 @@ import Link from "next/link";
 import { cookies, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { CalendarClock, CalendarPlus, Clock3, Flame, Radar, ServerCrash, Star, Users, Zap } from "lucide-react";
+import { CalendarClock, CalendarPlus, Clock3, Flame, Radar, Star, Users, Zap } from "lucide-react";
+import { ApiDown } from "@/components/api-down";
 import type { Stats } from "@wiperadar/shared";
 import { Countdown } from "@/components/clock";
 import { FilterBar } from "@/components/filter-bar";
@@ -194,7 +195,7 @@ export default async function Home({ params, searchParams }: PageProps<"/[lang]"
 
             <div className="p-2 sm:p-3">
               {!list ? (
-                <ApiDown />
+                <ApiDown t={d.down} href={hrefWith({})} />
               ) : list.items.length === 0 ? (
                 <div className="grid place-items-center gap-1 px-4 py-16 text-center">
                   {tab === "favorites" ? (
@@ -317,16 +318,5 @@ function Pager({ d, page, pages, href }: { d: Dict; page: number; pages: number;
         <span className={`pointer-events-none btn-dim opacity-40 ${btn}`}>{d.pagination.next}</span>
       )}
     </nav>
-  );
-}
-
-function ApiDown() {
-  return (
-    <div className="flex items-center gap-3 p-6 text-sm text-ash">
-      <ServerCrash className="size-6 text-rust-2" aria-hidden />
-      <span>
-        API is unreachable. Start the worker: <code className="font-mono text-bone">npm run dev -w @wiperadar/worker</code>
-      </span>
-    </div>
   );
 }

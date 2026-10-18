@@ -6,6 +6,11 @@ export const pl: Dict = {
     description: "Świeżo zwipowane serwery Rust, kalendarz wipe'ów, liczba graczy i kolejki na żywo. EU, WNP, NA, Azja.",
   },
   nav: { home: "Serwery", calendar: "Kalendarz", language: "Język" },
+  down: {
+    title: "Dane chwilowo niedostępne",
+    body: "Nie możemy połączyć się z monitorem serwerów. Zwykle wraca w ciągu minuty.",
+    retry: "Spróbuj ponownie",
+  },
   hero: {
     kicker: "Tracker wipe'ów Rust",
     title: "Wejdź w pierwszych minutach wipe'a",

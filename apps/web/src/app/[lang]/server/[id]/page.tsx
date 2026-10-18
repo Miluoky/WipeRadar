@@ -16,6 +16,7 @@ import type { OwnerSchedule, ServerDetail } from "@wiperadar/shared";
 import { Badges, PopBar } from "@/components/badges";
 import { MapImage, ServerBanner, ServerLogo } from "@/components/server-logo";
 import { LocalTime, Since, Until } from "@/components/clock";
+import { ApiDown } from "@/components/api-down";
 import { ClaimBox } from "@/components/claim-box";
 import { ConnectButtons, ViewBeacon } from "@/components/connect";
 import { FavoriteButton } from "@/components/favorite-button";
@@ -30,21 +31,21 @@ import { api, NotFound } from "@/lib/api";
 import { formatMiss, rustmapsUrl } from "@/lib/time";
 import { FAV_COOKIE, parseFavorites } from "@/lib/favorites";
 
-async function load(id: string): Promise<ServerDetail | null> {
+/** null → no such server (404); "down" → the worker didn't answer, so say that instead of a 404 or a crash. */
+async function load(id: string): Promise<ServerDetail | null | "down"> {
   const n = Number(id);
   if (!Number.isInteger(n) || n <= 0) return null;
   try {
     return await api.server(n);
   } catch (e) {
-    if (e instanceof NotFound) return null;
-    throw e;
+    return e instanceof NotFound ? null : "down";
   }
 }
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/server/[id]">): Promise<Metadata> {
   const { lang, id } = await params;
-  const s = await load(id).catch(() => null);
-  if (!s || !hasLocale(lang)) return {};
+  const s = await load(id);
+  if (!s || s === "down" || !hasLocale(lang)) return {};
   const d = getDict(lang);
   const vars = { name: s.name, players: s.players, max: s.maxPlayers, region: s.region ? d.region[s.region] : "—" };
   return {
@@ -77,6 +78,13 @@ export default async function ServerPage({ params }: PageProps<"/[lang]/server/[
   const d = getDict(lang);
   const s = await load(id);
   if (!s) notFound();
+  if (s === "down") {
+    return (
+      <div className="plate">
+        <ApiDown t={d.down} href={`/${lang}/server/${id}`} />
+      </div>
+    );
+  }
   const [metrics, similar, accuracy] = await Promise.all([
     api.metrics(s.id, "24h").catch(() => []),
     api.similar(s.id).catch(() => []),

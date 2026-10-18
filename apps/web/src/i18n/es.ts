@@ -6,6 +6,11 @@ export const es: Dict = {
     description: "Servidores de Rust recién wipeados, calendario de wipes, jugadores y colas en tiempo real. EU, CEI, NA, Asia.",
   },
   nav: { home: "Servidores", calendar: "Calendario", language: "Idioma" },
+  down: {
+    title: "Datos no disponibles temporalmente",
+    body: "No podemos contactar con nuestro monitor de servidores. Suele volver en menos de un minuto.",
+    retry: "Reintentar",
+  },
   hero: {
     kicker: "Rastreador de wipes de Rust",
     title: "Entra en los primeros minutos del wipe",

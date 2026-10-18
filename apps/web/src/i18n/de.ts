@@ -6,6 +6,11 @@ export const de: Dict = {
     description: "Frisch gewipte Rust-Server, Wipe-Kalender, Live-Spielerzahlen und Warteschlangen. EU, GUS, NA, Asien.",
   },
   nav: { home: "Server", calendar: "Kalender", language: "Sprache" },
+  down: {
+    title: "Daten vorübergehend nicht verfügbar",
+    body: "Unser Server-Monitor ist gerade nicht erreichbar. Meist ist er innerhalb einer Minute wieder da.",
+    retry: "Erneut versuchen",
+  },
   hero: {
     kicker: "Rust Wipe-Tracker",
     title: "Sei in den ersten Minuten des Wipes dabei",

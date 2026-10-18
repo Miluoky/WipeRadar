@@ -6,6 +6,7 @@ export const zh: Dict = {
     description: "刚刚刷新的 Rust 服务器、刷新日历、实时在线人数与排队。欧洲、独联体、北美、亚洲。",
   },
   nav: { home: "服务器", calendar: "日历", language: "语言" },
+  down: { title: "数据暂时不可用", body: "暂时无法连接服务器监控，通常一分钟内即可恢复。", retry: "重试" },
   hero: {
     kicker: "Rust 刷新追踪",
     title: "在刷新的第一分钟进服",

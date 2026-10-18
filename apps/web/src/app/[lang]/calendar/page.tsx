@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ApiDown } from "@/components/api-down";
 import { notFound } from "next/navigation";
 import { CalendarView } from "@/components/calendar-view";
 import { alternates, getDict, hasLocale } from "@/i18n";
@@ -23,7 +24,13 @@ export default async function CalendarPage({ params }: PageProps<"/[lang]/calend
         <h1 className="font-display text-3xl font-bold sm:text-4xl">{d.calendar.title}</h1>
         <p className="text-sm text-ash">{d.calendar.subtitle}</p>
       </header>
-      <CalendarView servers={list?.items ?? []} d={d} locale={lang} />
+      {list ? (
+        <CalendarView servers={list.items} d={d} locale={lang} />
+      ) : (
+        <div className="plate">
+          <ApiDown t={d.down} href={`/${lang}/calendar`} />
+        </div>
+      )}
     </div>
   );
 }

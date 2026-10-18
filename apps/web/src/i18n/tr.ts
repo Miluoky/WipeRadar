@@ -6,6 +6,11 @@ export const tr: Dict = {
     description: "Yeni wipe atmış Rust sunucuları, wipe takvimi, canlı oyuncu sayıları ve kuyruklar. EU, BDT, NA, Asya.",
   },
   nav: { home: "Sunucular", calendar: "Takvim", language: "Dil" },
+  down: {
+    title: "Veriler geçici olarak kullanılamıyor",
+    body: "Sunucu izleyicimize şu anda ulaşılamıyor. Genellikle bir dakika içinde geri gelir.",
+    retry: "Tekrar dene",
+  },
   hero: {
     kicker: "Rust wipe takibi",
     title: "Wipe'ın ilk dakikalarında orada ol",
